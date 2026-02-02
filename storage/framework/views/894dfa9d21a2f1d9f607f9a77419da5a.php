@@ -1,0 +1,2 @@
+<button <?php echo e($attributes->merge(['class' => 'btn btn-primary account-btn', 'type' => 'submit'])); ?>><?php echo e($slot); ?></button>
+<?php /**PATH /home/renown/public_html/renownsystem.com/resources/views/components/form/button.blade.php ENDPATH**/ ?>

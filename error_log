@@ -1,0 +1,21 @@
+[25-Jan-2026 23:05:40 Asia/Kolkata] PHP Fatal error:  Trait "Illuminate\Queue\Queueable" not found in /home/renown/public_html/renownsystem.com/app/Jobs/AutoClockoutUnsignedAttendances.php on line 14
+[25-Jan-2026 23:07:56 Asia/Kolkata] PHP Fatal error:  Trait "App\Jobs\Queueable" not found in /home/renown/public_html/renownsystem.com/app/Jobs/AutoClockoutUnsignedAttendances.php on line 13
+[27-Jan-2026 07:47:00 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function now() in Command line code:1
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 1
+[28-Jan-2026 05:36:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function base_path() in Command line code:1
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 1
+[28-Jan-2026 05:36:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function base_path() in Command line code:1
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 1
+[29-Jan-2026 05:00:07 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 407
+[29-Jan-2026 17:42:28 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 407
+[30-Jan-2026 18:25:17 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 414
+[31-Jan-2026 19:40:06 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Collections/Collection.php on line 44
+[01-Feb-2026 09:37:46 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Collections/Arr.php on line 600
+[01-Feb-2026 23:38:49 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Foundation/Application.php on line 1060
+[02-Feb-2026 12:47:02 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Query/Grammars/Grammar.php on line 558

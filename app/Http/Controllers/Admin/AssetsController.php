@@ -1,0 +1,194 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Models\User;
+use App\Models\Asset;
+use App\Enums\UserType;
+use Illuminate\Http\Request;
+use App\DataTables\AssetDataTable;
+use App\Http\Controllers\Controller;
+use App\Traits\uploadFile;
+
+class AssetsController extends Controller
+{
+    use uploadFile;
+
+    public $tenant;
+
+    public function __construct () 
+    {
+        $this->tenant = app('tenant');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(AssetDataTable $dataTable)
+    {
+        return $dataTable->render("pages.assets.index");
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $users = User::where('type','!=', UserType::ADMIN)->where('is_active',1)->get();
+        return view('pages.assets.create',compact(
+            'users'
+        ));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:200',
+            'purchase_date' => 'required|date',
+            'purchase_from' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'nullable|max:100',
+            'serial_no' => 'nullable|max:50',
+            'supplier' => 'nullable|max:200',
+            'condition' => 'nullable|max:200',
+            'warranty' => 'nullable',
+            'cost' => 'required',
+            'status' => 'required',
+            'user' => 'required',
+            'description' => 'nullable|max:255'
+        ]);
+
+        $dir = 'storage/' . $this->tenant->domain . '/assets/';
+        $fileNames = [];
+        if(!empty($fileNames) && count($fileNames) > 0){
+            foreach($request->astFiles as $key => $requestFile){
+                if (!empty($requestFile)) {
+                    $fileName = self::upload($requestFile, $dir);
+                    $fileNames[$key] = $fileName;
+                }
+            }
+        }
+        $totalAsset = Asset::count();
+        $assetId = "AST-" . pad_zeros(($totalAsset + 1));
+        Asset::create([
+            'ast_id' => $request->ast_id ?? $assetId,
+            'name' => $request->name,
+            'purchase_date' => $request->purchase_date,
+            'purchase_from' => $request->purchase_from,
+            'manufacturer' => $request->manufacturer,
+            'model' => $request->model,
+            'serial_no' => $request->serial_no,
+            'supplier' => $request->supplier,
+            'ast_condition' => $request->condition,
+            'warranty' => $request->warranty,
+            'warranty_end' => $request->warranty_end,
+            'brand' => $request->brand,
+            'cost' => $request->cost,
+            'description' => $request->description,
+            'status' => $request->status,
+            'user_id' => $request->user,
+            'created_by' => auth()->user()->id,
+            'files' => $fileNames
+        ]);
+        $notification = notify(__("Asset has been added"));
+        return redirect()->route('assets-list.index')->with($notification);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Asset $assets_list)
+    {
+        return view('pages.assets.show', ['asset' => $assets_list]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Asset $assets_list)
+    {
+        $users = User::where('type','!=',UserType::SUPERADMIN)->where('is_active',1)->get();
+        return view("pages.assets.edit", ['asset' => $assets_list, 'users' => $users]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Asset $assets_list)
+    {
+        $request->validate([
+            'name' => 'required|max:200',
+            'purchase_date' => 'required|date',
+            'purchase_from' => 'required',
+            'manufacturer' => 'required',
+            'model' => 'nullable|max:100',
+            'serial_no' => 'nullable|max:50',
+            'supplier' => 'nullable|max:200',
+            'condition' => 'nullable|max:200',
+            'warranty' => 'nullable',
+            'cost' => 'required',
+            'status' => 'required',
+            'user' => 'required',
+            'description' => 'nullable|max:255'
+        ]);
+
+        $dir = 'storage/' . $this->tenant->domain . '/assets/';
+        $fileNames = $assets_list->files ?? [];
+        if(!empty($fileNames) && count($fileNames) > 0){
+            foreach($request->astFiles as $key => $requestFile){
+                if (!empty($requestFile)) {
+                    $oldFile = $fileNames[$key] ?? null;
+                    
+                    $fileName = self::upload($requestFile, $dir, $oldFile);
+                    $fileNames[$key] = $fileName;
+                }
+            }
+        }
+        $assets_list->update([
+            'ast_id' => $request->ast_id,
+            'name' => $request->name,
+            'purchase_date' => $request->purchase_date,
+            'purchase_from' => $request->purchase_from,
+            'manufacturer' => $request->manufacturer,
+            'model' => $request->model,
+            'serial_no' => $request->serial_no,
+            'supplier' => $request->supplier,
+            'ast_condition' => $request->condition,
+            'warranty' => $request->warranty,
+            'warranty_end' => $request->warranty_end,
+            'brand' => $request->brand,
+            'cost' => $request->cost,
+            'description' => $request->description,
+            'status' => $request->status,
+            'user_id' => $request->user,
+            'created_by' => auth()->user()->id,
+            'files' => $fileNames,
+        ]);
+        $notification = notify(__("Asset has been updated"));
+        return redirect()->route('assets-list.index')->with($notification);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Asset $assets_list)
+    {
+        $files = $asset_list->files ?? [];
+
+        $path = 'storage/' . $this->tenant->domain . '/assets/';
+
+        foreach ($files as $file) {
+
+            if ($file) {
+                self::delete($file, $path);
+            }
+        }
+
+        $assets_list->delete();
+        $notification = notify(__('Asset has been deleted'));
+        return back()->with($notification);
+    }
+}
