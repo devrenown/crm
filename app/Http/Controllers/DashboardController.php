@@ -43,12 +43,11 @@ class DashboardController extends BaseController
             return $plan;
         });
 
-        if ($request->getHost() === env('PRIMARY_HOST')) {
+        if ($request->getHost() === env('PRIMARY_HOST', 'renownsystem.com')) {
             return view("pages.front.index", ['plans' => $plans, 'currency' => $currency]);
         }
 
         return redirect()->route('tenant.login');
-        
     }
 
     public function index()
@@ -63,6 +62,7 @@ class DashboardController extends BaseController
         {
             return view('pages.employees.dashboard',$this->data);
         }
+
         $projects = null;
         $recentProjects = null;
         if(!empty(module('Project')) && module('Project')->isEnabled()){

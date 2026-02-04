@@ -34,6 +34,14 @@
                 display: none !important;
             }
         }
+
+    .header #toggle_btn {
+        padding: 20px 10px !important;
+    }
+
+    .header .header-left {
+        padding: 10px 20px !important;
+    }
     </style>
 @endpush
 

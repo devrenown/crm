@@ -4,6 +4,14 @@
     .profile-widget {
         padding: 20px 20px 0px 20px !important;
     }
+
+    .header #toggle_btn {
+        padding: 20px 10px !important;
+    }
+
+    .header .header-left {
+        padding: 10px 20px !important;
+    }
 </style>
 
 @section('page-content')
@@ -28,7 +36,7 @@
                         @activeCan('create-employee')
                             <a href="javascript:void(0)"
                                data-url="{{ route('employees.create') }}"
-                               class="btn add-btn"
+                               class="btn add-btn btn-sm"
                                data-ajax-modal="true"
                                data-size="lg"
                                data-title="Add Employee">
@@ -37,7 +45,7 @@
                         @endactiveCan
 
                         <form action="{{ route('employees.index') }}" method="GET" class="mb-0">
-                            <select class="form-control" name="status" id="status" style="width: 130px;" onchange="this.form.submit()">
+                            <select class="form-control" name="status" id="status" style="max-width: 100px;" onchange="this.form.submit()">
                                 <option value="active" {{ request('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>

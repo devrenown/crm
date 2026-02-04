@@ -155,6 +155,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('backups', fn() => view('pages.backups', ['pageTitle' => __('Backups')]))->name('backups.index');
         Route::get('attendance', [AttendancesController::class, 'index'])->name('attendances.index');
         Route::get('attendance-details/{attendance}', [AttendancesController::class, 'attendanceDetails'])->name('attendance.details');
+        Route::get('attendance-history/{employee_id}', [AttendancesController::class, 'attendanceHistory'])->name('attendance.history');
 
         Route::get('clockout-modal/{timeId?}', [EmployeeAttendanceController::class, 'clockoutModal'])->name('clockout-modal');
         Route::post('clockout', [EmployeeAttendanceController::class, 'clockout'])->name('clockout');

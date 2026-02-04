@@ -62,9 +62,14 @@
                         <label class="focus-label">{{ __('Select Year') }}</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">  
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-success">{{ __('Search') }}</button>
+                <div class="col-sm-6 col-md-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{{ route('attendances.index') }}" class="btn btn-dark w-100">Reset</a>
+                        </div>  
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary w-100">{{ __('Search') }}</button>
+                        </div>
                     </div>
                 </div>       
             </div>
@@ -87,12 +92,19 @@
                             @if (!empty($employees))
                                 @foreach ($employees as $employee)
                                 <tr>
-                                    <td class="position-sticky start-0">    
-                                    @php
-                                        $img = !empty($employee->avatar) ? asset('storage/users/'.$employee->avatar): asset('images/user.jpg');
-                                        $link = route('employees.show', ['employee' => Crypt::encrypt($employee->id)]);
-                                    @endphp 
-                                    {!! \Spatie\Menu\Laravel\Html::userAvatar($employee->fullname, $img, $link) !!}
+                                    <td class="position-sticky start-0">
+                                        <div class="d-flex justify-content-between align-items-center gap-2">
+                                            <div>    
+                                                @php
+                                                    $img = !empty($employee->avatar) ? asset('storage/users/'.$employee->avatar): asset('images/user.jpg');
+                                                    $link = route('employees.show', ['employee' => Crypt::encrypt($employee->id)]);
+                                                @endphp 
+                                                {!! \Spatie\Menu\Laravel\Html::userAvatar($employee->fullname, $img, $link) !!}
+                                            </div>
+                                            <div>
+                                                <a href="{{ route('attendance.history', ['employee_id' => encrypt($employee->id)]) }}" title="View {{ $employee->fullname }}'s Attendance History"><i class="fa-solid fa-clock-rotate-left"></i></a>
+                                            </div>
+                                        </div>
                                     </td>
                                     @for ($day = 1; $day <= $days_in_month; $day++)
                                         @php

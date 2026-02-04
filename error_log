@@ -22,3 +22,4 @@ Stack trace:
 [03-Feb-2026 00:33:58 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 852
 [03-Feb-2026 13:09:11 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Database/Events/QueryExecuted.php on line 53
 [04-Feb-2026 01:07:31 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/laravel/framework/src/Illuminate/Collections/Arr.php on line 610
+[04-Feb-2026 13:48:26 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/renown/public_html/renownsystem.com/vendor/nesbot/carbon/src/Carbon/FactoryImmutable.php on line 171
