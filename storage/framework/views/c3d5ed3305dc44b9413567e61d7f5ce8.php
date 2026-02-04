@@ -29,17 +29,40 @@
                 </li>
             </ul>
              <?php $__env->slot('right', null, []); ?> 
-                <div class="col-auto float-end ms-auto">
-                    <?php if (\Illuminate\Support\Facades\Blade::check('activeCan', 'create-employee')): ?>
-                    <a href="javascript:void(0)" data-url="<?php echo e(route('employees.create')); ?>" class="btn add-btn"
-                        data-ajax-modal="true" data-size="lg" data-title="Add Employee">
-                        <i class="fa-solid fa-plus"></i> <?php echo e(__('Add Employee')); ?>
+                <div class="col-auto ms-auto">
 
-                    </a>
-                    <?php endif; ?>
-                    <div class="view-icons">
-                        <a href="<?php echo e(route('employees.index')); ?>" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
-                        <a href="<?php echo e(route('employees.list')); ?>" class="list-view btn btn-link"><i class="fa-solid fa-bars"></i></a>
+                    <div class="d-flex align-items-center gap-2">
+
+                        <?php if (\Illuminate\Support\Facades\Blade::check('activeCan', 'create-employee')): ?>
+                            <a href="javascript:void(0)"
+                               data-url="<?php echo e(route('employees.create')); ?>"
+                               class="btn add-btn"
+                               data-ajax-modal="true"
+                               data-size="lg"
+                               data-title="Add Employee">
+                                <i class="fa-solid fa-plus"></i> <?php echo e(__('Add Employee')); ?>
+
+                            </a>
+                        <?php endif; ?>
+
+                        <form action="<?php echo e(route('employees.index')); ?>" method="GET" class="mb-0">
+                            <select class="form-control" name="status" id="status" style="width: 130px;" onchange="this.form.submit()">
+                                <option value="active" <?php echo e(request('status', 'active') === 'active' ? 'selected' : ''); ?>>Active</option>
+                                <option value="inactive" <?php echo e(request('status') === 'inactive' ? 'selected' : ''); ?>>Inactive</option>
+                            </select>
+                        </form>
+
+                        <div class="view-icons d-flex align-items-center">
+                            <a href="<?php echo e(route('employees.index')); ?>"
+                               class="grid-view btn btn-link bg-primary text-white p-2">
+                                <i class="fa fa-th"></i>
+                            </a>
+                            <a href="<?php echo e(route('employees.list')); ?>"
+                               class="list-view btn btn-link p-2">
+                                <i class="fa-solid fa-bars"></i>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
              <?php $__env->endSlot(); ?>

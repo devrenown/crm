@@ -80,7 +80,7 @@
         width: .35em;
         height: 4.79em;
         border-radius: .5em;
-        background: #343536;
+        background: var(--bs-primary);
         box-shadow: #343536 0 0 2px;
         transform-origin: 0.1em 4.6em;
         z-index: 7;
@@ -90,8 +90,8 @@
       width: .2em;
       height: 7.5em;
       border-radius: .1em .1em 0 0 / 10em 10em 0 0;
-      /*background: #c00;*/
-      background: var(--bs-primary);
+      background: #c00;
+      /*background: var(--bs-primary);*/
       margin: 0 0 -2em -.1em;
       box-shadow: rgba(0, 0, 0, .8) 0 0 .2em;
       transform-origin: 0.1em 5.5em;
@@ -238,9 +238,13 @@
                         <button type="button" data-bs-toggle="modal" data-bs-target="#clockin_modal" class="btn btn-primary punch-btn"><i class="fa-solid fa-right-to-bracket me-1"></i> <?php echo e(__('Clock In')); ?></button>
                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-                        <div class="text-center">
-                            <span><?php echo e($totalHours); ?> <?php echo e(\Str::plural(__('Hour'), intval($totalHours))); ?></span> 
+                        <div wire:poll.1s="updateLiveHours">
+                            <h4 class="fw-bold">
+                                <?php echo e($totalHours); ?> Hours
+                            </h4>
                         </div>
+
+                        
                     </div>
 
                     
@@ -346,6 +350,7 @@
             </div>
 
         </div>
+
         <div class="col-md-4">
             <div class="card recent-activity">
                 <div class="card-body">
@@ -395,59 +400,69 @@
                     </thead>
                     <tbody>
                         
-                        <!--[if BLOCK]><![endif]--><?php if(!empty($attendances)): ?>
-                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $attendances; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $date => $records): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $attendances; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $date => $records): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
 
-                                <?php
-                                    // 1. Calculate total minutes for the day
-                                    $totalMinutes = 0;
-                                    foreach ($records as $r) {
-                                        $totalMinutes += ($r['totalHours'] * 60) + $r['totalMinutes'];
-                                    }
-                                    $hours = floor($totalMinutes / 60);
-                                    $minutes = $totalMinutes % 60;
+                            <?php
+                                // Total minutes worked in the day
+                                $totalMinutes = $records->sum(function ($r) {
+                                    return $r->endTime
+                                        ? $r->startTime->diffInMinutes($r->endTime)
+                                        : 0;
+                                });
 
-                                    $startTimes = array_column($records, 'created_at'); // Extract all 'created_at' values
-                                    $endTimes   = array_column($records, 'endTime');     // Extract all 'endTime' values
+                                $hours = intdiv($totalMinutes, 60);
+                                $minutes = $totalMinutes % 60;
 
-                                    $punchIn  = !empty($startTimes) ? min($startTimes) : null;
-                                    $punchOut = !empty($endTimes) ? max($endTimes) : null;
+                                // Punch In = earliest startTime
+                                $punchIn = $records->min('startTime');
 
-                                    $recordDate = \Carbon\Carbon::parse($date);
-                                ?>
+                                // Punch Out = latest endTime (ignore nulls)
+                                $punchOut = $records->whereNotNull('endTime')->max('endTime');
+
+                                $recordDate = \Carbon\Carbon::parse($date);
+                            ?>
         
                             <tr>
-                                
                                 <td><?php echo e($loop->iteration); ?></td>
                                 <td><?php echo e(format_date($date)); ?></td>
-                                
-                                <td><?php echo e($punchIn ? \Carbon\Carbon::parse($punchIn)->format('h:i A') : ''); ?></td>
-                                
-                                <td>
 
-                                    <!--[if BLOCK]><![endif]--><?php if(empty($punchOut) && $recordDate->lt(now()->startOfDay())): ?>
+                                <td>
+                                    <?php echo e($punchIn ? $punchIn->format('h:i A') : ''); ?>
+
+                                </td>
+
+                                <td>
+                                    <!--[if BLOCK]><![endif]--><?php if(!$punchOut && $recordDate->lt(now()->startOfDay())): ?>
                                         <span class="text-danger">Miss Out</span>
                                     <?php else: ?>
-                                        <?php echo e($punchOut ? \Carbon\Carbon::parse($punchOut)->format('h:i A') : ''); ?>
+                                        <?php echo e($punchOut ? $punchOut->format('h:i A') : ''); ?>
 
                                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                    
                                 </td>
-                                
+
                                 <td><?php echo e(sprintf('%02d:%02d', $hours, $minutes)); ?></td>
                             </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No attendance records found
+                                </td>
+                            </tr>
                         <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-                        
                     </tbody>
                 </table>
+
+                <div class="mt-3">
+                    <?php echo e($attendancePaginator->links()); ?>
+
+                </div>
             </div>
         </div>
     </div>
 
 
-    <div class="modal custom-modal fade" id="clockin_modal" role="dialog">
+    <div wire:ignore.self class="modal custom-modal fade" id="clockin_modal" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -573,6 +588,8 @@
 <?php unset($__componentOriginal4655fd8c65a18572fb62908c30ba0d39); ?>
 <?php endif; ?>
                     </div>
+
+                    
                 </div>
                 <div class="submit-section mb-3">
                     <?php if (isset($component)) { $__componentOriginal8a31ff0802d1df0c26bb607f30439b3a = $component; } ?>
@@ -671,29 +688,6 @@
                     className: "success",
                 }).showToast()
             })
-
-                /* -----------------------------
-                   LIVE TOTAL HOURS COUNTER
-                ------------------------------*/
-                let startedAt = "<?php echo e($timeStarted); ?>"; // From backend
-                if (startedAt) {
-
-                    function updateWorkedHours() {
-                        let start = new Date(startedAt);
-                        let now   = new Date();
-
-                        let diffMs = now - start;
-                        let diffMins = Math.floor(diffMs / 60000);
-                        let diffHours = Math.floor(diffMins / 60);
-                        let mins = diffMins % 60;
-
-                        document.getElementById("totalHoursRunningLive").textContent =
-                            `${diffHours}h : ${String(mins).padStart(2, "0")}m Worked`;
-                    }
-
-                    updateWorkedHours();
-                    setInterval(updateWorkedHours, 60000);
-                }
         </script>
 
         <?php

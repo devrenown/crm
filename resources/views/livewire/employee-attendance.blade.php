@@ -80,7 +80,7 @@
         width: .35em;
         height: 4.79em;
         border-radius: .5em;
-        background: #343536;
+        background: var(--bs-primary);
         box-shadow: #343536 0 0 2px;
         transform-origin: 0.1em 4.6em;
         z-index: 7;
@@ -90,8 +90,8 @@
       width: .2em;
       height: 7.5em;
       border-radius: .1em .1em 0 0 / 10em 10em 0 0;
-      /*background: #c00;*/
-      background: var(--bs-primary);
+      background: #c00;
+      /*background: var(--bs-primary);*/
       margin: 0 0 -2em -.1em;
       box-shadow: rgba(0, 0, 0, .8) 0 0 .2em;
       transform-origin: 0.1em 5.5em;
@@ -238,9 +238,15 @@
                         <button type="button" data-bs-toggle="modal" data-bs-target="#clockin_modal" class="btn btn-primary punch-btn"><i class="fa-solid fa-right-to-bracket me-1"></i> {{ __('Clock In') }}</button>
                         @endif
 
-                        <div class="text-center">
-                            <span>{{ $totalHours }} {{ \Str::plural(__('Hour'), intval($totalHours)) }}</span> 
+                        <div wire:poll.1s="updateLiveHours">
+                            <h4 class="fw-bold">
+                                {{ $totalHours }} Hours
+                            </h4>
                         </div>
+
+                        {{-- <div class="text-center">
+                            <span>{{ $totalHours }} {{ \Str::plural(__('Hour'), intval($totalHours)) }}</span> 
+                        </div> --}}
                     </div>
 
                     {{-- <div class="statistics">
@@ -355,6 +361,7 @@
             </div>
 
         </div>
+
         <div class="col-md-4">
             <div class="card recent-activity">
                 <div class="card-body">
@@ -402,58 +409,66 @@
                     </thead>
                     <tbody>
                         
-                        @if (!empty($attendances))
-                            @foreach ($attendances as $date => $records)
+                        @forelse ($attendances as $date => $records)
 
-                                @php
-                                    // 1. Calculate total minutes for the day
-                                    $totalMinutes = 0;
-                                    foreach ($records as $r) {
-                                        $totalMinutes += ($r['totalHours'] * 60) + $r['totalMinutes'];
-                                    }
-                                    $hours = floor($totalMinutes / 60);
-                                    $minutes = $totalMinutes % 60;
+                            @php
+                                // Total minutes worked in the day
+                                $totalMinutes = $records->sum(function ($r) {
+                                    return $r->endTime
+                                        ? $r->startTime->diffInMinutes($r->endTime)
+                                        : 0;
+                                });
 
-                                    $startTimes = array_column($records, 'created_at'); // Extract all 'created_at' values
-                                    $endTimes   = array_column($records, 'endTime');     // Extract all 'endTime' values
+                                $hours = intdiv($totalMinutes, 60);
+                                $minutes = $totalMinutes % 60;
 
-                                    $punchIn  = !empty($startTimes) ? min($startTimes) : null;
-                                    $punchOut = !empty($endTimes) ? max($endTimes) : null;
+                                // Punch In = earliest startTime
+                                $punchIn = $records->min('startTime');
 
-                                    $recordDate = \Carbon\Carbon::parse($date);
-                                @endphp
+                                // Punch Out = latest endTime (ignore nulls)
+                                $punchOut = $records->whereNotNull('endTime')->max('endTime');
+
+                                $recordDate = \Carbon\Carbon::parse($date);
+                            @endphp
         
                             <tr>
-                                
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ format_date($date) }}</td>
-                                {{-- Display the earliest punch in time --}}
-                                <td>{{ $punchIn ? \Carbon\Carbon::parse($punchIn)->format('h:i A') : '' }}</td>
-                                {{-- Display the latest punch out time --}}
-                                <td>
 
-                                    @if (empty($punchOut) && $recordDate->lt(now()->startOfDay()))
+                                <td>
+                                    {{ $punchIn ? $punchIn->format('h:i A') : '' }}
+                                </td>
+
+                                <td>
+                                    @if (!$punchOut && $recordDate->lt(now()->startOfDay()))
                                         <span class="text-danger">Miss Out</span>
                                     @else
-                                        {{ $punchOut ? \Carbon\Carbon::parse($punchOut)->format('h:i A') : '' }}
+                                        {{ $punchOut ? $punchOut->format('h:i A') : '' }}
                                     @endif
-                                    
                                 </td>
-                                {{-- Display the calculated total time for the day --}}
+
                                 <td>{{ sprintf('%02d:%02d', $hours, $minutes) }}</td>
                             </tr>
-                        @endforeach
-                        @endif
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No attendance records found
+                                </td>
+                            </tr>
+                        @endforelse
 
-                        {{-- $attendances->links() --}}
                     </tbody>
                 </table>
+
+                <div class="mt-3">
+                    {{ $attendancePaginator->links() }}
+                </div>
             </div>
         </div>
     </div>
 
 
-    <div class="modal custom-modal fade" id="clockin_modal" role="dialog">
+    <div wire:ignore.self class="modal custom-modal fade" id="clockin_modal" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -488,6 +503,16 @@
                             </select>
                         </x-form.input-block>
                     </div>
+
+                    {{-- <x-form.input-block>
+                        <x-form.label required>{{ __('Shift') }}</x-form.label>
+                        <select class="form-control" name="shift" id="shift" required>
+                            <option value="">{{ __('Select Shift') }}</option>
+                            @foreach (\App\Models\Shift::get() as $shift)
+                                <option value="{{ $shift->id }}">{{ $shift->name }}</option>
+                            @endforeach
+                        </select>
+                    </x-form.input-block> --}}
                 </div>
                 <div class="submit-section mb-3">
                     <x-form.button type="submit" class="btn btn-primary submit-btn">{{ __('Start') }}</x-form.button>
@@ -565,29 +590,6 @@
                     className: "success",
                 }).showToast()
             })
-
-                /* -----------------------------
-                   LIVE TOTAL HOURS COUNTER
-                ------------------------------*/
-                let startedAt = "{{ $timeStarted }}"; // From backend
-                if (startedAt) {
-
-                    function updateWorkedHours() {
-                        let start = new Date(startedAt);
-                        let now   = new Date();
-
-                        let diffMs = now - start;
-                        let diffMins = Math.floor(diffMs / 60000);
-                        let diffHours = Math.floor(diffMins / 60);
-                        let mins = diffMins % 60;
-
-                        document.getElementById("totalHoursRunningLive").textContent =
-                            `${diffHours}h : ${String(mins).padStart(2, "0")}m Worked`;
-                    }
-
-                    updateWorkedHours();
-                    setInterval(updateWorkedHours, 60000);
-                }
         </script>
 
     @endscript

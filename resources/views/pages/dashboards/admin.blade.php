@@ -373,6 +373,7 @@
                         <th>#</th>
                         <th>Employee</th>
                         <th>Name</th>
+                        <th>Shift</th>
                         <th>Location</th>
                         <th>Platform</th>
                         <th>Clock In</th>
@@ -392,6 +393,7 @@
                             </span>
                         </td>
                         <td>{{ $user->fullname }}</td>
+                        <td>{{ @$user->shift->shift->name ?? 'N/A' }}</td>
                         <td>{{ $attendance->location ?? 'N/A' }}</td>
                         <td>{{ $attendance->platform ?? 'N/A' }}</td>
                         <td>{{ date('H:i A', strtotime($attendance->created_at)) }}</td>

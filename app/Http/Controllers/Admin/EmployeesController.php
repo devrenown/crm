@@ -43,13 +43,23 @@ class EmployeesController extends Controller
         $this->tenant = app('tenant');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $pageTitle = __("Employees");
         $query = User::with('shift')->where('type', UserType::EMPLOYEE);
 
         if(activeRole() === UserType::TL->value) {
             $query->where('reporting_manager', auth()->id());
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($request->status === 'inactive') {
+                $query->where('is_active', false);
+            }
+        } else {
+            $query->where('is_active', true);
         }
 
         $employees = $query->get();

@@ -12,13 +12,18 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Jenssegers\Agent\Agent;
+use Livewire\WithPagination;
 
 class EmployeeAttendance extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $forProject,$project, $clockedIn, $timeStarted;
     public $totalHours = 0;
     public $timeId = null;
-    public $attendances, $todayActivity;
+    public $todayActivity;
     
     public $totalHoursToday = 0;
     public $totalHoursThisMonth = 0;
@@ -79,6 +84,7 @@ class EmployeeAttendance extends Component
 
             $this->dispatch('IsClockedIn');
             $this->dispatch('refreshAttendance');
+            $this->dispatch('fetchStatistics');
             $this->dispatch('Notification',__('You have clockin successfully'));
             // $this->js("bootstrap.Modal.getInstance(document.getElementById('clockin_modal')).hide()");
             $this->js("$('#clockin_modal').modal('hide');");
@@ -118,65 +124,16 @@ class EmployeeAttendance extends Component
         }
     }
 
-   
-    // #[On('refreshAttendance')]
-    // public function getAttendance()
-    // {
-    //     $userId = auth()->user()->id;
-    //     $attendances = AttendanceTimestamp::where('user_id', $userId)
-    //                 ->whereNotNull('attendance_id');
-
-    //     $attendances->groupBy($item) {
-    //         $item->created_at->format('Y-m-d');
-    //     }
-    //     $this->attendances = $attendances->get();
-    //     $this->todayActivity = $attendances->whereDate('created_at', Carbon::today())->get();
-        
-    // }
-
     #[On('refreshAttendance')]
     public function getAttendance()
     {
-        // 1. Get the base query. No execution yet.
-        $userId = auth()->user()->id;
-        $baseQuery = AttendanceTimestamp::where('user_id', $userId)
-                                        ->whereNotNull('attendance_id')
-                                        ->orderBy('created_at', 'desc');
+        $userId = auth()->id();
 
-        $this->attendances = $baseQuery->get()
-        ->groupBy(function($item) {
-            return $item->created_at->format('Y-m-d');
-        })
-        ->map(function ($dayRecords) {
-            // Ensure each group is converted to an array of simple objects/arrays
-            return $dayRecords->all(); 
-        })
-        ->all(); // Convert the main grouped Collection to a plain array
-        
-        // Using separate query (more performant for large tables):
         $this->todayActivity = AttendanceTimestamp::where('user_id', $userId)
             ->whereDate('created_at', Carbon::today())
             ->orderBy('created_at', 'desc')
             ->get();
     }
-
-    // [On('fetchStatistics')]
-    // public function statistics()
-    // {
-    //     $userId = auth()->user()->id;
-    //     $userAttendances = AttendanceTimestamp::where('user_id', $userId)
-    //         ->whereNotNull('attendance_id');
-    //     $this->totalHoursToday = $userAttendances->whereDate('created_at', Carbon::today())
-    //         ->get()
-    //         ->sum('totalHours');
-    //     $this->totalHoursThisMonth = $userAttendances->whereMonth('created_at', Carbon::now())
-    //         ->get()
-    //         ->sum('totalHours');
-    //     $this->totalHoursThisWeek = $userAttendances
-    //         ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
-    //         ->get()
-    //         ->sum('totalHours');
-    // }
 
     #[On('fetchStatistics')]
     public function statistics()
@@ -234,7 +191,8 @@ class EmployeeAttendance extends Component
             if(!empty($latestClockin)){
                 $this->clockedIn = true;
                 $this->timeId = Crypt::encrypt($latestClockin->id);
-                $this->timeStarted = $latestClockin->startTime;
+                // $this->timeStarted = $latestClockin->startTime;
+                $this->timeStarted = $latestClockin->startTime->toDateTimeString();
 
                 $diffInMinutes = $latestClockin->startTime->diffInMinutes(Carbon::now());
                 $hours = intdiv($diffInMinutes, 60);
@@ -244,6 +202,26 @@ class EmployeeAttendance extends Component
             }
         }
     }
+
+    public function updateLiveHours()
+    {
+        if (!$this->clockedIn || !$this->timeStarted) {
+            $this->totalHours = '00:00:00';
+            return;
+        }
+
+        $start = \Carbon\Carbon::parse($this->timeStarted);
+        $now   = now();
+
+        $diffInSeconds = $start->diffInSeconds($now);
+
+        $hours   = intdiv($diffInSeconds, 3600);
+        $minutes = intdiv($diffInSeconds % 3600, 60);
+        $seconds = $diffInSeconds % 60;
+
+        $this->totalHours = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
 
 
 //     #[On('IsClockedIn')]
@@ -316,7 +294,27 @@ class EmployeeAttendance extends Component
    
     public function render()
     {
-        return view('livewire.employee-attendance');
+        $dates = AttendanceTimestamp::where('user_id', auth()->id())
+        ->whereNotNull('attendance_id')
+        ->selectRaw('DATE(created_at) as date')
+        ->groupBy('date')
+        ->orderBy('date', 'desc')
+        ->paginate(10);
+
+        $records = AttendanceTimestamp::where('user_id', auth()->id())
+        ->whereIn(
+            \DB::raw('DATE(created_at)'),
+            $dates->pluck('date')
+        )
+        ->orderBy('created_at')
+        ->get()
+        ->groupBy(fn ($r) => $r->created_at->format('Y-m-d'))
+        ->sortKeysDesc();
+
+        return view('livewire.employee-attendance', [
+            'attendances' => $records,
+            'attendancePaginator' => $dates,
+        ]);
     }
         
 }

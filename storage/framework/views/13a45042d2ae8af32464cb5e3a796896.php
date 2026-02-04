@@ -350,6 +350,7 @@
                         <th>#</th>
                         <th>Employee</th>
                         <th>Name</th>
+                        <th>Shift</th>
                         <th>Location</th>
                         <th>Platform</th>
                         <th>Clock In</th>
@@ -369,6 +370,7 @@
                             </span>
                         </td>
                         <td><?php echo e($user->fullname); ?></td>
+                        <td><?php echo e(@$user->shift->shift->name ?? 'N/A'); ?></td>
                         <td><?php echo e($attendance->location ?? 'N/A'); ?></td>
                         <td><?php echo e($attendance->platform ?? 'N/A'); ?></td>
                         <td><?php echo e(date('H:i A', strtotime($attendance->created_at))); ?></td>
