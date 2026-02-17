@@ -30,7 +30,7 @@ class ClientsController extends Controller
     public function index()
     {        
         $pageTitle = __("Clients");
-        $clients = User::where('type', UserType::CLIENT)->get();
+        $clients = User::where('type', UserType::CLIENT)->paginate(12);
         return view('pages.clients.index', compact(
             'pageTitle',
             'clients'

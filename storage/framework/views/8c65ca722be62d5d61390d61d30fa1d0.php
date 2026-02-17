@@ -146,6 +146,9 @@
                         </tbody>
                     </table>
                 </div>
+
+                <?php echo e($employees->links()); ?>
+
             </div>
         </div>
 

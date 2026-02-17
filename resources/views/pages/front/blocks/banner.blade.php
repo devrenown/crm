@@ -1,50 +1,85 @@
 <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container-fluid px-3 px-md-4 px-lg-5">
-            <div class="row align-items-center text-light" data-aos="fade-up">
-                <div class="col-lg-6 text-center text-lg-start mb-5 mb-md-0 mb-lg-0">
+    <section class="hero-section position-relative" id="home">
+        <div class="container-fluid mx-5">
+            <div class="row align-items-center gy-5">
 
-                    <div
-                        class="tooltip-card3 position-absolute end-50 mt-5 d-none d-lg-flex align-items-center gap-2 py-2 px-3 shadow-lg">
-                        <div class="icon">
-                            <i class="bi bi-kanban fs-5"></i>
-                        </div>
-                        <p class="p-0 m-0 fs-6">Project Management</p>
+                <!-- Left Content -->
+                <div class="col-lg-6 mt-0">
+                    <span class="badge badge-soft mb-3">
+                        <i class="fa-solid fa-bolt-lightning text-warning"></i> All-in-One Business Management
+                    </span>
+
+                    <h1 class="hero-title">
+                        <span class="text-gradient">RENOWN SYSTEM</span> – <br> Grow
+                        Smarter, <br> Sell Faster
+                    </h1>
+
+                    <p class="hero-text mb-5">
+                        One powerful CRM to manage leads, sales, and customers.
+                        Automate workflows, improve team efficiency, and scale
+                        your business with confidence.
+                    </p>
+
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#" class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg">
+                            Request a Demo →
+                        </a>
+                        <a href="#" class="btn btn-outline-primary btn-lg shadow-sm">
+                            Start a Free Trial →
+                        </a>
                     </div>
-
-                    <h1 class="hero-heading">All Your <br> <span> Customers. </span> <br> <span style="color: #1A194A;">
-                            One Powerful Tool. </span></h1>
-                    <p style="font-family: serif; letter-spacing: 0.8px;" class="text-start">Our CRM is designed to streamline your
-                        customer interactions, helping you manage leads, track opportunities, and nurture relationships
-                        effortlessly. With intuitive tools and real-time insights, it empowers your team to deliver
-                        personalized experiences that drive growth and customer satisfaction.</p>
-                    <div>
-                        {{-- <a href="#pricing" class="btn btn-light btn-lg mt-3 mb-lg-5 text-uppercase text-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">request a demo
-                        <i class="bi bi-arrow-right-circle-fill text-primary"></i></a> --}}
-
-                        <a href="{{ route('organization.signup', encrypt('FREE TRIAL')) }}" class="btn btn-light btn-lg mt-3 mb-lg-5 text-primary">Start Your Trial Today
-                        <i class="bi bi-arrow-right-circle-fill text-primary"></i></a>
-                    </div>
-
                 </div>
-                <div class="col-lg-6 text-end position-relative" data-aos="zoom-in">
-                    <div
-                        class="tooltip-card text-center position-relative d-flex align-items-center gap-2 py-2 px-3 mb-3 shadow-lg">
-                        <div class="icon">
-                            <i class="bi bi-people-fill fs-5"></i>
+
+                <!-- Right Image -->
+                <div class="col-lg-6 mt-0 text-end position-relative">
+                    <img src="./images/hero-right.png" class="img-fluid hero-image" alt="">
+                </div>
+
+            </div>
+
+            <div id="hero-features-card" class="position-absolute pe-lg-5 w-100">
+                <div class="cards row g-3 pe-lg-5">
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/ph_handshake-thin.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Onboarding</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
-                        <p class="p-0 m-0 fs-6">Employee Management</p>
                     </div>
-
-                    <img src="{{ asset('images/front/mockup-design-removebg-preview.png') }}"
-                        alt="CRM Dashboard" class="img-fluid">
-
-                    <div
-                        class="tooltip-card2 position-relative d-flex align-items-center gap-2 py-2 px-3 mt-5 shadow-lg">
-                        <div class="icon">
-                            <i class="bi bi-person-workspace fs-5"></i>
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/uit_calender.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Leave</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
-                        <p class="p-0 m-0 fs-6">Onboarding Management</p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/project icon.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Project</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/employee icon.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Employee</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/chat icon.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Chat</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">System</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-6">
+                        <div class="card d-flex align-items-center justify-content-center p-3 shadow">
+                            <div><img src="./images/solar_wallet-money-linear.svg" class="mb-2" alt=""></div>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Payroll</p>
+                            <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
+                        </div>
                     </div>
                 </div>
             </div>

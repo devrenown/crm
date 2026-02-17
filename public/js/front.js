@@ -28,19 +28,19 @@ $(window).on('scroll', function () {
     });
 });
 
-$(window).scroll(function () {
-    const bannerScreenHeight = $('#home').outerHeight();
+// $(window).scroll(function () {
+//     const bannerScreenHeight = $('#home').outerHeight();
 
-    if ($(window).scrollTop() > bannerScreenHeight) {
-        $('nav').removeClass('glass').addClass('bg-light');
-        $('.nav-link').removeClass('text-white').addClass('text-dark');
-        $('#login-btn').removeClass('btn-primary').addClass('bg-blue-gradient text-white');
-    } else {
-        $('nav').addClass('glass').removeClass('bg-light');
-        $('.nav-link').removeClass('text-dark').addClass('text-white');
-        $('#login-btn').removeClass('bg-blue-gradient').addClass('btn-primary');
-    }
-});
+//     if ($(window).scrollTop() > bannerScreenHeight) {
+//         $('nav').removeClass('glass').addClass('bg-light');
+//         $('.nav-link').removeClass('text-white').addClass('text-dark');
+//         $('#login-btn').removeClass('btn-primary').addClass('bg-blue-gradient text-white');
+//     } else {
+//         $('nav').addClass('glass').removeClass('bg-light');
+//         $('.nav-link').removeClass('text-dark').addClass('text-white');
+//         $('#login-btn').removeClass('bg-blue-gradient').addClass('btn-primary');
+//     }
+// });
 
 // Scroll to top button
 var scrollTopBtn = $('#scrollTopBtn');
@@ -207,5 +207,46 @@ $('#contact-form').on('submit', function(e) {
                 .text('Send Message');
         }
     });
+});
+
+$('#feature-icons .card').on('click', function () {
+    $('#feature-icons .card').removeClass('active');
+    $(this).addClass('active');
+    let iconId = $(this).data('icon');
+    $('.why-detail-card').removeClass('active').addClass('d-none');
+    
+    $(`.why-detail-card-${iconId}`).addClass('active').removeClass('d-none');
+});
+
+$('.slider-container').loopslider({
+    visibleItems: 3 // Amount for slides showing in window at once
+    ,step: 1 // Amount of slides scrolling each time
+    ,gap: 20 // Margin between each slide (in px)
+    ,slideDuration: 400 // Slide transition duration (in ms)
+    ,easing: 'swing' // "swing" or "linear", more easing jqueryui.com/easing/
+    ,autoplay: true // Auto play slides
+    ,autoplayInterval: 2000 // Delay between slides
+    ,stopOnHover: false // Stop slideshow on mouse over
+    ,touchSupport: true // Handling swipe gestures
+    ,responsive: {
+        480: {visibleItems: 1,step: 1}
+        ,760: {visibleItems: 3,step: 3}
+        ,1000: {visibleItems: 4,step: 3}
+    }
+    ,fullscreen: false  //If true sets the height of the slides equal of a viewport height
+    ,parallax: null
+    
+    // Controls
+    ,pagination: false
+    ,navigation: false // prev and next buttons
+    ,prevButton: '#prev' // CSS selector for element used to populate the "Prev" control
+    ,nextButton: '#next' // CSS selector for element used to populate the "Next" control
+    ,stopButton: '#stop' // CSS selector for element used to populate the "Stop" control
+    ,playButton: '#play' // CSS selector for element used to populate the "Play" control
+    
+    // Callbacks
+    ,onStop: function(){ /* your code here */ }
+    ,onPlay: function(){ /* your code here */ }
+    ,onMove: function(index, $element, direction){ /* your code here */ }
 });
 

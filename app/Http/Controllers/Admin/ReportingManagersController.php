@@ -19,7 +19,7 @@ class ReportingManagersController extends Controller
 	{
 		$data = [
 			'pageTitle'	 		=> 'Reporting Managers',
-			'reportingManagers' => User::reportingManagerList() ?? [],
+			'reportingManagers' => User::reportingManagerList()->paginate(8) ?? [],
 		];
 
 		return view($this->view . 'index', $data);

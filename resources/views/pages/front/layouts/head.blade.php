@@ -13,27 +13,27 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM tools for small businesses, Employee Management | Renown System</title>
+    <title>CRM for Small Business, Employee Management CRM | Renown System</title>
 
-    <meta name="description" content="Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure cloud-based CRM platform.">
+    <meta name="description" content="Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure CRM platform.">
 
     <meta name="keywords" content="Best CRM tools for small businesses, Business management CRM, CRM for small business, CRM system for tracking leads and sales, CRM solution for sales performance tracking, Best CRM tools for small businesses, Business management CRM, CRM for small business, CRM system for tracking leads and sales, CRM solution for sales performance tracking, CRM for employee and task management, client management system for small business, Project management CRM tools, CRM for small business, Customer relationship management system, Sales and lead management tools, CRM dashboard software, Client management system, Task and project management CRM, Employee management CRM, CRM with reporting and analytics, CRM for client management, CRM software tools, sales and lead management tools, Best CRM for project management, Employee management system.">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Renown CRM | Powerful Customer Relationship Management Software">
-    <meta property="og:description" content="Renown CRM helps businesses manage leads, sales, and customer interactions efficiently through a powerful, easy-to-use CRM platform.">
+    <meta property="og:title" content="Best CRM tools for small businesses | Renown System">
+    <meta property="og:description" content="Renown Mart is a USA-based dropshipping and FBA platform dedicated to helping online sellers grow their eCommerce businesses with confidence.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://crm.renownsystem.com/">
-    <meta property="og:image" content="https://crm.renownsystem.com/assets/images/renown-crm-preview.jpg">
+    <meta property="og:url" content="https://renownsystem.com/">
+    <meta property="og:image" content="https://renownsystem.com/assets/images/renown-crm-preview.jpg">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Renown CRM | Powerful Customer Relationship Management Software">
-    <meta name="twitter:description" content="Manage leads, sales, and customer relationships seamlessly with Renown CRM. Streamline your operations and drive business growth.">
-    <meta name="twitter:image" content="https://crm.renownsystem.com/assets/images/renown-crm-preview.jpg">
+    <meta name="twitter:title" content="Best CRM for project management Tools - Renown System">
+    <meta name="twitter:description" content="Renown Mart is a USA-based dropshipping platform dedicated to helping online sellers grow businesses.">
+    <meta name="twitter:image" content="https://renownsystem.com/assets/images/renown-crm-preview.jpg">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://crm.renownsystem.com/">
+    <link rel="canonical" href="https://renownsystem.com/">
 
     <!-- AOS CSS -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">

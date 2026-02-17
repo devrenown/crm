@@ -169,8 +169,7 @@ class User extends Authenticatable
             ->from('users')
             ->whereNotNull('reporting_manager');
         })
-        ->with('subordinates')
-        ->get();
+        ->with('subordinates');
     }
 
     public function reportingManager () 

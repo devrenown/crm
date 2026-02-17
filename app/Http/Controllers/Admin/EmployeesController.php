@@ -62,7 +62,7 @@ class EmployeesController extends Controller
             $query->where('is_active', true);
         }
 
-        $employees = $query->get();
+        $employees = $query->paginate(12);
 
         return view('pages.employees.index', compact(
             'pageTitle',

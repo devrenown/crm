@@ -163,6 +163,8 @@
                 @endforeach
             @endif
         </div>
+
+        {{ $projects->links() }}
     </div>
 @endsection
 

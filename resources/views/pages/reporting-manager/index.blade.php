@@ -130,6 +130,9 @@
                     </div>
                 @endforeach
             @endif
+
+            {{ $reportingManagers->links() }}
+
         </div>
     </div>
 @endsection

@@ -22,6 +22,10 @@
 
             <x-slot name="right">
                 <div class="col-auto ms-auto">
+                    <div class="btn-group btn-group-sm">
+                        <button id="exportCsv" class="btn btn-outline-primary">CSV</button>
+                        <button id="exportPdf" class="btn btn-outline-danger">PDF</button>
+                    </div>
                     <a href="{{ route('attendances.index') }}" class="btn btn-dark btn-sm">Back</a>
                 </div>
             </x-slot>
@@ -32,7 +36,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="table-responsive">
-                    <table class="table table-striped custom-table mb-0">
+                    <table id="attendanceTable" class="table table-striped custom-table mb-0">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -94,5 +98,45 @@
             </div>
         </div>
     </div>
+
+    @push('page-scripts')
+
+    @vite([
+        "resources/js/datatables.js"
+    ])
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = $('#attendanceTable').DataTable({
+                paging: false,
+                searching: false,
+                ordering: false,
+                info: false,
+                dom: 'rt',
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        title: 'Attendance History'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: 'Attendance History',
+                        orientation: 'portrait',
+                        pageSize: 'A4'
+                    }
+                ]
+            });
+
+            $('#exportCsv').on('click', function () {
+                table.button('.buttons-csv').trigger();
+            });
+
+            $('#exportPdf').on('click', function () {
+                table.button('.buttons-pdf').trigger();
+            });
+        });
+        </script>
+    @endpush
+
 
 @endsection

@@ -29,11 +29,11 @@ class ProjectController extends Controller
         if(activeRole() === UserType::EMPLOYEE->value) {
            $projects   = Project::whereIn(
             'id', ProjectTeam::where('user_id', $authUser->id)->pluck('project_id')
-           )->get();
+           )->paginate(8);
         }elseif (activeRole() === UserType::TL->value) {
-            $projects  = Project::where('leader_id', $authUser->id)->get();
+            $projects  = Project::where('leader_id', $authUser->id)->paginate(8);
         }else{
-           $projects   = Project::get();
+           $projects   = Project::paginate(8);
        }
 
         return view('project::index',compact(

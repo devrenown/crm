@@ -47,7 +47,7 @@ class AttendancesController extends Controller
         if (activeRole() === UserType::TL->value) {
             $users->where('reporting_manager', auth()->id());
         }
-        $employees = $users->get();
+        $employees = $users->paginate(10);
 
         return view('pages.attendances.index',compact(
             'pageTitle','employees','years_range','days_in_month'

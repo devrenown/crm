@@ -186,7 +186,7 @@ class UsersController extends BaseController
     {
         if ($user->avatar) {
             $path = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
-            self::delete($user->avatar, $path)
+            self::delete($user->avatar, $path);
         }
 
         $user->delete();

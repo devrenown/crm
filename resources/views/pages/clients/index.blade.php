@@ -88,6 +88,8 @@
                     </div>
                 @endforeach
             @endif
+
+            {{ $clients->links() }}
         </div>
     </div>
 @endsection

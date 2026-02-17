@@ -25,7 +25,7 @@ class LeaveBalanceController extends Controller
             )
             ->groupBy('user_id', 'year')
             ->orderByDesc('year')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('pages.leaves.leave-balances.index', compact('leaveBalances'));
     }

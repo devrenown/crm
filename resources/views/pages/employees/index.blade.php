@@ -128,6 +128,8 @@
                     </div>
                 </div>
                 @endforeach
+
+                {{ $employees->links() }}
             @endif
         </div>
     </div>

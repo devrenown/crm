@@ -1,82 +1,60 @@
-<!-- How It Works Section -->
-    <section class="p-5 bg-light" id="how-it-works">
-        <div class="container-fluid text-center mb-5">
-            <h2 class="fw-bold">How It Works</h2>
-            <p class="text-muted">Follow these simple steps to get started with your CRM</p>
-        </div>
-
-        <div class="">
-            <div class="row justify-content-between align-items-center text-center g-4">
-
-                <!-- Step 1 -->
-                <div class="col-md-2" data-aos="slide-right" data-aos-delay="100">
-                    <div class="position-relative d-inline-block">
-                        <span class="step-number">1</span>
-                        <div class="circle-icon shadow-sm">
-                            <i class="bi bi-person-plus-fill fs-3"></i>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold mt-3">Registration</h4>
-                    <p class="text-muted">Sign up and create your account instantly.</p>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="col-md-2" data-aos="slide-right" data-aos-delay="200">
-                    <div class="position-relative d-inline-block">
-                        <span class="step-number">2</span>
-                        <div class="circle-icon shadow-sm">
-                            <i class="bi bi-check-circle-fill fs-3"></i>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold mt-3">Review & Approval</h4>
-                    <p class="text-muted">Your details are verified by our team.</p>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="col-md-2" data-aos="slide-right" data-aos-delay="300">
-                    <div class="position-relative d-inline-block">
-                        <span class="step-number">3</span>
-                        <div class="circle-icon shadow-sm">
-                            <i class="bi bi-globe2 fs-3"></i>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold mt-3">Get Subdomain</h4>
-                    <p class="text-muted">Receive a secure & unique business subdomain.</p>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="col-md-2" data-aos="slide-right" data-aos-delay="400">
-                    <div class="position-relative d-inline-block">
-                        <span class="step-number">4</span>
-                        <div class="circle-icon shadow-sm">
-                            <i class="bi bi-box-arrow-in-right fs-3"></i>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold mt-3">Login</h4>
-                    <p class="text-muted">Access your personalized CRM dashboard.</p>
-                </div>
-
-                <!-- Step 5 -->
-                <div class="col-md-2" data-aos="slide-right" data-aos-delay="500">
-                    <div class="position-relative d-inline-block">
-                        <span class="step-number">5</span>
-                        <div class="circle-icon shadow-sm">
-                            <i class="bi bi-briefcase-fill fs-3"></i>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold mt-3">Start Managing</h4>
-                    <p class="text-muted">Manage leads, clients, tasks and grow your company.</p>
-                </div>
-
+<section class="how-it-works-section bg-white py-5" id="how-it-works">
+    <div class="container-fluid px-5">
+        <div class="text-center">
+            <span class="section-title-badge">How It Works</span>
+            <div class="mt-4 mb-5">
+                <h3 class="fs-1 fw-bold"><span class="text-gradient">HOW RENOWN</span> SYSTEM WORKS</h3>
+                <p class="fs-5 text-secondary">Get started in 4 simple steps and transform your <br> business
+                    operations</p>
             </div>
 
-            <!-- Demo Button -->
-            <div class="text-center mt-5">
-                {{-- <button class="btn px-4 border-0 py-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Request a Demo</button> --}}
+            <div class="main row">
+                <div class="left col-md-6 p-4 d-flex justify-content-center align-items-center">
+                    <img src="./images/registration-image.png" alt="" class="w-100 sticky-image"
+                        id="howItWorksImage">
+                </div>
 
-                <a href="{{ route('organization.signup', encrypt('FREE TRIAL')) }}" class="btn btn-primary btn-lg">Start Your Trial Today</a>
+                <div class="right text-start px-5 col-md-6">
+                    <div class="scroller">
+                        <div class="section mb-4" data-step="1">
+                            <div class="mb-3 text-white">
+                                <span class="bg-gradient-tri p-2 fs-3 rounded-4">01</span>
+                            </div>
+                            <p class="fw-bold fs-4 mb-2">Request Demo / Sign Up</p>
+                            <p class="fs-6 text-secondary">Book a personalized demo or start your free trial in
+                                seconds. No credit card required.</p>
+                        </div>
+
+                        <div class="section mb-4 opacity-half" data-step="2">
+                            <div class="mb-3 text-white">
+                                <span class="bg-gradient-tri p-2 fs-3 rounded-4">02</span>
+                            </div>
+                            <p class="fw-bold fs-4 mb-2">Setup & Team Onboarding</p>
+                            <p class="fs-6 text-secondary">Our experts help you set up the system and onboard your
+                                team with guided training.</p>
+                        </div>
+
+                        <div class="section mb-4 opacity-half" data-step="3">
+                            <div class="mb-3 text-white">
+                                <span class="bg-gradient-tri p-2 fs-3 rounded-4">03</span>
+                            </div>
+                            <p class="fw-bold fs-4 mb-2">Manage Sales, Employees & Tasks</p>
+                            <p class="fs-6 text-secondary">Start managing your entire business operations from one
+                                unified dashboard.</p>
+                        </div>
+
+                        <div class="section opacity-half" data-step="4">
+                            <div class="mb-3 text-white">
+                                <span class="bg-gradient-tri p-2 fs-3 rounded-4">04</span>
+                            </div>
+                            <p class="fw-bold fs-4 mb-2">Track Performance & Growth</p>
+                            <p class="fs-6 text-secondary mb-0">Monitor KPIs, generate reports, and make data-driven
+                                decisions to scale your business.</p>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
-
         </div>
-    </section>
+    </div>
+</section>
