@@ -1,10 +1,10 @@
 <section class="features-section" id="features">
-    <div class="container-fluid px-5 text-center">
+    <div class="container-fluid px-lg-5 text-center">
 
         <span class="section-title-badge">Key Features</span>
 
         <h2 class="section-title mt-5">
-            <span class="text-gradient">POWERFUL FEATURES</span>
+            <span class="text-gradient fw-bold">POWERFUL FEATURES</span>
             FOR MODERN BUSINESS
         </h2>
 

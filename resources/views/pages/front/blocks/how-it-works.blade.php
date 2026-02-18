@@ -1,10 +1,10 @@
 <section class="how-it-works-section bg-white py-5" id="how-it-works">
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-lg-5">
         <div class="text-center">
             <span class="section-title-badge">How It Works</span>
             <div class="mt-4 mb-5">
-                <h3 class="fs-1 fw-bold"><span class="text-gradient">HOW RENOWN</span> SYSTEM WORKS</h3>
-                <p class="fs-5 text-secondary">Get started in 4 simple steps and transform your <br> business
+                <h3 class="fs-1"><span class="text-gradient fw-bold">HOW RENOWN</span> SYSTEM WORKS</h3>
+                <p class="fs-5 text-secondary mt-3 lh-base">Get started in 4 simple steps and transform your <br> business
                     operations</p>
             </div>
 

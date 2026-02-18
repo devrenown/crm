@@ -118,8 +118,8 @@
                 <span class="section-title-badge">Pricing Plans</span>
             </div>
 
-            <p class="fs-1 fw-bold"><span class="text-gradient">SIMPLE, TRANSPARENT</span> PRICING</p>
-            <p class="fs-5 text-secondary">Choose the plan that fits your business. All plans include a <br> 15-day
+            <p class="fs-1"><span class="text-gradient fw-bold">SIMPLE, TRANSPARENT</span> PRICING</p>
+            <p class="fs-5 text-secondary lh-base mt-3">Choose the plan that fits your business. All plans include a <br> 15-day
                 free trial.</p>
         </div>
 
@@ -130,8 +130,17 @@
                 $features = json_decode($plan->features, true) ?? [];
             @endphp
                 <div class="col-md-3 mb-5 mb-lg-3 mb-md-3">
-                    <div class="card bg-white shadow border-0 rounded">
-                        <div class="card-header text-center m-2 p-3 bg-light-gradient rounded">
+                    <div class="card {{ $plan->is_popular ? 'bg-gradient-tri' : 'bg-white' }} shadow border-0 rounded">
+                        @if ($plan->is_popular)
+                        <div class="position-relative">
+                            <span
+                                class="popular-badge shadow-sm position-absolute py-2 px-3 rounded-pill fs-5 bg-gradient-yellow">MOST
+                                POPULAR
+                            </span>
+                        </div>
+                        @endif
+
+                        <div class="card-header text-center m-2 {{ $plan->is_popular ? 'mt-4' : '' }} p-3 bg-light-gradient rounded">
                             <h5 class="fw-bold text-uppercase">{{ $plan->name == 'FREE TRIAL' ? '15 DAYS ' . $plan->name : $plan->name }}</h5>
                             
                             @if ($plan->name == 'FREE TRIAL' ?? false)
@@ -144,34 +153,34 @@
                             <p class="mb-0">Billed Quarterly</p>
                         </div>
     
-                        <div class="card-list p-3">
-                            <h6 class="fw-bold text-blue mb-2">Limits</h6>
+                        <div class="card-list {{ $plan->is_popular ? 'text-white' : '' }} p-3">
+                            <h6 class="fw-bold {{ $plan->is_popular ? 'text-white' : 'text-blue' }} mb-2">Limits</h6>
                             
                             @foreach($features['limits'] ?? [] as $key => $value)
                                 <div class="mb-2">
                                     <i class="fa-solid fa-circle-check"></i>
-                                    <strong class="text-secondary">{{ ucwords(str_replace('_', ' ', $key)) }}: {{ $value }}</strong>
+                                    <strong class="{{ $plan->is_popular ? 'text-white' : 'text-secondary' }}">{{ ucwords(str_replace('_', ' ', $key)) }}: {{ $value }}</strong>
                                 </div>
                             @endforeach
                             
                             <div class="mb-3">
-                                <a href="javascript:void(0)" class="read-more" data-target="details-{{ $loop->index }}">Read More <i class="fa-solid fa-arrow-right"></i> </a>
+                                <a href="javascript:void(0)" class="read-more {{ $plan->is_popular ? 'text-white' : 'text-blue' }}" data-target="details-{{ $loop->index }}">Read More <i class="fa-solid fa-arrow-right"></i> </a>
                             </div>
                             
                             <div class="plan-details text-start" id="details-{{ $loop->index }}">
                                 
                                 @if(isset($features['modules']))
-                                    <h6 class="fw-bold text-blue mt-3">Modules</h6>
+                                    <h6 class="fw-bold {{ $plan->is_popular ? 'text-white' : 'text-blue' }}  mt-3">Modules</h6>
                                     @foreach($features['modules'] as $key => $value)
                                     <div class="mb-2">
                                         <i class="fa-solid fa-circle-{{ $value ? 'check' : 'xmark text-danger' }}"></i>
-                                        <strong class="text-secondary">{{ ucwords(str_replace('_', ' ', $key)) }}</strong>
+                                        <strong class="{{ $plan->is_popular ? 'text-white' : 'text-secondary' }}">{{ ucwords(str_replace('_', ' ', $key)) }}</strong>
                                     </div>
                                     @endforeach
                                 @endif
                                 
                                 @if(isset($features['features']))
-                                    <h6 class="fw-bold text-blue mt-3">Features</h6>
+                                    <h6 class="fw-bold {{ $plan->is_popular ? 'text-white' : 'text-blue' }} mt-3">Features</h6>
                                     @foreach($features['features'] as $key => $value)
                                         <div class="d-flex align-items-center mb-2">
                                             <i class="fa-solid fa-circle-check me-2"></i>
@@ -184,13 +193,14 @@
                             <a href="{{ $plan->name == 'INTERPRISE' 
                                         ? '#' 
                                         : route('organization.signup', encrypt($plan->name)) }}"
-                               class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg w-100">
+                               class="btn {{ $plan->is_popular ? 'bg-white text-blue' : 'btn-primary' }} btn-lg border-3 border-top-0 border-white shadow-lg w-100">
                                
                                {{ $plan->name == 'FREE TRIAL' 
                                     ? 'Start Free Trial' 
                                     : ($plan->name == 'INTERPRISE' 
                                         ? 'Contact Us' 
                                         : 'Choose Plan') }}
+                                <i class="fa-solid fa-arrow-right"></i>
                             </a>
     
                         </div>
@@ -304,7 +314,7 @@
         background: #6f7cff;
         color: #fff;
         padding: 2px 30px;
-        width: 60%;
+        width: 65%;
         border-radius: 10px;
         font-size: 13px;
         font-weight: 600;

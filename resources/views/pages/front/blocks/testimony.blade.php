@@ -1,13 +1,13 @@
 <section class="testimonial-section bg-white py-5" id="testimonials">
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-lg-5">
         <div class="text-center">
             <div class="mb-4">
                 <span class="section-title-badge">Testimonial</span>
             </div>
 
-            <p class="fs-1 fw-bold text-uppercase"><span class="text-gradient">Loved by </span> Businesses Worldwide
+            <p class="fs-1 text-uppercase"><span class="text-gradient fw-bold">Loved by </span> Businesses Worldwide
             </p>
-            <p class="fs-5 text-secondary">See what our customers have to say about transforming their <br>
+            <p class="fs-5 text-secondary mt-3 lh-base">See what our customers have to say about transforming their <br>
                 operations with Renown System.</p>
         </div>
 

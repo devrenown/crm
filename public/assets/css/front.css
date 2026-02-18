@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root {
     --bg-primary: #0B5ED7;
     --bg-gradient: linear-gradient(45deg, #155DFC, #9810FA);
@@ -13,7 +16,7 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif !important;
+    font-family: "Lato", sans-serif !important;
     background: #f9fbff;
 }
 
@@ -27,6 +30,10 @@ p {
 
 .line-height-1-6 {
     line-height: 1.6 !important;
+}
+
+.fs-1, .fs-2, h1, h2 {
+    font-family: "Raleway", sans-serif;
 }
 
 #scrollTopBtn {
@@ -53,12 +60,21 @@ p {
 .bg-soft-pink { background: #FFF6F7; }
 .bg-light-gradient { background: var(--bg-light-gradient); }
 .bg-transparent { background: rgba(255, 255, 255, 0.2) !important; }
+.bg-gradient-tri {
+    background: var(--bg-gradient) !important;
+}
+.bg-gradient-yellow { background: linear-gradient(45deg, rgba(253, 199, 0, 1), rgba(255, 137, 4, 1)) !important; }
 
 .btn-primary { background: var(--bg-primary) !important; }
 
 .text-purple { color: #AE00FF; }
 .text-blue { color: #0E51FF !important; }
 .text-light-gray { color: rgba(219, 234, 254, 1) !important; }
+.text-gradient {
+    background: linear-gradient(90deg,#0059FF,#AE00FF, #0059FF);
+    -webkit-background-clip: text;
+    color: transparent;
+}
 
 .btn-outline-primary {
     color: #0B5ED7 !important;
@@ -122,31 +138,40 @@ nav {
 
 .hero-section {
     padding: 140px 0 25px;
-    background: linear-gradient(45deg,#FAEFFF, #ffffff, #6da0ff5e);
-    /*background: linear-gradient(
-        120deg,
-        #d4e0ff 0%,
-        #c5d2f3 30%,
-        #cbb9ea 65%,
-        #e2d8f5 100%
-    );*/
+    /*background: linear-gradient(45deg,#FAEFFF, #ffffff, #6da0ff5e);*/
+    
+    background:
+        /* Left Top Blue */
+        radial-gradient(circle at 0% 0%, 
+            rgba(109, 160, 255, 0.45) 0%, 
+            rgba(109, 160, 255, 0.25) 20%, 
+            transparent 45%
+        ),
+
+        /* Right Top Blue */
+        radial-gradient(circle at 100% 0%, 
+            rgba(109, 160, 255, 0.45) 0%, 
+            rgba(109, 160, 255, 0.25) 20%, 
+            transparent 45%
+        ),
+
+        /* Soft Middle Pink Glow */
+        /*radial-gradient(circle at 50% 35%, 
+            rgba(250, 239, 255, 0.9) 0%, 
+            rgba(250, 239, 255, 0.6) 30%, 
+            transparent 60%
+        ),*/
+
+        /* Base Background */
+        rgba(249, 250, 255, 1);
+
     min-height: 100vh;
 }
 
 .hero-title {
     font-size: 3.5em;
-    font-weight: 800;
+    /*font-weight: 800;*/
     line-height: 1.2;
-}
-
-.text-gradient {
-    background: linear-gradient(90deg,#0059FF,#AE00FF, #0059FF);
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-.bg-gradient-tri {
-    background: var(--bg-gradient) !important;
 }
 
 .hero-text {
@@ -201,9 +226,11 @@ nav {
     border: 1px solid #1A6AFF;
 }
 
-.why-detail-card-1 {
-    background: url('/images/whay-choose.png');
-    background-size: cover;
+.why-detail-card {
+    background: url('/images/why-choose-1.png');
+    background-size: cover !important;
+    /*background-position: center !important;*/
+    background-repeat: no-repeat !important;
 }
 
 #feature-icons .card {
@@ -217,6 +244,7 @@ nav {
 
 .how-it-works-section .main .left {
     background: url('/images/how-works.png');
+    background-position: center;
     background-size: cover;
 }
 
@@ -259,10 +287,6 @@ nav {
     border-radius: 10px;
 }
 
-.popular-badge {
-    top: -2rem;
-    left: 3.5rem;
-}
 .review-profile {
     height: 50px;
     width: 50px;
@@ -278,11 +302,17 @@ nav {
     min-height: 50vh;
 }
 
+#contact {
+    background: url('/images/contact.png');
+    background-position: center;
+    background-size: cover;
+}
+
 @media (max-width: 768px) {
     .hero-title { font-size: 32px; }
     .hero-section { padding-top: 110px; }
     #hero-features-card {position: relative !important;}
-    .navbar .container {border-radius: 0 !important; padding-bottom: 1rem;}
+    .navbar .container-fluid {border-radius: 0 !important; padding-bottom: 1rem;}
     .features-section {padding: 50px 0 40px 0px;}
     .growing-business-heading { font-size: 1.5rem; }
     .growing-business-paragraph { font-size: 1rem; line-height: normal; }

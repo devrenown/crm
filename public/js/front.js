@@ -210,12 +210,16 @@ $('#contact-form').on('submit', function(e) {
 });
 
 $('#feature-icons .card').on('click', function () {
+
     $('#feature-icons .card').removeClass('active');
     $(this).addClass('active');
     let iconId = $(this).data('icon');
     $('.why-detail-card').removeClass('active').addClass('d-none');
-    
-    $(`.why-detail-card-${iconId}`).addClass('active').removeClass('d-none');
+
+    $(`.why-detail-card-${iconId}`)
+    .css('background', `url('/images/why-choose-${iconId}.png')`)
+    .addClass('active')
+    .removeClass('d-none');
 });
 
 $('.slider-container').loopslider({

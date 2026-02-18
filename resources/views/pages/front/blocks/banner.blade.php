@@ -1,16 +1,16 @@
 <!-- Hero Section -->
     <section class="hero-section position-relative" id="home">
-        <div class="container-fluid mx-5">
+        <div class="container-fluid mx-lg-5">
             <div class="row align-items-center gy-5">
 
                 <!-- Left Content -->
-                <div class="col-lg-6 mt-0">
+                <div class="col-lg-6 mt-lg-0">
                     <span class="badge badge-soft mb-3">
                         <i class="fa-solid fa-bolt-lightning text-warning"></i> All-in-One Business Management
                     </span>
 
                     <h1 class="hero-title">
-                        <span class="text-gradient">RENOWN SYSTEM</span> – <br> Grow
+                        <span class="text-gradient fw-bold">RENOWN SYSTEM</span> – <br> Grow
                         Smarter, <br> Sell Faster
                     </h1>
 
@@ -24,7 +24,7 @@
                         <a href="#" class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg">
                             Request a Demo →
                         </a>
-                        <a href="#" class="btn btn-outline-primary btn-lg shadow-sm">
+                        <a href="{{ route('organization.signup', encrypt('FREE TRIAL')) }}" class="btn btn-outline-primary btn-lg shadow-sm">
                             Start a Free Trial →
                         </a>
                     </div>

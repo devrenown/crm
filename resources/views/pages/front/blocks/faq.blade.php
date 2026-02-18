@@ -1,13 +1,13 @@
 <section class="faq-section bg-white py-5">
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-lg-5">
         <div class="text-center">
             <div class="mb-4">
                 <span class="section-title-badge">FAQS</span>
             </div>
 
-            <p class="fs-1 fw-bold text-uppercase"><span class="text-gradient">Frequently </span> asked questions
+            <p class="fs-1 text-uppercase"><span class="text-gradient fw-bold">Frequently </span> asked questions
             </p>
-            <p class="fs-5 text-secondary">Everything you need to know about Renown System. Can't <br> find what
+            <p class="fs-5 text-secondary lh-base mt-3">Everything you need to know about Renown System. Can't <br> find what
                 you're looking for? Contact our support team.</p>
         </div>
 

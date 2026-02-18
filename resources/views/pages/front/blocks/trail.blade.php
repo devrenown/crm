@@ -1,6 +1,6 @@
 <section class="bg-white py-5">
-    <div class="container-fluid px-5">
-        <div class="trial-section px-5 py-3 row" id="trial-section">
+    <div class="container-fluid px-lg-5">
+        <div class="trial-section p-5 row" id="trial-section">
             <div class="col-md-5">
                 <p class="fw-bold fs-1 text-white mb-3">
                     Start Your 15-Day <br> Free Trial

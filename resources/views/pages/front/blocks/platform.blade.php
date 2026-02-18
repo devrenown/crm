@@ -1,5 +1,5 @@
 <section class="platform-section bg-white mt-5 pb-5">
-    <div class="container-fluid px-5">
+    <div class="container-fluid px-lg-5">
         <div class="row align-items-center gy-5">
 
             <!-- LEFT: IMAGE + FLOATING CARDS -->
