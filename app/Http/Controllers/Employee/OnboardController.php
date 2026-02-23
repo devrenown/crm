@@ -189,10 +189,10 @@ class OnboardController extends Controller
             'ref_emp_id'            => $request->ref_emp_id                 ?? null,
             'bank'                  => $request->bank_name                  ?? null,
             'branch'                => $request->branch_address             ?? null,
-            'account'               => encrypt($request->account_number)    ?? null,
+            'account' => $request->account_number 
+                ? encrypt($request->account_number) 
+                : null,
             'ifsc'                  => $request->ifsc_code                  ?? null,
-            'marital_status'        => $request->marital_status             ?? null,
-            'no_of_children'        => $request->no_of_children             ?? null,
         ];
 
         $user       = User::updateOrCreate(['id' => $authUser->id], $personalUserData);
@@ -339,6 +339,10 @@ class OnboardController extends Controller
         }
 
         $identityId->delete();
+        return response()->json([
+            'status'  => 200,
+            'message' => 'Identity record deleted successfully'
+        ]);
     }
 
     public function saveEducationalDetails(Request $request)
@@ -445,6 +449,10 @@ class OnboardController extends Controller
         }
 
         $education->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => 'Education deleted successfully'
+        ]);
     }
 
     public function saveEmployementDetails(Request $request)
@@ -621,7 +629,9 @@ class OnboardController extends Controller
             $userId = auth()->id();
         }
         
-        $employment = EmployeeWorkExperience::find($id);
+        $employment = EmployeeWorkExperience::where('id', $id)
+        ->where('employee_detail_id', Auth::user()->employeeDetail->id)
+        ->first();
 
         if (!$employment) {
             return response()->json([

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@php use Illuminate\Support\Facades\Storage; @endphp
 @push('page-styles')
     <style>
       .profile-info-left {
@@ -34,13 +34,19 @@
                         <div class="profile-view">
                             <div class="profile-img-wrap">
                                 <div class="profile-img">
-                                    <a href="#"><img
-                                    src="{{ $user->avatar ? asset('storage/users/' . $user->avatar) : asset('images/user.jpg') }}"
-                                    alt="User Image" style="object-fit: cover;"></a>
+                                    <a href="#">
+                                        <img
+                                            src="{{ $user->avatar 
+                                                ? \Storage::url(app('tenant')->domain . '/' . $user->id . '/' . $user->avatar) 
+                                                : asset('images/user.jpg') }}"
+                                            alt="User Image 1"
+                                            style="object-fit: cover;">
+                                    </a>
+
 
                                     {{-- <a href="#"><img
                                     src="{{ $user->avatar }}"
-                                    alt="User Image" style="object-fit: cover;"></a> --}}
+                                    alt="User Image 1" style="object-fit: cover;"></a> --}}
                                 </div>
                             </div>
                             <div class="profile-basic">
