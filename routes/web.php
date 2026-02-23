@@ -241,6 +241,23 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('leave-type', LeaveTypeController::class);
         Route::resource('leave-balances', LeaveBalanceController::class);
 
+        Route::get('/secure/document', function (Request $request) {
+            abort_unless($request->hasValidSignature(), 403);
+
+            $path     = decrypt($request->path);
+            $mime     = $request->mime;
+            $filename = $request->filename;
+
+            return app(\App\Services\SecureFileViewService::class)
+                ->streamDocument(
+                    $path,
+                    $mime,
+                    $filename,
+                    $filename,
+                    auth()->user()
+                );
+        })->name('secure.document.view')->middleware('auth');
+
         // =============== Shift management routes =================== //
         Route::get('shift', [ShiftManagementController::class, 'index'])->name('shift.index');
         Route::get('shift-list', [ShiftManagementController::class, 'list'])->name('shift.list');

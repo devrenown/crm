@@ -139,13 +139,21 @@
                                 @php
                                     $filePath = $path . $list->image;
                                     $fileUrl = $url . '/' . $list->image;
+                                    $filePath = public_path('upload/employee_ids/' . $list->image);
+                                    $mime = mime_content_type($filePath);
+                                    
+                                    $signedUrl = URL::signedRoute('secure.document.view', now()->addMinutes(3), [
+                                        'path' => encrypt($filePath),
+                                        'mime' => $mime,
+                                        'filename' => $list->image,
+                                    ]);
                                 @endphp
                                 @if ($list->image && file_exists($filePath))
-                                   <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $fileUrl }}" target="_blank">View {{ $list->id_name }}</a>
-                                    <!-- <a href="{{ asset('js/plugins/pdfjs/web/viewer.html') }}?file={{ urlencode($fileUrl) }}" 
-                                       target="_blank">
-                                       View {{ $list->id_name ?? '' }}
-                                    </a> -->
+                                    <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="javascript:void(0);"
+                                        onclick="openSecureDocument('{{ $signedUrl }}')">
+                                        View {{ $list->id_name }}
+                                        </a>
+                                    
                                 @endif
                                 <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
                                     jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
