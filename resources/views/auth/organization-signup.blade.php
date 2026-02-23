@@ -1,200 +1,167 @@
 @extends('pages.front.layouts.app')
 
 <style>
-
-    nav {
-        background: #ffffff !important;
-    }
-    .nav-link {
-        color: black !important;
-    }
     .error {
         color: red !important;
+    }
+
+    .form-control {
+        height: 42px !important;
     }
 
 </style>
 
 @section('content')
 
-<div class="container mt-5">
-
-    <div class="row justify-content-center">
-
-        <div class="mt-5">
-
-            <div class="card shadow-sm">
-
-                <div class="card-body p-5">
-
-                    <div class="text-center">
-
-                        <h3 class="account-title mb-2">{{ __('Create Your Organization') }}</h3>
-
-                        <p class="account-subtitle text-muted mb-4">{{ __('Create your organization workspace and start collaborating instantly.') }}</p>
-
-                    </div>
-
-                    <!-- Account Form -->
-
-                    <form action="{{ route('organization.store') }}" method="POST" id="orgForm" autocomplete="off">
-
-                        @csrf
-
-                        <input type="hidden" name="plan" value="{{ request('plan') }}">
-
-                        <div class="row">
-
-                            <!-- Full Name -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="organization_name" class="form-label">{{ __('Organization Name') }}</label>
-
-                                <input type="text" class="form-control required" id="organization_name" name="organization_name" tabindex="1" value="{{ old('organization_name') }}" placeholder="Enter Organization Name">
-
-                                <small class="form-text mt-1 text-muted">
-                                    Note: Your tenant domain will be generated based on the organization name and cannot be changed later. Ex: <span id="domain-exp" class="text-black">organization</span>.renownsystem.com 
-                                </small>
-
-                            </div>
-
-
-
-                            <div class="col-lg-6 mb-3">
-
-                              <label for="organization_size" class="form-label">Organization Size</label>
-
-                              <select name="organization_size" id="organization_size" class="form-select form-control required">
-
-                                <option value="" selected disabled>Select Organization Size</option>
-
-                                <option value="1-50" {{ old('organization_size') == '1-50' ? 'selected' : '' }}>1 - 50</option>
-
-                                <option value="50-100" {{ old('organization_size') == '50-100' ? 'selected' : '' }}>50 - 100</option>
-
-                                <option value="100-200" {{ old('organization_size') == '100-200' ? 'selected' : '' }}>100 - 200</option>
-
-                                <option value="200+" {{ old('organization_size') == '200+' ? 'selected' : '' }}>200+</option>
-
-                              </select>
-
-                            </div>
-
-                            <!-- First Name -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="f_name" class="form-label">{{ __('First Name') }}</label>
-
-                                <input type="text" class="form-control required" id="f_name" name="f_name" tabindex="1"
-
-                                       value="{{ old('f_name') }}" placeholder="Enter First Name">
-
-                            </div>
-
-                            <!-- First Name -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="l_name" class="form-label">{{ __('Last Name') }}</label>
-
-                                <input type="text" class="form-control required" id="l_name" name="l_name" tabindex="1"
-
-                                       value="{{ old('l_name') }}" placeholder="Enter First Name">
-
-                            </div>
-
-                            <!-- Email -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="email" class="form-label">{{ __('Email Address') }}</label>
-
-                                <input type="email" class="form-control required" id="email" name="email" tabindex="1"
-
-                                       value="{{ old('email') }}" placeholder="Enter email" autocomplete="off">
-
-                            </div>
-
-                            <!-- Phone -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="phone" class="form-label">{{ __('Contact Number') }}</label>
-
-                                <input type="number" class="form-control required" id="phone" name="phone" tabindex="1"
-
-                                       value="{{ old('phone') }}" placeholder="Enter contact" maxlength="10">
-
-                            </div>
-
-                            <!-- Password -->
-
-                            <div class="col-lg-6">
-
-                                <label for="password" class="form-label">{{ __('Password') }}</label>
-
-                                <div class="input-group">
-
-                                    <input type="password" class="form-control" id="password" name="password"
-
-                                           placeholder="******" tabindex="2" required>
-
-                                    <span class="input-group-text" id="toggle-password" style="cursor:pointer;">
-
-                                        <i class="fa-solid fa-eye-slash"></i>
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                            <!-- Confirm Password -->
-
-                            <div class="col-lg-6 mb-3">
-
-                                <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
-
-                                <input type="password" class="form-control required" id="password_confirmation"
-
-                                       name="password_confirmation" tabindex="1" placeholder="******" autocomplete="off">
-
-                            </div>
-
-                            <!-- Submit Button -->
-
-                            <div class="mt-3 d-flex justify-content-between align-items-center">
-
-                                <p class="mb-0">
-
-                                    I have already an account ? <a href="{{ route('login') }}">Login</a>
-
-                                </p>
-
-                                {{-- <button type="submit" class="btn btn-primary">{{ __('Register') }}</button> --}}
-
-                                <input type="submit" class="btn btn-primary pay-button" title="Register" 
-                                data-plan-id="{{ $plan->id }}"
-                                data-plan-name="{{ $plan->name }}"
-                                data-plan-price="{{ $plan->price }}">
-
-                            </div>
-
+<div class="container-fluid py-lg-5" id="create-organization">
+
+    <div class="rounded-4 mt-5 px-3 py-5 p-lg-5" id="org-form-section">
+
+        <div class="text-center mb-4 mb-lg-5">
+            <h2 class="account-title mb-2">
+                <span class="text-gradient fw-bold">Create Your</span> Organization
+            </h2>
+
+            <p class="fs-6 fs-lg-5">
+                {{ __('Create your organization workspace and start collaborating instantly.') }}
+            </p>
+        </div>
+
+        <!-- Account Form -->
+        <div class="row align-items-center g-4">
+
+            <!-- Left Image -->
+            <div class="col-12 col-lg-6 text-center">
+                <img src="{{ asset('images/org-create-left.png') }}" 
+                     class="img-fluid rounded-3">
+            </div>
+
+            <!-- Form -->
+            <div class="col-12 col-lg-6">
+                <form action="{{ route('organization.store') }}" 
+                      method="POST" 
+                      id="orgForm" 
+                      autocomplete="off">
+
+                    @csrf
+                    <input type="hidden" name="plan" value="{{ request('plan') }}">
+
+                    <div class="row">
+
+                        <!-- Organization Name -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Organization Name</label>
+                            <input type="text" 
+                                   class="form-control required" 
+                                   id="organization_name"
+                                   name="organization_name"
+                                   value="{{ old('organization_name') }}"
+                                   placeholder="Enter Organization Name">
+
+                            <small class="text-muted">
+                                Tenant domain will be generated automatically.
+                                Ex: <span id="domain-exp" class="text-gradient">organization</span>.renownsystem.com
+                            </small>
                         </div>
 
-                    </form>
+                        <!-- Organization Size -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Organization Size</label>
+                            <select name="organization_size" 
+                                    class="form-select required">
+                                <option value="" disabled selected>Select Organization Size</option>
+                                <option value="1-50">1 - 50</option>
+                                <option value="50-100">50 - 100</option>
+                                <option value="100-200">100 - 200</option>
+                                <option value="200+">200+</option>
+                            </select>
+                        </div>
 
-                    <!-- /Account Form -->
+                        <!-- First Name -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">First Name</label>
+                            <input type="text" 
+                                   class="form-control required"
+                                   name="f_name"
+                                   value="{{ old('f_name') }}"
+                                   placeholder="Enter First Name">
+                        </div>
 
-                </div>
+                        <!-- Last Name -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" 
+                                   class="form-control required"
+                                   name="l_name"
+                                   value="{{ old('l_name') }}"
+                                   placeholder="Enter Last Name">
+                        </div>
 
+                        <!-- Email -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" 
+                                   class="form-control required"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   placeholder="Enter email">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="number" 
+                                   class="form-control required"
+                                   name="phone"
+                                   value="{{ old('phone') }}"
+                                   placeholder="Enter contact">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" 
+                                       class="form-control"
+                                       id="password"
+                                       name="password"
+                                       placeholder="******"
+                                       required>
+
+                                <span class="input-group-text" 
+                                      id="toggle-password" 
+                                      style="cursor:pointer;">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="col-12 col-md-6 mb-3">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" 
+                                   class="form-control required"
+                                   name="password_confirmation"
+                                   placeholder="******">
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="col-12 mt-3">
+                            <button type="submit" 
+                                    class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg w-100 pay-button"
+                                    data-plan-id="{{ $plan->id }}"
+                                    data-plan-name="{{ $plan->name }}"
+                                    data-plan-price="{{ $plan->price }}">
+                                Submit →
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
         </div>
-
     </div>
-
 </div>
 
 

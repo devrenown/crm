@@ -4,81 +4,114 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @php
+        $theme = app(\App\Settings\ThemeSettings::class);
+    @endphp
+
    @include('partials.styles')
 
     <style>
 
         body {
-            background: #f8f9fa;
+            /*background: url('/images/org-login.png');
+            background-position: center;
+            background-size: cover;*/
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+        }
+
+        .left-section h1 {
+            font-size: 3.2rem;
         }
 
         .login-card {
+            border-radius: 18px;
             width: 100%;
-            max-width: 500px;
-            padding: 30px;
+            max-width: 480px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-input {
+            height: 50px;
             border-radius: 12px;
+            padding-left: 15px;
+            background: #f1f3f8;
+            border: none;
+        }
+
+        .custom-input:focus {
+            box-shadow: none;
+            background: #e9ecf5;
+        }
+        
+        .login-btn {
+            height: 50px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
         }
 
         .tenant-logo {
-            height: 50px;
-            width: auto;
+            height: 5rem;
         }
 
-        .input-email-icon,
-        .input-password-icon {
+        .input-icon {
             position: absolute;
-            left: 15px;
+            left: 5%;
             top: 50%;
-            color: #6c757d;
-            pointer-events: none;
-            z-index: 99;
+            transform: translate(-5%, -50%);
         }
+        
 
-        .input-email-icon {
-            transform: translate(50%, 50%);
-            left: 2%;
-        }
-
-        .input-password-icon {
-            transform: translate(-4%, -50%);
-            left: 4%;
-        }
-
-        @media (max-width: 576px) {
-            .login-card {
+        @media (max-width: 992px) {
+            /*.left-section {
+                display: none !important;
+            }*/
+        
+            .login-wrapper {
                 padding: 20px;
             }
-
-            .tenant-logo {
-                height: 40px;
+        
+            .login-card {
+                padding: 30px;
             }
 
-            h4 {
-                font-size: 1.25rem;
+            .left-section h1 {
+                font-size: 2.5rem;
             }
         }
-
     </style>
 
 </head>
 
-<body>
+<body style="
+        background:
+            radial-gradient(circle at 0% 0%,
+                color-mix(in srgb, {{ $theme->color_scheme }} 35%, transparent) 0%,
+                transparent 50%
+            ),
+            radial-gradient(circle at 100% 0%,
+                color-mix(in srgb, {{ $theme->color_scheme }} 35%, transparent) 0%,
+                transparent 50%
+            ),
+            #f9faff;
+        ">
 
-    <div class="container">
-        <div class="card shadow login-card mx-auto">
+    <div class="container login-wrapper">
+        <div class="row bg-white shadow-sm rounded-3 p-3">
 
-            <div class="card-body text-center">
-
-                <!-- Tenant Logo -->
-
-                @php
-                    $theme = app(\App\Settings\ThemeSettings::class);
-                @endphp
+            <div class="text-center mb-4">
 
                 @if($theme->logo_dark ?? false)
                     <img src="{{ asset('storage/settings/theme/'.$theme->logo_dark) }}" class="tenant-logo mb-3" alt="Tenant Logo">
@@ -86,62 +119,90 @@
                     <img src="{{ asset('images/company-placeholder.png') }}" class="tenant-logo mb-3" alt="Logo">
                 @endif
 
-                <!-- Tenant Name -->
+                @php
+                    $name = strtoupper($tenant->name ?? 'RENOWN ALFA TECHNOLOGIES PRIVATE LIMITED');
+                    $words = explode(' ', $name);
+                
+                    $firstTwo = implode(' ', array_slice($words, 0, 2));
+                    $remaining = implode(' ', array_slice($words, 2));
+                @endphp
+                
+                <h3 class="">
+                    <span class="fw-bold" style="color: {{ $theme->color_scheme }}">{{ $firstTwo }}</span>
+                    <span class="text-dark">{{ $remaining }}</span>
+                </h3>
+            </div>
 
-                <h4 class="mb-4 fs-4 text-capitalize">{{ $tenant->name ?? 'Welcome' }}</h4>
+            <!-- LEFT SECTION -->
+            <div class="col-lg-7 d-lg-flex flex-column justify-content-center px-lg-5 left-section">
+                <img src="{{ asset('images/org-login-left.png') }}" class="img" alt="Renown System Login">
+            </div>
 
-                <!-- Login Form -->
+            <!-- RIGHT SECTION -->
+            <div class="col-lg-5 text-center">
 
-                <form action="{{ route('login.submit') }}" method="POST">
-                    @csrf
-                    <div class="mb-3 text-start position-relative">
+                <div class="login-card shadow p-3" 
+                    style="background: linear-gradient(
+                         to bottom,
+                         color-mix(in srgb, {{ $theme->color_scheme }} 30%, white),
+                         white
+                     );">
 
-                        <label class="form-label">Email</label>
-                        <i class="fa-solid fa-envelope input-email-icon"></i>
+                    <h3 class="text-center fw-bold mb-2">LOGIN</h3>
+                    <p class="text-center mb-4">
+                        Enter your credentials to continue
+                    </p>
 
-                        <input type="email" name="email" class="form-control ps-5" placeholder="example@gmail.com" value="{{ old('email') }}">
+                    <form action="{{ route('login.submit') }}" method="POST">
+                        @csrf
 
-                        @error('email')
-                          <small class="text-danger">{{ $message }}</small>
-                        @enderror
+                        <div class="mb-3">
+                            <div class="position-relative">
+                                <i class="fa-solid fa-user input-icon text-muted fs-5"></i>
+                                <input type="email"
+                                       name="email"
+                                       class="form-control custom-input ps-5"
+                                       placeholder="Username"
+                                       value="{{ old('email') }}">
+                            </div>
 
-                    </div>
-
-                    <!-- Password -->
-
-                    <div class="mb-3">
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for="password" class="form-label">{{ __('Password') }}</label>
-                            {{-- <a href="{{ route('password.email') }}" class="text-muted small">
-                                {{ __('Forgot password?') }}
-                            </a> --}}
-                        </div>
-
-                        <div class="input-group position-relative">
-
-                            <i class="fa-solid fa-lock input-password-icon"></i>
-                            <input type="password" class="form-control ps-5" id="password" name="password"
-                            placeholder="******" tabindex="2">
-
-                            <span class="input-group-text" id="toggle-password" style="cursor:pointer;">
-                                <i class="fa-solid fa-eye-slash"></i>
-                            </span>
-
-                        </div>
-
-                        @error('password')
-
+                            @error('email')
                             <div class="text-start">
                                 <small class="text-danger">{{ $message }}</small>
                             </div>
-                        @enderror
+                            @enderror
+                        </div>
 
-                    </div>
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <div class="position-relative">
+                                <i class="fa-solid fa-lock input-icon text-muted fs-5"></i>
+                                <input type="password"
+                                       id="password"
+                                       name="password"
+                                       class="form-control custom-input ps-5"
+                                       placeholder="Password">
 
-                    <button class="btn bg-{{ $theme->color_scheme }} w-100 mt-2">Login</button>
-                </form>
+                                <span class="toggle-password" id="toggle-password">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </span>
+                            </div>
+
+                            @error('password')
+                            <div class="text-start">
+                                <small class="text-danger">{{ $message }}</small>
+                            </div>
+                            @enderror
+                        </div>
+
+                        <button class="btn bg-{{ $theme->color_scheme }} w-100 login-btn">
+                            Login Now <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </button>
+                    </form>
+
+                </div>
             </div>
+
         </div>
     </div>
 

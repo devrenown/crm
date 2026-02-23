@@ -10,6 +10,11 @@ class FrontController extends Controller
 {
    public $view = 'pages.front.blocks.';
 
+   // public function demoRequest ()
+   // {
+   //   return view($this->view . 'demo-modal');
+   // }
+
    public function saveRequest (Request $request)
    {
 

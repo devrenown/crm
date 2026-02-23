@@ -48,6 +48,7 @@ use Illuminate\Support\Facades\Cache;
 Route::get('/', [DashboardController::class, 'front'])->name('front');
 Route::get('onboarding/verify/{user_id}/{code}', [OnboardController::class, 'verifyOnboarding'])->name('onboard.verify');
 
+// Route::get('demo-request', [FrontController::class, 'demoRequest'])->name('demo.request');
 Route::post('save-demo-request', [FrontController::class, 'saveRequest'])->name('save.demo-request');
 Route::get('privacy-policy', [FrontController::class, 'privacyPolicyView'])->name('privacy-policy');
 Route::get('terms_&_conditions', [FrontController::class, 'termsConditionsView'])->name('terms-conditions');

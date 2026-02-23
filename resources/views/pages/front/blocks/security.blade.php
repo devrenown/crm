@@ -5,7 +5,7 @@
 
       <!-- Left: Image / Illustration -->
       <div class="col-md-6 mb-4 mb-md-0 text-center" data-aos="slide-right" data-aos-delay="100">
-        <img src="{{ asset('images/front/security.png') }}" alt="Security Illustration" class="img-fluid" style="max-height: 500px;">
+        <img src="{{ asset('images/front/security.png') }}" alt="CRM with reporting and analytics" class="img-fluid" style="max-height: 500px;">
       </div>
 
       <!-- Right: Content -->

@@ -16,14 +16,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        How long does it take to set up Renown System?
+                        How quickly can I get started with Renown System?
                     </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Most businesses are up and running within 24 hours. Our guided onboarding process and
-                            dedicated support team help you configure the system to match your workflows. For
-                            complex setups, we offer personalized implementation support. </p>
+                        <p>Most businesses are fully operational within 24–48 hours. Our guided onboarding process ensures a smooth setup, and our support team assists you in configuring workflows tailored to your business needs. </p>
                     </div>
                 </div>
             </div>
@@ -31,17 +29,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        What are the pricing options?
+                        Do I need a credit card to start the free trial?
                     </button>
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>This is the second item’s accordion body.</p> It is hidden by default, until
-                        the collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>No. You can start your 15-day free trial without providing any credit card details. We believe you should experience the full value of the platform before committing.</p> 
                     </div>
                 </div>
             </div>
@@ -49,17 +42,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Is my data secure with Renown System?
+                        Is my business data secure?
                     </button>
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>Absolutely. Renown System uses enterprise-grade security protocols, encrypted data transmission (SSL), secure cloud infrastructure, and regular system monitoring to protect your data at all times.</p>
                     </div>
                 </div>
             </div>
@@ -68,17 +56,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                        Do you provide training and onboarding support?
+                        Can I upgrade or downgrade my plan later?
                     </button>
                 </h2>
                 <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>Yes. You can upgrade or downgrade your subscription at any time as your business needs evolve. Changes take effect seamlessly without disrupting your operations.</p>
                     </div>
                 </div>
             </div>
@@ -87,17 +70,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                        Can I integrate Renown System with other tools?
+                        Does Renown System integrate with other tools?
                     </button>
                 </h2>
                 <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>Yes. Renown System supports integrations with popular business tools, accounting software, CRM platforms, and third-party applications. API access is also available on selected plans.</p>
                     </div>
                 </div>
             </div>
@@ -106,17 +84,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                        What happens if I need to cancel my subscription?
+                        Do you provide training and onboarding support?
                     </button>
                 </h2>
                 <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>Yes. We provide guided onboarding, training resources, and dedicated support to ensure your team gets up to speed quickly and confidently.</p>
                     </div>
                 </div>
             </div>
@@ -125,17 +98,12 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                        How does customer support work?
+                        What happens if I cancel my subscription?
                     </button>
                 </h2>
                 <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>You can cancel at any time. There are no long-term contracts. Your data remains accessible during the billing period, and we provide assistance for secure data export if needed.</p>
                     </div>
                 </div>
             </div>
@@ -149,12 +117,21 @@
                 </h2>
                 <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the
-                        collapse plugin adds the appropriate classes that we use to style each element. These
-                        classes control the overall appearance, as well as the showing and hiding via CSS
-                        transitions. You can modify any of this with custom CSS or overriding our default variables.
-                        It’s also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
+                        <p>Absolutely. Renown System is designed to grow with you. Whether you're managing a small team or scaling across multiple departments, our platform adapts to your expanding operational needs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                        What kind of customer support do you offer?
+                    </button>
+                </h2>
+                <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p>We offer responsive customer support via email, chat, and priority support on higher-tier plans. Our goal is to ensure you always have the assistance you need to run your business smoothly.</p>
                     </div>
                 </div>
             </div>

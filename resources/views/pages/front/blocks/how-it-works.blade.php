@@ -10,7 +10,7 @@
 
             <div class="main row">
                 <div class="left col-md-6 p-4 d-flex justify-content-center align-items-center">
-                    <img src="./images/registration-image.png" alt="" class="w-100 sticky-image"
+                    <img src="./images/registration-image.png" alt="Business management CRM" class="w-100 sticky-image"
                         id="howItWorksImage">
                 </div>
 

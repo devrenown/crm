@@ -11,7 +11,7 @@
                 the difference a unified platform makes.</p>
 
             <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
-                <a href="#" class="btn btn-light text-blue btn-lg border-3 border-top-0 border-white shadow-lg">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-light text-blue btn-lg border-3 border-top-0 border-white shadow-lg">
                     Request a Demo →
                 </a>
                 <a href="{{ route('organization.signup', encrypt('FREE TRIAL')) }}" class="btn btn-outline-light btn-lg shadow-sm">

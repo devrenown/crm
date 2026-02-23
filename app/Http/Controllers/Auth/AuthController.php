@@ -168,12 +168,18 @@ class AuthController extends BaseController
 
     public function logout(Request $request)
     {
-        auth()->user()->update([
-            'is_online' => false,
-        ]);
-        auth()->logout();
+        if (auth()->check()) {
+            auth()->user()->update([
+                'is_online' => false,
+            ]);
+
+            auth()->logout();
+        }
+
+        // Invalidate session safely
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('login');
+
+        return redirect()->route('login');
     }
 }

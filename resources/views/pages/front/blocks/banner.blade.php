@@ -21,7 +21,7 @@
                     </p>
 
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="#" class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary btn-lg border-3 border-top-0 border-white shadow-lg">
                             Request a Demo →
                         </a>
                         <a href="{{ route('organization.signup', encrypt('FREE TRIAL')) }}" class="btn btn-outline-primary btn-lg shadow-sm">
@@ -32,7 +32,7 @@
 
                 <!-- Right Image -->
                 <div class="col-lg-6 mt-0 text-end position-relative">
-                    <img src="./images/hero-right.png" class="img-fluid hero-image" alt="">
+                    <img src="./images/hero-right.png" class="img-fluid hero-image" alt="Best CRM tools for small businesses">
                 </div>
 
             </div>
@@ -41,42 +41,42 @@
                 <div class="cards row g-3 pe-lg-5">
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/ph_handshake-thin.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/ph_handshake-thin.svg" class="mb-2" alt="Onboarding Management"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Onboarding</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/uit_calender.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/uit_calender.svg" class="mb-2" alt="Leave Management"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Leave</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/project icon.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/project icon.svg" class="mb-2" alt="Project Management"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Project</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/employee icon.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/employee icon.svg" class="mb-2" alt="Employee Management"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Employee</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/chat icon.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/chat icon.svg" class="mb-2" alt="Chat System"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Chat</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">System</p>
                         </div>
                     </div>
                     <div class="col-md-2 col-lg-2 col-6">
                         <div class="card d-flex align-items-center justify-content-center p-3 shadow">
-                            <div><img src="./images/solar_wallet-money-linear.svg" class="mb-2" alt=""></div>
+                            <div><img src="./images/solar_wallet-money-linear.svg" class="mb-2" alt="Payroll Management"></div>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Payroll</p>
                             <p class="mb-0 fs-6 fs-md-5 fs-lg-5">Management</p>
                         </div>

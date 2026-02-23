@@ -302,10 +302,34 @@ nav {
     min-height: 50vh;
 }
 
-#contact {
+#contact-section {
     background: url('/images/contact.png');
     background-position: center;
     background-size: cover;
+}
+
+#create-organization {
+    background: url('/images/org-create-bg.png');
+    background-size: cover;
+}
+
+#org-form-section {
+    background: url('/images/org-create-bg-2.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#demo-request-form {
+    /*background: url('/images/org-create-bg-2.png');*/
+    background: url('/images/org-create-bg.png');
+    background-position: center;
+    background-size: cover;
+}
+
+#staticBackdrop .demo-paragraph {
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: rgb(63 68 73) !important;
 }
 
 @media (max-width: 768px) {

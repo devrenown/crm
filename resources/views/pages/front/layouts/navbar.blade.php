@@ -36,7 +36,7 @@
             <div class="d-flex align-items-center gap-3">
                 <a href="{{ route('login') }}" class="nav-link fs-19 me-2"><i class="fa-regular fa-user"></i> Login</a>
                 
-                <a href="#" class="btn btn-primary rounded-pill px-2 px-lg-4 fs-19 shadow">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary border-white rounded-pill px-2 px-lg-4 fs-19 shadow">
                     Request Demo <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>

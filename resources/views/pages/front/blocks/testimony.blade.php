@@ -28,12 +28,11 @@
                 <hr>
                 <div class="d-flex align-items-center gap-3">
                     <div class="review-profile">
-                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle border-3" alt="">
+                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle border-3" alt="Profile">
                     </div>
                     <div>
                         <h6 class="fw-bold mb-0">Amit Sharma</h6>
                         <small class="text-muted">Operations Head</small><br>
-                        <small class="text-blue">TechVenture Inc</small>
                     </div>
                 </div>
             </div>
@@ -53,12 +52,11 @@
                 <hr>
                 <div class="d-flex align-items-center gap-3">
                     <div class="review-profile">
-                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle border-3" alt="">
+                        <img src="./images/user.jpg" class="w-100 h-100 rounded-circle border-3" alt="Profile">
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0">Amit Sharma</h6>
-                        <small class="text-muted">Operations Head</small><br>
-                        <small class="text-blue">TechVenture Inc</small>
+                        <h6 class="fw-bold mb-0">Eve</h6>
+                        <small class="text-muted">Assistent General Manager</small><br>
                     </div>
                 </div>
             </div>
@@ -78,12 +76,11 @@
                 <hr>
                 <div class="d-flex align-items-center gap-3">
                     <div class="review-profile">
-                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle border-3" alt="">
+                        <img src="./images/user.jpg" class="w-100 h-100 rounded-circle border-3" alt="Profile">
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0">Amit Sharma</h6>
-                        <small class="text-muted">Operations Head</small><br>
-                        <small class="text-blue">TechVenture Inc</small>
+                        <h6 class="fw-bold mb-0">Shivam Rastogi</h6>
+                        <small class="text-muted">Manager</small><br>
                     </div>
                 </div>
             </div>
@@ -103,12 +100,11 @@
                 <hr>
                 <div class="d-flex align-items-center gap-3">
                     <div class="review-profile">
-                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle border-3" alt="">
+                        <img src="./images/user.jpg" class="w-100 h-100 rounded-circle border-3" alt="Profile">
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0">Amit Sharma</h6>
-                        <small class="text-muted">Operations Head</small><br>
-                        <small class="text-blue">TechVenture Inc</small>
+                        <h6 class="fw-bold mb-0">Rajnish Malhotra</h6>
+                        <small class="text-muted">Chief Technical Officer</small><br>
                     </div>
                 </div>
             </div>
@@ -128,12 +124,11 @@
                 <hr>
                 <div class="d-flex align-items-center gap-3">
                     <div class="review-profile">
-                        <img src="./images/review-profile.jpg" class="w-100 h-100 rounded-circle" alt="">
+                        <img src="./images/user.jpg" class="w-100 h-100 rounded-circle" alt="Profile">
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0">Amit Sharma</h6>
-                        <small class="text-muted">Operations Head</small><br>
-                        <small class="text-blue">TechVenture Inc</small>
+                        <h6 class="fw-bold mb-0">Kajal Agarawal</h6>
+                        <small class="text-muted">General Manager</small><br>
                     </div>
                 </div>
             </div>

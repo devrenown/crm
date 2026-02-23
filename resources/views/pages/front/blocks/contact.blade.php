@@ -1,5 +1,5 @@
     <!-- Contact Section -->
-    <section class="px-3 bg-white py-5 px-md-4 px-lg-5" id="contact">
+    <section class="px-3 bg-white py-5 px-md-4 px-lg-5" id="contact-section">
         <div class="container-fluid">
             <div class="text-center mb-5">
                 <span class="section-title-badge">Get In Touch</span>

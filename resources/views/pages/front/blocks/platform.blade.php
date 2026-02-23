@@ -6,7 +6,7 @@
             <div class="col-lg-6 position-relative text-center platform-visual">
 
                 <!-- Main Person Image -->
-                <img src="./images/platform-left.png" class="img-fluid main-person" alt="">
+                <img src="./images/platform-left.png" class="img-fluid main-person" alt="CRM software tools">
             </div>
 
             <!-- RIGHT: CONTENT -->

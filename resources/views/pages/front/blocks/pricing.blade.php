@@ -123,7 +123,7 @@
                 free trial.</p>
         </div>
 
-        <div class="cards mt-5 row align-items-center">
+        <div class="cards mt-5 row">
             
             @foreach($plans as $plan)
             @php 
