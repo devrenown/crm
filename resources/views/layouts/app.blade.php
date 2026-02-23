@@ -65,4 +65,36 @@
     </div>
     <!-- /Delete Modal -->
 
+    {{-- Global Secure Document Modal --}}
+    <div class="modal fade" id="globalDocumentModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Document Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body p-0" style="height:80vh;">
+                    <iframe id="globalDocumentFrame"
+                            style="width:100%; height:100%; border:0;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+       $(document).ready(function() {
+    window.openSecureDocument = function(url) {
+        $('#globalDocumentFrame').attr('src', url);
+        let modal = new bootstrap.Modal($('#globalDocumentModal')[0]);
+        modal.show();
+    };
+
+    $('#globalDocumentModal').on('hidden.bs.modal', function() {
+        $('#globalDocumentFrame').attr('src', '');
+    });
+});
+    </script>
+
 @endsection
