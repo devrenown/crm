@@ -1,0 +1,53 @@
+@extends('layouts.app')
+
+@section('page-content')
+
+<div class="content container-fluid">
+
+        <!-- Page Header -->
+        <x-breadcrumb class="col">
+            <x-slot name="title">{{ __('Shifts') }}</x-slot>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    {{ __('Shifts') }}
+                </li>
+            </ul>
+            <x-slot name="right">
+                <div class="col-auto float-end ms-auto">
+                    @activeCan('create-shift')
+                        <a href="javascript:void(0)" data-url="{{ route('shift.create') }}" class="btn add-btn" data-ajax-modal="true"
+                            data-size="lg" data-title="{{ __('Add Shift') }}">
+                            <i class="fa-solid fa-plus"></i> {{ __('Add Shift') }}
+                        </a>
+                    @endactiveCan
+
+                    <div class="view-icons">
+                        <a href="{{ route('shift.index') }}" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
+                        <a href="{{ route('shift.list') }}" class="list-view btn btn-link"><i class="fa-solid fa-bars"></i></a>
+                    </div>
+                </div>
+            </x-slot>
+        </x-breadcrumb>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    {!! $dataTable->table(['class' => 'table table-striped custom-table w-100']) !!}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+@endsection
+
+@push('page-scripts')
+@vite([
+    "resources/js/datatables.js",
+])
+{!! $dataTable->scripts(attributes: ['type' => 'module']) !!}
+@endpush

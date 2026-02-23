@@ -1,0 +1,60 @@
+<div class="modal-body">
+    <form action="{{ route('shift.store') }}" method="POST">
+        @csrf
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('Shift Name') }}</x-form.label>
+                    <x-form.input type="text" name="name" placeholder="e.g. General / Morning / Night" required />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('Start Time') }}</x-form.label>
+                    <x-form.input type="time" name="start_time" required />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('End Time') }}</x-form.label>
+                    <x-form.input type="time" name="end_time" required />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('Break Minutes') }}</x-form.label>
+                    <x-form.input type="number" name="break_minutes" min="0" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('Grace Minutes') }}</x-form.label>
+                    <x-form.input type="number" name="grace_minutes" min="0" />
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="input-block mb-3">
+                    <x-form.label>{{ __('Status') }}</x-form.label>
+                    <select name="status" class="form-control">
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="submit-section my-2">
+            <x-form.button class="btn btn-primary submit-btn" type="submit">
+                {{ __('Save Shift') }}
+            </x-form.button>
+        </div>
+    </form>
+</div>
