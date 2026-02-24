@@ -21,5 +21,10 @@ class Attendance extends Model
     public function timestamps(){
         return $this->hasMany(AttendanceTimestamp::class);
     }
+    
+    public function punchTimestamps()
+    {
+        return $this->hasMany(AttendanceTimestamp::class);
+    }
 
 }

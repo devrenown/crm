@@ -54,6 +54,7 @@
         </div>
 
         <!-- DETAIL CARD -->
+<<<<<<< HEAD
         <div class="why-detail-card why-detail-card-1 active p-5 row">
             <div class="col-lg-5">
                 <p class="fw-bold fs-1 mb-3">
@@ -179,6 +180,138 @@
                     Get Started →
                 </a>
             </div>
+=======
+        
+        <div class="why-detail-card why-detail-card-1 active p-5">
+
+            <p class="fw-bold fs-1 mb-3">
+                All-in-One<br>Business Solution
+            </p>
+
+            <p class="mb-4 fs-5 text-secondary">
+                Everything your business needs, <br> managed seamlessly
+                on one platform.
+            </p>
+
+            <div class="check-list mb-2">
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i> CRM,
+                    HR, Payroll & Attendance in one system</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Centralized employee & customer data</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Simplified daily operations</div>
+            </div>
+
+            <a href="#"
+                class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
+                Explore Features →
+            </a>
+
+        </div>
+        <div class="why-detail-card why-detail-card-2 d-none p-5">
+
+            <p class="fw-bold fs-1 mb-3">
+                Easy Setup &<br>User-Friendly Ui
+            </p>
+
+            <p class="mb-4 fs-5 text-secondary">
+                Everything your business needs, <br> managed seamlessly
+                on one platform.
+            </p>
+
+            <div class="check-list mb-2">
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i> CRM,
+                    HR, Payroll & Attendance in one system</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Centralized employee & customer data</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Simplified daily operations</div>
+            </div>
+
+            <a href="#"
+                class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
+                Explore Features →
+            </a>
+
+        </div>
+        <div class="why-detail-card why-detail-card-3 d-none p-5">
+
+            <p class="fw-bold fs-1 mb-3">
+                Automation<br>Driven Workflow
+            </p>
+
+            <p class="mb-4 fs-5 text-secondary">
+                Everything your business needs, <br> managed seamlessly
+                on one platform.
+            </p>
+
+            <div class="check-list mb-2">
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i> CRM,
+                    HR, Payroll & Attendance in one system</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Centralized employee & customer data</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Simplified daily operations</div>
+            </div>
+
+            <a href="#"
+                class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
+                Explore Features →
+            </a>
+
+        </div>
+        <div class="why-detail-card why-detail-card-4 d-none p-5">
+
+            <p class="fw-bold fs-1 mb-3">
+                Scalable for Any<br>Business Size
+            </p>
+
+            <p class="mb-4 fs-5 text-secondary">
+                Everything your business needs, <br> managed seamlessly
+                on one platform.
+            </p>
+
+            <div class="check-list mb-2">
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i> CRM,
+                    HR, Payroll & Attendance in one system</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Centralized employee & customer data</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Simplified daily operations</div>
+            </div>
+
+            <a href="#"
+                class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
+                Explore Features →
+            </a>
+
+        </div>
+        <div class="why-detail-card why-detail-card-5 d-none p-5">
+
+            <p class="fw-bold fs-1 mb-3">
+                Secure Cloud-<br>Based Platform
+            </p>
+
+            <p class="mb-4 fs-5 text-secondary">
+                Everything your business needs, <br> managed seamlessly
+                on one platform.
+            </p>
+
+            <div class="check-list mb-2">
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i> CRM,
+                    HR, Payroll & Attendance in one system</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Centralized employee & customer data</div>
+                <div><i class="fa-solid fa-check border rounded-circle bg-primary text-white mb-3 me-2"></i>
+                    Simplified daily operations</div>
+            </div>
+
+            <a href="#"
+                class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
+                Explore Features →
+            </a>
+
+>>>>>>> master
         </div>
 
     </div>

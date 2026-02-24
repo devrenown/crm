@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
-// use App\Traits\uploadFile;
-use App\Traits\SecureFileUpload;
+use App\Traits\uploadFile;
+//use App\Traits\SecureFileUpload;
 
 class UserProfileController extends Controller
 {
-    use SecureFileUpload;
+    use uploadFile;
 
     public $tenant;
 
@@ -60,8 +60,8 @@ class UserProfileController extends Controller
         $fileName = $user->avatar;
         if ($request->hasFile('avatar')) {
 
-            $path = 'storage/' . $this->tenant->domain . '/'. $user->id . '/';
-            $fileName   = self::uploadEncrypted($request->file('avatar'), $path, $user->avatar ?? '');
+            $path =  $this->tenant->domain . '/'. $user->id . '/';
+            $fileName   = self::upload($request->file('avatar'), $path, $user->avatar ?? '');
         }
         $user->update([
             'firstname' => $request->firstname ?? $user->firstname,

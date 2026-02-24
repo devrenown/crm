@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @push('page-styles')
     <style>
       .profile-info-left {

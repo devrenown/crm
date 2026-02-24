@@ -62,7 +62,6 @@ class DashboardController extends BaseController
         {
             return view('pages.employees.dashboard',$this->data);
         }
-
         $projects = null;
         $recentProjects = null;
         if(!empty(module('Project')) && module('Project')->isEnabled()){

@@ -157,6 +157,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('attendance', [AttendancesController::class, 'index'])->name('attendances.index');
         Route::get('attendance-details/{attendance}', [AttendancesController::class, 'attendanceDetails'])->name('attendance.details');
         Route::get('attendance-history/{employee_id}', [AttendancesController::class, 'attendanceHistory'])->name('attendance.history');
+        Route::get('attendance/export', [AttendancesController::class, 'exportAttendance'])->name('attendance.export');
 
         Route::get('clockout-modal/{timeId?}', [EmployeeAttendanceController::class, 'clockoutModal'])->name('clockout-modal');
         Route::post('clockout', [EmployeeAttendanceController::class, 'clockout'])->name('clockout');
@@ -241,6 +242,23 @@ Route::middleware(['auth'])->group(function () {
         //leave type
         Route::resource('leave-type', LeaveTypeController::class);
         Route::resource('leave-balances', LeaveBalanceController::class);
+
+        Route::get('/secure/document', function (Request $request) {
+            abort_unless($request->hasValidSignature(), 403);
+
+            $path     = decrypt($request->path);
+            $mime     = $request->mime;
+            $filename = $request->filename;
+
+            return app(\App\Services\SecureFileViewService::class)
+                ->streamDocument(
+                    $path,
+                    $mime,
+                    $filename,
+                    $filename,
+                    auth()->user()
+                );
+        })->name('secure.document.view')->middleware('auth');
 
         // =============== Shift management routes =================== //
         Route::get('shift', [ShiftManagementController::class, 'index'])->name('shift.index');

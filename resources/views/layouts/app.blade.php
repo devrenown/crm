@@ -84,17 +84,17 @@
     </div>
 
     <script>
-       $(document).ready(function() {
-    window.openSecureDocument = function(url) {
-        $('#globalDocumentFrame').attr('src', url);
-        let modal = new bootstrap.Modal($('#globalDocumentModal')[0]);
-        modal.show();
-    };
+        function openSecureDocument(url) {
+            document.getElementById('globalDocumentFrame').src = url;
+            let modal = new bootstrap.Modal(document.getElementById('globalDocumentModal'));
+            modal.show();
+        }
 
-    $('#globalDocumentModal').on('hidden.bs.modal', function() {
-        $('#globalDocumentFrame').attr('src', '');
-    });
-});
+        // Clear iframe when modal closes
+        document.getElementById('globalDocumentModal')
+            .addEventListener('hidden.bs.modal', function () {
+                document.getElementById('globalDocumentFrame').src = '';
+            });
     </script>
 
 @endsection
