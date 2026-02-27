@@ -11,7 +11,7 @@ class EmployeeEducation extends Model
     use HasFactory, BelongsToTenant;
 
     protected $fillable = [
-        'employee_detail_id', 'tenant_id', 'institution', 'subject', 'course', 'grade', 'file', 'start_date',
+        'employee_detail_id', 'tenant_id', 'institution', 'subject', 'course', 'grade', 'file', 'document_mime', 'start_date',
         'end_date',
     ];
 

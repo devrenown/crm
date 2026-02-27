@@ -65,4 +65,50 @@
     </div>
     <!-- /Delete Modal -->
 
+    <!-- Global Document Viewer Modal -->
+<div class="modal fade" id="globalDocumentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Document</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="globalDocumentFrame"
+                        src=""
+                        frameborder="0"
+                        style="width:100%; height:85vh;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+@push('page-scripts')
+<script>
+    function openSecureDocument(url) {
+        $('#globalDocumentFrame').attr('src', url);
+        $('#globalDocumentModal').modal('show');
+    }
+
+    // Clear iframe when modal closes
+    $(document).on('hidden.bs.modal', '#globalDocumentModal', function () {
+        $('#globalDocumentFrame').attr('src', '');
+    });
+</script>
+@endpush
+
+    <script>
+        function openSecureDocument(url) {
+            document.getElementById('globalDocumentFrame').src = url;
+            let modal = new bootstrap.Modal(document.getElementById('globalDocumentModal'));
+            modal.show();
+        }
+
+        // Clear iframe when modal closes
+        document.getElementById('globalDocumentModal')
+            .addEventListener('hidden.bs.modal', function () {
+                document.getElementById('globalDocumentFrame').src = '';
+            });
+    </script> -->
+
 @endsection

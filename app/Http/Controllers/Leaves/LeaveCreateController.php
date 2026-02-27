@@ -116,19 +116,19 @@ class LeaveCreateController extends Controller
 
             // Document upload
             if ($request->hasFile('document')) {
-                $path = $this->uploadEncrypted(
-                    file: $request->file('document'),
-                    directory: 'leaves',
-                    tenantDomain: $user->tenant->domain,
-                    userId: $user->id,
-                    objectId: $leave->id
+                $upload = $this->uploadEncrypted(
+                    $request->file('document'),
+                    $user->tenant_id . '/' . $user->id . '/leaves/' . $leave->id
                 );
 
-                $leave->update([
-                    'document_path' => $path,
-                    'document_mime' => $request->file('document')->getMimeType(),
-                ]);
+                if ($upload) {
+                    $leave->update([
+                        'document_path' => $upload['path'],
+                        'document_mime' => $upload['mime'],
+                    ]);
+                }
             }
+            
         });
 
         // Success toast

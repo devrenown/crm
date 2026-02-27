@@ -5,7 +5,7 @@
 
     <IfModule mod_headers.c>
         # Match any subdomain of renownsystem.com
-        SetEnvIf Origin "https?://([a-z0-9-]+\.)*renownsystem\.com$" ACAO=$0
+        SetEnvIf Origin "https?://([a-z0-9-]+\.)*dev.renownsystem\.com$" ACAO=$0
         Header set Access-Control-Allow-Origin "%{ACAO}e" env=ACAO
         Header set Access-Control-Allow-Credentials true
         Header set Access-Control-Allow-Methods "GET, OPTIONS"
@@ -27,14 +27,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
-
-# php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php83” package as the default “PHP” programming language.
-<IfModule mime_module>
-  AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
-</IfModule>
-# php -- END cPanel-generated handler, do not edit
 
 # BEGIN cPanel-generated php ini directives, do not edit
 # Manual editing of this file may result in unexpected behavior.
@@ -65,3 +57,10 @@
    php_flag zlib.output_compression Off
 </IfModule>
 # END cPanel-generated php ini directives, do not edit
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php83” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

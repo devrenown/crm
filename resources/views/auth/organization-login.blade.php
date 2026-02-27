@@ -114,22 +114,18 @@
             <div class="text-center mb-4">
 
                 @if($theme->logo_dark ?? false)
-                    <img src="{{ asset('storage/settings/theme/'.$theme->logo_dark) }}" class="tenant-logo mb-3" alt="Tenant Logo">
+                    <img src="{{ asset('storage/' . $theme->logo_dark) }}" class="tenant-logo mb-3" alt="Tenant Logo">
                 @else
                     <img src="{{ asset('images/company-placeholder.png') }}" class="tenant-logo mb-3" alt="Logo">
                 @endif
 
                 @php
-                    $name = strtoupper($tenant->name ?? 'RENOWN ALFA TECHNOLOGIES PRIVATE LIMITED');
-                    $words = explode(' ', $name);
+                    $name = strtoupper($tenant->name ?? 'Company Name');
                 
-                    $firstTwo = implode(' ', array_slice($words, 0, 2));
-                    $remaining = implode(' ', array_slice($words, 2));
                 @endphp
                 
                 <h3 class="">
-                    <span class="fw-bold" style="color: {{ $theme->color_scheme }}">{{ $firstTwo }}</span>
-                    <span class="text-dark">{{ $remaining }}</span>
+                    <span class="fw-bold" style="color: {{ $theme->color_scheme }}">{{ $name }}</span>
                 </h3>
             </div>
 

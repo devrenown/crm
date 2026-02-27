@@ -49,7 +49,7 @@
     <div class="onboarding-card text-center position-relative">
 
       <!-- Company Logo -->
-      <img src="{{ $user->avatar ? asset('storage/users/' . $user->avatar) : asset('images/user.jpg') }}" 
+      <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/user.jpg') }}" 
           alt="User" 
           class="rounded-circle position-absolute border bg-white" 
           style="height: 5rem; width: 5rem; top: -2.5rem; transform: translate(-50%);">

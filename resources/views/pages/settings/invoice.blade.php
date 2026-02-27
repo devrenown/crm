@@ -33,7 +33,7 @@
                     <div class="col-lg-2">
                         <div class="img-thumbnail float-end">
                             <img id="logo" class="img-fluid"
-                                src="{{ !empty($settings->logo) ? asset('storage/settings/invoice/' . $settings->logo) : asset('images/logo2.png') }}"
+                                src="{{ !empty($settings->logo) ? asset('storage/' . $settings->logo) : asset('images/logo2.png') }}"
                                 alt="logo light" width="140" height="40">
                             </div>
                     </div>

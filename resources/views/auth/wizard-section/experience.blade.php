@@ -8,18 +8,7 @@
                 {{-- Existing Employment Records --}}
                 @if (count($employeeEmployementList->workExperience ?? []) > 0)
                     @foreach ($employeeEmployementList->workExperience as $employement)
-                        @php
-                            $path = public_path('storage/employees/work-experience/');
-                            $imagUrl = asset('storage/employees/work-experience/');
-
-                            $offerUrl = $employement->offer_letter ? $imagUrl . '/' . $employement->offer_letter : null;
-                            $appointmentUrl = $employement->appointment_letter ? $imagUrl . '/' . $employement->appointment_letter : null;
-                            $expUrl = $employement->experience_letter ? $imagUrl . '/' . $employement->experience_letter : null;
-                            $relievingUrl = $employement->relieving_letter ? $imagUrl . '/' . $employement->relieving_letter : null;
-                            $incrementUrl = $employement->increment_letter ? $imagUrl . '/' . $employement->increment_letter : null;
-                            $salaryUrl = $employement->salary_slip ? $imagUrl . '/' . $employement->salary_slip : null;
-                            $bankUrl = $employement->bank_statement ? $imagUrl . '/' . $employement->bank_statement : null;
-                        @endphp
+                        
 
                         <div class="card experience-item deletable-item">
 
@@ -119,8 +108,39 @@
                                             <x-form.input type="hidden" class="old_offer_letters" value="{{ $employement->offer_letter ?? '' }}"
                                                 name="old_offer_letters[]" />
 
-                                            @if ($offerUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $offerUrl }}" target="_blank">View Offer Letter</a>
+                                            @php
+                                                $files = [
+                                                    'offer_letter'       => $employement->offer_letter,
+                                                    'appointment_letter' => $employement->appointment_letter,
+                                                    'experience_letter'  => $employement->experience_letter,
+                                                    'relieving_letter'   => $employement->relieving_letter,
+                                                    'increment_letter'   => $employement->increment_letter,
+                                                    'salary_slip'        => $employement->salary_slip,
+                                                    'bank_statement'     => $employement->bank_statement,
+                                                ];
+                                            @endphp
+
+                                            @if($employement->offer_letter)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->offer_letter),
+                                                            'mime'     => $employement->offer_letter_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->offer_letter),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Offer Letter
+                                                </a>
+
                                             @endif
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
                                             &nbsp; max: 2MB</small>
@@ -136,8 +156,28 @@
                                             <x-form.input type="hidden" class="old_appointment_letters" value="{{ $employement->appointment_letter ?? '' }}"
                                                 name="old_appointment_letters[]" />
 
-                                            @if ($appointmentUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $appointmentUrl }}" target="_blank">View Appointment Letter</a>
+                                            
+                                            @if($employement->appointment_letter)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->appointment_letter),
+                                                            'mime'     => $employement->appointment_letter_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->appointment_letter),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Appointment Letter
+                                                </a>
+
                                             @endif
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
                                             &nbsp; max: 2MB</small>
@@ -153,8 +193,28 @@
                                             <x-form.input type="hidden" class="old_experience_letters" value="{{ $employement->experience_letter ?? '' }}"
                                                 name="old_experience_letters[]" />
 
-                                            @if ($expUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $expUrl }}" target="_blank">View Experience Letter</a>
+
+                                            @if($employement->experience_letter)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->experience_letter),
+                                                            'mime'     => $employement->experience_letter_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->experience_letter),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Experience Letter
+                                                </a>
+
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -170,9 +230,28 @@
                                                 name="relieving_letters[]" accept="application/pdf" />
                                             <x-form.input type="hidden" class="old_relieving_letters" value="{{ $employement->relieving_letter ?? '' }}"
                                                 name="old_relieving_letters[]" />
+                                            
+                                            @if($employement->relieving_letter)
 
-                                            @if ($relievingUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $relievingUrl }}" target="_blank">View Relieving Letter</a>
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->relieving_letter),
+                                                            'mime'     => $employement->relieving_letter_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->relieving_letter),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Relieving Letter
+                                                </a>
+
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -189,8 +268,28 @@
                                             <x-form.input type="hidden" class="old_increment_letters" value="{{ $employement->increment_letter ?? '' }}"
                                                 name="old_increment_letters[]" />
 
-                                            @if ($incrementUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $incrementUrl }}" target="_blank">View Increment Letter</a>
+                            
+                                             @if($employement->increment_letter)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->increment_letter),
+                                                            'mime'     => $employement->increment_letter_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->increment_letter),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Increment Letter
+                                                </a>
+
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -206,8 +305,28 @@
                                             <x-form.input type="hidden" class="old_salary_slips" value="{{ $employement->salary_slip ?? '' }}"
                                                 name="old_salary_slips[]" />
 
-                                            @if ($salaryUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $salaryUrl }}" target="_blank">View Salary Slip</a>
+                                    
+                                            @if($employement->salary_slip)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->salary_slip),
+                                                            'mime'     => $employement->salary_slip_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->salary_slip),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Salary Slip
+                                                </a>
+
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -224,8 +343,27 @@
                                             <x-form.input type="hidden" class="old_bank_statements" value="{{ $employement->bank_statement ?? '' }}"
                                                 name="old_bank_statements[]" />
 
-                                            @if ($bankUrl)
-                                               <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $bankUrl }}" target="_blank">View Bank Statement</a>
+                                            @if($employement->bank_statement)
+
+                                                @php
+                                                    $signedUrl = URL::signedRoute(
+                                                        'secure.document.view',
+                                                        [
+                                                            'path'     => encrypt($employement->bank_statement),
+                                                            'mime'     => $employement->bank_statement_mime ?? 'application/pdf',
+                                                            'filename' => basename($employement->bank_statement),
+                                                            'mode'     => 'clean'
+                                                        ],
+                                                        now()->addMinutes(5)
+                                                    );
+                                                @endphp
+
+                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                <a href="javascript:void(0);" 
+                                                onclick="openSecureDocument('{{ $signedUrl }}')">
+                                                    View Bank Statement
+                                                </a>
+
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed

@@ -28,7 +28,7 @@ Artisan::command('inspire', function () {
 */
 Schedule::command('leaves:accrue-monthly')
     ->dailyAt('00:10')
-    ->name('monthly-leave-accrual') //  name for overlapping
+    ->name('monthly-leave-accrual')
     ->withoutOverlapping()
     ->runInBackground()
     ->appendOutputTo(storage_path('logs/leaves-accrual.log'));
@@ -41,7 +41,7 @@ Schedule::command('leaves:accrue-monthly')
 */
 Schedule::command('leaves:carry-forward')
     ->dailyAt('00:20')
-    ->name('year-end-leave-carry-forward') //  name for overlapping
+    ->name('year-end-leave-carry-forward')
     ->withoutOverlapping()
     ->runInBackground()
     ->appendOutputTo(storage_path('logs/leaves-carry-forward.log'));
@@ -59,7 +59,7 @@ Schedule::call(function () {
     ]);
 })
 ->dailyAt('00:30')
-->name('birthday-anniversary-reset') //  name for overlapping
+->name('birthday-anniversary-reset') 
 ->withoutOverlapping();
 
 /*
@@ -70,7 +70,7 @@ Schedule::call(function () {
 */
 Schedule::command('app:send-birthday-emails')
     ->dailyAt('21:00')
-    ->name('send-birthday-emails') // name for overlapping
+    ->name('send-birthday-emails') 
     ->withoutOverlapping();
 
 /*

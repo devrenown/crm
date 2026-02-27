@@ -8,7 +8,7 @@
                     <div class="user-details me-auto">
                         <div class="float-start user-img">
                             <a class="avatar" href="#" title="{{ $user->fullname }}">
-                                <img src="{{ !empty($user->avatar) ? asset('storage/users/'.$user->avatar) : asset('images/user.jpg') }}" alt="User Image" class="rounded-circle">
+                                <img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar) : asset('images/user.jpg') }}" alt="User Image" class="rounded-circle">
                                 @if (!empty($user->is_online)) 
                                 <span class="status online"></span> 
                                 @else
@@ -64,7 +64,7 @@
                                     <div class="chat chat-left">
                                         <div class="chat-avatar">
                                             <a href="#" class="avatar">
-                                                <img src="{{ !empty($message->sender->avatar) ? asset('storage/users/'.$message->sender->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
+                                                <img src="{{ !empty($message->sender->avatar) ? asset('storage/'.$message->sender->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
                                             </a>
                                         </div>
                                         <div class="chat-body">
@@ -144,7 +144,7 @@
                                 <div class="table-content">
                                     <div class="chat-profile-img">
                                         <div class="edit-profile-img">
-                                            <img src="{{ !empty($user->avatar) ? asset('storage/users/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
+                                            <img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
                                             <span class="change-img">Change Image</span>
                                         </div>
                                         <h3 class="user-name m-t-10 mb-0">{{ $user->fullname }}</h3>

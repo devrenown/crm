@@ -42,7 +42,7 @@
                     <div class="profile-img">
                       <a href="#"
                         ><img
-                        src="{{ !empty($user->avatar) ? asset('storage/users/' . $user->avatar) : Vite::asset('resources/assets/img/user.jpg') }}"
+                        src="{{ !empty($user->avatar) ? asset('storage/' . $user->avatar) : Vite::asset('resources/assets/img/user.jpg') }}"
                         alt="User Image"
                       /></a>
                     </div>
@@ -387,7 +387,27 @@
                                 <div class="text-black fw-bold">{{ $education->course }} <span class="text-muted small"> ( {{$education->institution}} ) </span></div>
                                 <span class="time">{{ $education->start_date }} - {{ $education->end_date }}</span>
                                 @if (!empty($education->file))
-                                    <a href="{{ uploadedAsset($education->file,'employees/education') }}" target="_blank" rel="noopener noreferrer">{{ __('View File') }}</a>
+
+                                    @php
+                                        $signedUrl = URL::signedRoute(
+                                            'secure.document.view',
+                                            [
+                                                'path'     => encrypt($education->file), // must be full stored path
+                                                'mime'     => $education->document_mime ?? 'application/pdf',
+                                                'filename' => basename($education->file),
+                                                'mode'     => 'watermark'
+                                            ],
+                                            now()->addMinutes(5)
+                                        );
+                                    @endphp
+
+                                    <a href="javascript:void(0);"
+                                      onclick="openSecureDocument('{{ $signedUrl }}')"
+                                      class="d-block mt-1">
+                                        <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                        {{ __('View File') }}
+                                    </a>
+
                                 @endif
                               </div>
                             </div>
@@ -481,7 +501,7 @@
                               <tr>
                                   @if (!empty($member->picture))
                                   <td>
-                                      {!! Spatie\Menu\Laravel\Html::userAvatar($member->name, !empty($member->picture) ? uploadedAsset($member->picture,'family-members'): Vite::asset('resources/assets/img/user.jpg')) !!}
+                                      {!! Spatie\Menu\Laravel\Html::userAvatar($member->name, !empty($member->picture) ? uploadedAsset($member->picture): Vite::asset('resources/assets/img/user.jpg')) !!}
                                   </td>
                                   @else
                                   <td>{{ $member->name }}</td>

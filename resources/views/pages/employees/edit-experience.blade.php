@@ -115,10 +115,28 @@
                                         <input type="file" name="{{ $field }}s[]" class="form-control" accept="image/*,application/pdf">
                                         <input type="hidden" name="old_{{ $field }}s[]" value="{{ $exp->$field }}">
                                         @if($exp->$field)
-                                            <a href="{{ asset('storage/employees/work-experience/' . $exp->$field) }}" target="_blank"
-                                                class="d-block mt-1">
+
+                                            @php
+                                                $signedUrl = URL::signedRoute(
+                                                    'secure.document.view',
+                                                    [
+                                                        'path'     => encrypt($exp->$field),
+                                                        'mime'     => $exp->{$field . '_mime'} ?? 'application/pdf',
+                                                        'filename' => basename($exp->$field),
+                                                        'mode'     => 'watermark'
+                                                    ],
+                                                    now()->addMinutes(5)
+                                                );
+                                            @endphp
+
+                                            
+                                            <a href="javascript:void(0);"
+                                            onclick="openSecureDocument('{{ $signedUrl }}')"
+                                            class="d-block mt-1">
+                                            <i class="fa-solid fa-check-circle text-success me-1"></i>
                                                 View {{ $label }}
                                             </a>
+
                                         @endif
                                     </div>
                                 @endforeach
@@ -314,5 +332,6 @@
                 });
             });
         });
+
     </script>
 @endpush

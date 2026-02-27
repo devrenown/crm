@@ -104,7 +104,7 @@
                         @foreach ($asset->files as $file)
                         @if (is_string($file))
                         <li>
-                            <img src="{{ uploadedAsset($file,'assets') }}" width="100px" height="100px" alt="Keyboard Image">
+                            <img src="{{ uploadedAsset($file) }}" width="100px" height="100px" alt="Keyboard Image">
                         </li>
                         @endif
                         @endforeach 

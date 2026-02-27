@@ -2,42 +2,47 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
-trait uploadFile
+trait UploadFile
 {
-    public static function upload($file, $path, $oldFile = null)
-    {
+    public static function upload(
+        ?UploadedFile $file,
+        string $path,
+        ?string $oldFile = null
+    ): ?string {
+
         if (!$file) {
             return null;
         }
 
-        if ($oldFile && File::exists(public_path($path . $oldFile))) {
-            File::delete(public_path($path . $oldFile));
+        $disk = Storage::disk('public');
+
+        // Normalize path
+        $path = rtrim($path, '/') . '/';
+
+        // Delete old file (oldFile now contains full path)
+        if ($oldFile && $disk->exists($oldFile)) {
+            $disk->delete($oldFile);
         }
 
-        if (!File::exists(public_path($path))) {
-            File::makeDirectory(public_path($path), 0777, true);
-        }
+        // Generate filename
+        $filename = bin2hex(random_bytes(16)) . '.' . $file->extension();
 
-        $newFileName = time() . '_' . uniqid() . "." . $file->getClientOriginalName();
+        $fullPath = $path . $filename;
 
-        $file->move(public_path($path), $newFileName);
+        $disk->putFileAs($path, $file, $filename);
 
-        return $newFileName;
+        return $fullPath;   // STORE FULL PATH
     }
 
-    public static function delete($file, $path)
+    public static function delete(?string $file): bool
     {
         if (!$file) {
-            return null;
+            return false;
         }
 
-        if ($file && File::exists(public_path($path . $file))) {
-            File::delete(public_path($path . $file));
-            return true;
-        }
-
-        return false;
+        return Storage::disk('public')->delete($file);
     }
 }

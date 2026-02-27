@@ -96,7 +96,7 @@
                                         <div class="d-flex justify-content-between align-items-center gap-2">
                                             <div>    
                                                 @php
-                                                    $img = !empty($employee->avatar) ? asset('storage/users/'.$employee->avatar): asset('images/user.jpg');
+                                                    $img = !empty($employee->avatar) ? asset('storage/'.$employee->avatar): asset('images/user.jpg');
                                                     $link = route('employees.show', ['employee' => Crypt::encrypt($employee->id)]);
                                                 @endphp 
                                                 {!! \Spatie\Menu\Laravel\Html::userAvatar($employee->fullname, $img, $link) !!}

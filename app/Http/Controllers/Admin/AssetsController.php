@@ -61,7 +61,7 @@ class AssetsController extends Controller
             'description' => 'nullable|max:255'
         ]);
 
-        $dir = 'storage/' . $this->tenant->domain . '/assets/';
+        $dir = $this->tenant->id . '/assets/';
         $fileNames = [];
         if(!empty($fileNames) && count($fileNames) > 0){
             foreach($request->astFiles as $key => $requestFile){
@@ -135,7 +135,7 @@ class AssetsController extends Controller
             'description' => 'nullable|max:255'
         ]);
 
-        $dir = 'storage/' . $this->tenant->domain . '/assets/';
+        $dir = $this->tenant->id . '/assets/';
         $fileNames = $assets_list->files ?? [];
         if(!empty($fileNames) && count($fileNames) > 0){
             foreach($request->astFiles as $key => $requestFile){
@@ -178,7 +178,7 @@ class AssetsController extends Controller
     {
         $files = $asset_list->files ?? [];
 
-        $path = 'storage/' . $this->tenant->domain . '/assets/';
+        $path = $this->tenant->id . '/assets/';
 
         foreach ($files as $file) {
 

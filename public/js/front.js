@@ -28,22 +28,8 @@ $(window).on('scroll', function () {
     });
 });
 
-// $(window).scroll(function () {
-//     const bannerScreenHeight = $('#home').outerHeight();
-
-//     if ($(window).scrollTop() > bannerScreenHeight) {
-//         $('nav').removeClass('glass').addClass('bg-light');
-//         $('.nav-link').removeClass('text-white').addClass('text-dark');
-//         $('#login-btn').removeClass('btn-primary').addClass('bg-blue-gradient text-white');
-//     } else {
-//         $('nav').addClass('glass').removeClass('bg-light');
-//         $('.nav-link').removeClass('text-dark').addClass('text-white');
-//         $('#login-btn').removeClass('bg-blue-gradient').addClass('btn-primary');
-//     }
-// });
-
 // Scroll to top button
-var scrollTopBtn = $('#scrollTopBtn');
+var scrollTopBtn = $('#scrollTopBtn');  
 $(window).scroll(function () {
     if ($(window).scrollTop() > 300) {
         scrollTopBtn.fadeIn();

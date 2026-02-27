@@ -6,7 +6,7 @@
                 @if (!empty($ticket->user_id))
                 <span class="assign-title">{{ __('Assigned to') }} </span> 
                 <a href="#" data-bs-toggle="tooltip" data-placement="bottom" title="{{ $ticket->user->full_name ?? '' }}" class="avatar">
-                    <img src="{{ !empty($ticket->user->avatar) ? uploadedAsset($ticket->user->avatar,'users'): asset('images/user.jpg') }}" alt="User Image">
+                    <img src="{{ !empty($ticket->user->avatar) ? uploadedAsset($ticket->user->avatar): asset('images/user.jpg') }}" alt="User Image">
                 </a>
                 @endif
                 @can('edit-ticket')
@@ -58,7 +58,7 @@
                             <div class="chat chat-left" x-transition>
                                 <div class="chat-avatar">
                                     <a @can('view-Employeeprofile') href="{{ route('employees.show', ['employee' => \Crypt::encrypt($reply->created_by)]) }}" @else href="#" @endcan class="avatar">
-                                        <img src="{{ !empty($reply->createdBy->avatar) ? uploadedAsset($reply->createdBy->avatar,'users'): asset('images/user.jpg') }}" alt="User Image">
+                                        <img src="{{ !empty($reply->createdBy->avatar) ? uploadedAsset($reply->createdBy->avatar): asset('images/user.jpg') }}" alt="User Image">
                                     </a>
                                 </div>
                                 <div class="chat-body">

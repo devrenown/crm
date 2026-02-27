@@ -49,7 +49,7 @@
                         <div class="profile-widget">
                             <div class="profile-img">
                                 <a href="{{ $showRoute }}" class="avatar">
-                                    <img src="{{ !empty($client->avatar) ? uploadedAsset($client->avatar, 'users') : asset('images/user.jpg') }}"
+                                    <img src="{{ !empty($client->avatar) ? uploadedAsset($client->avatar) : asset('images/user.jpg') }}"
                                         alt="User Image">
                                 </a>
                             </div>

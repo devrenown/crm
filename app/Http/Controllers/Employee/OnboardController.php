@@ -12,11 +12,12 @@ use App\Models\OnboardingInvitation;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Traits\SecureFileUpload;
 use App\Traits\uploadFile;
 
 class OnboardController extends Controller
 {
-    use UploadFile;
+    use SecureFileUpload, uploadFile;
 
     public $tenant;
 
@@ -157,7 +158,7 @@ class OnboardController extends Controller
         }
 
         if ($request->hasFile('photo')) {
-            $path = 'storage/' . $this->tenant->domain . '/'. $authUser->id . '/';
+            $path = $this->tenant->id . '/'. $authUser->id . '/';
             $validate['photo'] = self::upload($request->file('photo'), $path, $authUser->avatar ?? '');
         } else {
             $validate['photo'] = $request->old_image ?? null;
@@ -189,10 +190,10 @@ class OnboardController extends Controller
             'ref_emp_id'            => $request->ref_emp_id                 ?? null,
             'bank'                  => $request->bank_name                  ?? null,
             'branch'                => $request->branch_address             ?? null,
-            'account'               => encrypt($request->account_number)    ?? null,
+            'account' => $request->account_number 
+                ? encrypt($request->account_number) 
+                : null,
             'ifsc'                  => $request->ifsc_code                  ?? null,
-            'marital_status'        => $request->marital_status             ?? null,
-            'no_of_children'        => $request->no_of_children             ?? null,
         ];
 
         $user       = User::updateOrCreate(['id' => $authUser->id], $personalUserData);
@@ -264,6 +265,8 @@ class OnboardController extends Controller
 
                 $fileName   = null;
                 $idName     = null;
+                $filePath = $oldFile ?? null;
+                $fileMime = null;
 
                 switch ($type) {
                     case '1':
@@ -283,18 +286,24 @@ class OnboardController extends Controller
                         break;
                 }
 
+                $existing = EmployeeIdentityProof::find($identy_ids[$index] ?? null);
+
                 if ($file) {
-                    $path = 'storage/' . $this->tenant->domain . '/'. $userId . '/employee_ids/';
-                    $fileName = self::upload($file, $path, $oldFile);
+                    $path = $this->tenant->id . '/' . $userId . '/employee_ids/';
+                    $upload = self::uploadEncrypted($file, $path, $oldFile);
+
+                    $filePath = $upload['path'] ?? $oldFile;
+                    $fileMime = $upload['mime'] ?? null;
                 } else {
-                    $fileName = $oldFile;
+                    $filePath = $oldFile;
+                    $fileMime = $existing->document_mime ?? null; 
                 }
 
                 $empId = EmployeeIdentityProof::updateOrCreate(
                     [
                         'id'   => $identy_ids[$index] ?? null,
                     ],
-                    ['user_id' => $userId, 'id_type' => $type, 'id_name' => $idName, 'id_number' => $number, 'image' => $fileName]
+                    ['user_id' => $userId, 'id_type' => $type, 'id_name' => $idName, 'id_number' => $number, 'image' => $filePath,  'document_mime' => $fileMime,]
                 );
             }
         }
@@ -317,29 +326,37 @@ class OnboardController extends Controller
     public function deleteIdentityId(Request $request)
     {
         $id = $request->input('identity_id');
-        $userId = auth()->id();
 
         if (empty($id)) {
             return response()->json([
-                'status'    => 404,
-                'message'   => 'Data not found !'
+                'status'  => 404,
+                'message' => 'Data not found!'
             ]);
         }
 
-        $identityId = EmployeeIdentityProof::find($id);
+        $identityId = EmployeeIdentityProof::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
 
-        $path = 'storage/' . $this->tenant->domain . '/'. $userId . '/employee_ids/';
-        $deleteFile = self::delete($identityId->image, $path);
-
-        if (!$deleteFile) {
+        if (!$identityId) {
             return response()->json([
-                'status'    => 500,
-                'message'   => 'something went wrong'
+                'status'  => 404,
+                'message' => 'Identity record not found!'
             ]);
+        }
+
+        if (!empty($identityId->image)) {
+            self::deleteEncrypted($identityId->image);
         }
 
         $identityId->delete();
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'Identity record deleted successfully'
+        ]);
     }
+
 
     public function saveEducationalDetails(Request $request)
     {
@@ -375,14 +392,25 @@ class OnboardController extends Controller
         if (count($institutions) > 0) {
             foreach ($institutions as $index => $institution) {
 
-                $fileName   = null;
-                $oldFile    = $oldFiles[$index] ?? null;
+                $existing = EmployeeEducation::find($edu_ids[$index] ?? null);
+
+                $oldFile = $oldFiles[$index] ?? null;
+
+                $filePath = $oldFile;
+                $fileMime = $existing->document_mime ?? null;
 
                 if (isset($files[$index])) {
-                    $path = 'storage/' . $this->tenant->domain . '/'. $userId . '/education/';
-                    $fileName = self::upload($files[$index], $path, $oldFile);
-                } else {
-                    $fileName = $oldFile;
+
+                    $path = $this->tenant->id . '/' . $userId . '/education/';
+
+                    $upload = self::uploadEncrypted(
+                        $files[$index],
+                        $path,
+                        $oldFile
+                    );
+
+                    $filePath = $upload['path'] ?? $oldFile;
+                    $fileMime = $upload['mime'] ?? $fileMime;
                 }
 
                 $data = [
@@ -391,7 +419,8 @@ class OnboardController extends Controller
                     'subject'               => $subjects[$index] ?? null,
                     'course'                => $courses[$index] ?? null,
                     'grade'                 => $grades[$index] ?? null,
-                    'file'                  => $fileName,
+                    'file'                  => $filePath,
+                    'document_mime'         => $fileMime,
                     'start_date'            => $startDates[$index] ?? null,
                     'end_date'              => $endDates[$index] ?? null,
                 ];
@@ -415,37 +444,40 @@ class OnboardController extends Controller
 
     }
 
-    public function deleteEducation(Request $request)
+   public function deleteEducation(Request $request)
     {
         $id = $request->input('education_id');
 
         if (empty($id)) {
             return response()->json([
-                'status'    => 404,
-                'message'   => 'Data not found !'
+                'status'  => 404,
+                'message' => 'Data not found!'
             ]);
         }
 
-        $userId = auth()->id();
+        $education = EmployeeEducation::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
 
-        $education = EmployeeEducation::find($id);
-        $path = 'storage/' . $this->tenant->domain . '/'. $userId . '/education/';
+        if (!$education) {
+            return response()->json([
+                'status'  => 404,
+                'message' => 'Education record not found!'
+            ]);
+        }
 
-        $filePath = public_path($path . $education->file);
-
-        if (!empty($education->file) && file_exists($filePath)) {
-            $deleteFile = self::delete($education->file, $path);
-            
-            if (!$deleteFile) {
-                return response()->json([
-                    'status'    => 500,
-                    'message'   => 'something went wrong'
-                ]);
-            }
+        if (!empty($education->file)) {
+            self::deleteEncrypted($education->file);
         }
 
         $education->delete();
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'Education deleted successfully'
+        ]);
     }
+
 
     public function saveEmployementDetails(Request $request)
     {
@@ -505,11 +537,12 @@ class OnboardController extends Controller
         $old_salary_slips           = $request->input('old_salary_slips',           []);
         $old_bank_statements        = $request->input('old_bank_statements',        []);
 
-        $uploadPath = 'storage/' . $this->tenant->domain . '/'. $userId . '/work-experience/';
+        $uploadPath = $this->tenant->id . '/'. $userId . '/work-experience/';
 
         if (count($companies) > 0) {
 
             foreach ($companies as $index => $company) {
+                $existing = EmployeeWorkExperience::find($exp_ids[$index] ?? null);
 
                 $offerLatterName        = null;
                 $appointmentLatterName  = null;
@@ -528,46 +561,129 @@ class OnboardController extends Controller
                 $oldBankStatementName       = $old_bank_statements[$index]      ?? null;
 
 
+               // ===== OFFER LETTER =====
                 if (isset($offer_letters[$index])) {
-                    $offerLatterName = self::upload($offer_letters[$index], $uploadPath, $oldOfferLetterName);
+
+                    $upload = self::uploadEncrypted(
+                        $offer_letters[$index],
+                        $uploadPath,
+                        $oldOfferLetterName
+                    );
+
+                    $offerLatterName = $upload['path'] ?? $oldOfferLetterName;
+                    $offerLetterMime = $upload['mime'] ?? null;
+
                 } else {
                     $offerLatterName = $oldOfferLetterName;
+                    $offerLetterMime = $existing->offer_letter_mime ?? null;
                 }
 
+
+                // ===== APPOINTMENT LETTER =====
                 if (isset($appointment_letters[$index])) {
-                    $appointmentLatterName = self::upload($appointment_letters[$index], $uploadPath, $oldAppointmentLatterName);
+
+                    $upload = self::uploadEncrypted(
+                        $appointment_letters[$index],
+                        $uploadPath,
+                        $oldAppointmentLatterName
+                    );
+
+                    $appointmentLatterName = $upload['path'] ?? $oldAppointmentLatterName;
+                    $appointmentLetterMime = $upload['mime'] ?? null;
+
                 } else {
                     $appointmentLatterName = $oldAppointmentLatterName;
+                    $appointmentLetterMime = $existing->appointment_letter_mime ?? null;
                 }
 
+
+                // ===== EXPERIENCE LETTER =====
                 if (isset($experience_letters[$index])) {
-                    $experienceLatterName = self::upload($experience_letters[$index], $uploadPath, $oldExperienceLatterName);
+
+                    $upload = self::uploadEncrypted(
+                        $experience_letters[$index],
+                        $uploadPath,
+                        $oldExperienceLatterName
+                    );
+
+                    $experienceLatterName = $upload['path'] ?? $oldExperienceLatterName;
+                    $experienceLetterMime = $upload['mime'] ?? null;
+
                 } else {
                     $experienceLatterName = $oldExperienceLatterName;
+                    $experienceLetterMime = $existing->experience_letter_mime ?? null;
                 }
 
+
+                // ===== RELIEVING LETTER =====
                 if (isset($relieving_letters[$index])) {
-                    $relieving_letterName = self::upload($relieving_letters[$index], $uploadPath, $oldrelieving_letterName);
+
+                    $upload = self::uploadEncrypted(
+                        $relieving_letters[$index],
+                        $uploadPath,
+                        $oldrelieving_letterName
+                    );
+
+                    $relieving_letterName = $upload['path'] ?? $oldrelieving_letterName;
+                    $relievingLetterMime  = $upload['mime'] ?? null;
+
                 } else {
                     $relieving_letterName = $oldrelieving_letterName;
+                    $relievingLetterMime = $existing->relieving_letter_mime ?? null;
                 }
 
+
+                // ===== INCREMENT LETTER =====
                 if (isset($increment_letters[$index])) {
-                    $incrementLatterName = self::upload($increment_letters[$index], $uploadPath, $oldIncrementLatterName);
+
+                    $upload = self::uploadEncrypted(
+                        $increment_letters[$index],
+                        $uploadPath,
+                        $oldIncrementLatterName
+                    );
+
+                    $incrementLatterName = $upload['path'] ?? $oldIncrementLatterName;
+                    $incrementLetterMime = $upload['mime'] ?? null;
+
                 } else {
                     $incrementLatterName = $oldIncrementLatterName;
+                    $incrementLetterMime = $existing->increment_letter_mime ?? null;
                 }
 
+
+                // ===== SALARY SLIP =====
                 if (isset($salary_slips[$index])) {
-                    $salarySlipName = self::upload($salary_slips[$index], $uploadPath, $oldSalarySlipName);
+
+                    $upload = self::uploadEncrypted(
+                        $salary_slips[$index],
+                        $uploadPath,
+                        $oldSalarySlipName
+                    );
+
+                    $salarySlipName = $upload['path'] ?? $oldSalarySlipName;
+                    $salarySlipMime = $upload['mime'] ?? null;
+
                 } else {
                     $salarySlipName = $oldSalarySlipName;
+                    $salarySlipMime = $existing->salary_slip_mime ?? null;
                 }
 
+
+                // ===== BANK STATEMENT =====
                 if (isset($bank_statements[$index])) {
-                    $bankStatementName = self::upload($bank_statements[$index], $uploadPath, $oldBankStatementName);
+
+                    $upload = self::uploadEncrypted(
+                        $bank_statements[$index],
+                        $uploadPath,
+                        $oldBankStatementName
+                    );
+
+                    $bankStatementName = $upload['path'] ?? $oldBankStatementName;
+                    $bankStatementMime = $upload['mime'] ?? null;
+
                 } else {
                     $bankStatementName = $oldBankStatementName;
+                    $bankStatementMime = $existing->bank_statement_mime ?? null;
                 }
 
                 $data = [
@@ -581,13 +697,27 @@ class OnboardController extends Controller
                     'person_contact'        => $person_contacts[$index] ?? null,
                     'employee_id'           => $emp_ids[$index]         ?? null,
                     'leaving_reason'        => $leaving_reasons[$index] ?? null,
+
                     'offer_letter'          => $offerLatterName,
+                    'offer_letter_mime'     => $offerLetterMime ?? null,
+
                     'appointment_letter'    => $appointmentLatterName,
+                    'appointment_letter_mime' => $appointmentLetterMime ?? null,
+
                     'experience_letter'     => $experienceLatterName,
+                    'experience_letter_mime'  => $experienceLetterMime ?? null,
+
                     'relieving_letter'      => $relieving_letterName,
+                    'relieving_letter_mime'   => $relievingLetterMime ?? null,
+
                     'increment_letter'      => $incrementLatterName,
+                    'increment_letter_mime'   => $incrementLetterMime ?? null,
+
                     'salary_slip'           => $salarySlipName,
+                    'salary_slip_mime'     => $salarySlipMime ?? null,
+
                     'bank_statement'        => $bankStatementName,
+                    'bank_statement_mime'     => $bankStatementMime ?? null,
                 ];
 
                 EmployeeWorkExperience::updateOrCreate(
@@ -604,33 +734,31 @@ class OnboardController extends Controller
         return response()->json(['status' => 200, 'message' => 'Employement details saved']);
     }
 
-    public function deleteEmployement(Request $request)
+   public function deleteEmployement(Request $request)
     {
-        $id     = $request->employement_id;
-        
+        $id = $request->employement_id;
+
         if (empty($id)) {
             return response()->json([
-                'status'    => 404,
-                'message'   => 'Employment record not found!'
+                'status'  => 404,
+                'message' => 'Employment record not found!'
             ]);
         }
 
-        if ($request->user_id) {
-           $userId = $request->user_id;
-        }else {
-            $userId = auth()->id();
-        }
-        
-        $employment = EmployeeWorkExperience::find($id);
+        $userId = $request->user_id ?: auth()->id();
+
+        $employment = EmployeeWorkExperience::where('id', $id)
+            ->where('employee_detail_id', Auth::user()->employeeDetail->id)
+            ->first();
 
         if (!$employment) {
             return response()->json([
-                'status'    => 404,
-                'message'   => 'Employment record not found!'
+                'status'  => 404,
+                'message' => 'Employment record not found!'
             ]);
         }
 
-        // All file fields you store
+        // All stored file columns
         $files = [
             $employment->offer_letter,
             $employment->appointment_letter,
@@ -641,22 +769,20 @@ class OnboardController extends Controller
             $employment->bank_statement,
         ];
 
-        // Delete each file safely
         foreach ($files as $file) {
             if (!empty($file)) {
-                $path = 'storage/' . $this->tenant->domain . '/'. $userId . '/work-experience/';
-                self::delete($file, $path);
+                self::deleteEncrypted($file);
             }
         }
 
-        // Delete DB record
         $employment->delete();
 
         return response()->json([
-            'status'    => 200,
-            'message'   => 'Employment record deleted successfully!'
+            'status'  => 200,
+            'message' => 'Employment record deleted successfully!'
         ]);
     }
+
 
     public function onboardingWelcome (Request $request)
     {

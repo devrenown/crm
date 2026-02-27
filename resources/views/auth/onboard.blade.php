@@ -41,6 +41,7 @@
         }
 
         .wizard>.content {
+            min-height: 70vh !important;
             background: #ffffff !important;
         }
 
@@ -64,9 +65,9 @@
             padding: 0 .75rem !important;
         }
 
-        .form-select {
-            padding: 0 2.25rem 0rem .75rem !important;
-        }
+        /*.form-select {*/
+        /*    padding: 0 2.25rem 0rem .75rem !important;*/
+        /*}*/
 
         input[type=file].form-control {
             height: 34px !important;

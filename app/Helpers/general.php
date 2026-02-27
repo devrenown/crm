@@ -27,10 +27,10 @@ if(!function_exists('appLogo')){
         $theme = app(ThemeSettings::class);
         if(!empty($theme->color_scheme)){
             if($theme->color_scheme === 'light'){
-                $logo = asset('storage/settings/theme/'.$theme->logo_light);
+                $logo = asset('storage/' . $theme->logo_light);
             }
             if($theme->color_scheme === 'dark'){
-                $logo = asset('storage/settings/theme/'.$theme->logo_light);
+                $logo = asset('storage/' . $theme->logo_dark);
             }
         }
         return $logo;
@@ -195,7 +195,7 @@ if (!function_exists('SalarySettings')) {
 if (!function_exists('uploadedAsset')) {
     function uploadedAsset($asset, $directory = '')
     {
-        return ($directory !== '') ? asset("storage/$directory/$asset") : asset("storage/$asset");
+        return ($directory !== '') ? asset("storage/$asset") : asset("storage/$asset");
     }
 }
 

@@ -141,7 +141,7 @@
                         {{-- ================= ELIGIBILITY INFO ================= --}}
                         @if($summary['mode'] === 'Not Eligible Yet' && isset($summary['eligible_on']))
                             <small class="text-warning d-block">
-                                Eligible from {{ \Carbon\Carbon::parse($summary['eligible_on'])->format('d M Y') }}
+                                Eligible from {{ tz(\Carbon\Carbon::parse($summary['eligible_on']), 'd M Y') }}
                             </small>
                         @endif
                     </div>
@@ -171,8 +171,9 @@
             @foreach([
                 'Employee' => $leave->user->full_name ?? null,
                 'Leave Type' => $leave->leaveType->name ?? null,
-                'From Date' => optional($leave->start_date)?->format('d M Y'),
-                'To Date' => optional($leave->end_date)?->format('d M Y'),
+                'From Date' => tz($leave->start_date, 'd M Y'),
+                'To Date' => tz($leave->end_date, 'd M Y'),
+                'Applied On' =>  tz($leave->created_at, 'd M Y H:i'),
                 'Applied Days' => $leave->days,
                 'Approved Days' => $leave->approved_days,
                 
@@ -194,7 +195,7 @@
                     <div class="row mb-2">
                         <div class="col-md-3 fw-bold">Date</div>
                         <div class="col-md-9">
-                            {{ \Carbon\Carbon::parse($term['date'])->format('d M Y') }}
+                            {{ tz(\Carbon\Carbon::parse($term['date']), 'd M Y') }}
                         </div>
                     </div>
 
@@ -288,7 +289,7 @@
                         @if($leave->approved_level_1_on)
                             <div class="small mt-1">
                                 By {{ optional($leave->level1Approver)->full_name }}
-                                on {{ $leave->approved_level_1_on->format('d M Y H:i') }}
+                                on {{ tz($leave->approved_level_1_on, 'd M Y H:i') }}
                             </div>
                         @endif
 
@@ -319,7 +320,7 @@
                         @if($leave->approved_level_2_on)
                             <div class="small mt-1">
                                 By {{ optional($leave->level2Approver)->full_name }}
-                                on {{ $leave->approved_level_2_on->format('d M Y H:i') }}
+                                on {{ tz($leave->approved_level_2_on, 'd M Y H:i') }}
                             </div>
                         @endif
 

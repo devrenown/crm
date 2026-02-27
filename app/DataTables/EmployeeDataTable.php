@@ -27,7 +27,7 @@ class EmployeeDataTable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addColumn('fullname', function ($row) {
-                $img = !empty($row->avatar) ? asset('storage/users/'.$row->avatar): asset('images/user.jpg');
+                $img = !empty($row->avatar) ? asset('storage/'.$row->avatar): asset('images/user.jpg');
                 $link = route('employees.show', ['employee' => Crypt::encrypt($row->id)]);
                 return Html::userAvatar($row->fullname, $img, $link);
             })

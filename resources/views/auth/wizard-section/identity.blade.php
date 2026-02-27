@@ -1,8 +1,3 @@
-@php
-    $path = public_path('upload/employee_ids/');
-    $url = asset('upload/employee_ids/');
-@endphp
-
 <h3>Identification</h3>
 <section style="overflow-y:scroll; overflow-x: hidden;">
     <div>
@@ -91,8 +86,26 @@
 
                         <input type="hidden" name="old_ids[]" class="old_ids" value="{{ $pan->image ?? '' }}">
 
-                        @if(!empty($pan) && file_exists($path . $pan->image))
-                           <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $url . '/' . $pan->image }}" target="_blank">View PAN</a>
+                        @if(!empty($pan) && $pan->image)
+
+                            @php
+                                $signedUrl = URL::signedRoute(
+                                    'secure.document.view',
+                                    [
+                                        'path'     => encrypt($pan->image),
+                                        'mime'     => $pan->document_mime,
+                                        'filename' => $pan->image,
+                                        'mode'     => 'clean'
+                                    ],
+                                    now()->addMinutes(5)
+                                );
+                            @endphp
+
+                            <i class="fa-solid fa-check-circle text-success me-1"></i>
+                            <a href="javascript:void(0);" onclick="openSecureDocument('{{ $signedUrl }}')">
+                                View PAN
+                            </a>
+
                         @endif
 
                         <small class="text-muted d-block"><span class="text-danger">*</span>Allowed jpg,jpeg,png,webp,pdf (max 2MB)</small>
@@ -108,7 +121,7 @@
                         <input type="hidden" name="identy_ids[]" class="identy_ids" value="{{ $list->id }}">
                         <div class="col-lg-4 mb-2">
                             <label>ID Type *</label>
-                            <select name="id_type" class="form-select form-control id_type required necessary">
+                            <select name="id_type[]" class="form-select form-control id_type required necessary">
                                 <option value="" selected disabled>--Select ID--</option>
                                 <option value="1" {{ $list->id_type == '1' ? 'selected' : '' }}>Adhar Card</option>
                                 <option value="3" {{ $list->id_type == '3' ? 'selected' : '' }}>Voter ID Card</option>
@@ -119,14 +132,14 @@
 
                         <div class="col-lg-4 mb-2">
                             <label for="id_number">ID Number *</label>
-                            <input name="id_number" type="text" value="{{ !empty($list->id_number) ? decrypt($list->id_number) : '' }}"
+                            <input name="id_number[]" type="text" value="{{ !empty($list->id_number) ? decrypt($list->id_number) : '' }}"
                                 class="form-control id_number required necessary text-uppercase">
                         </div>
 
                         <div class="col-lg-4 mb-2">
                             <label for="id_image">ID Image or PDF* </label>
                             <div class="d-flex justify-content-center align-items-center gap-2">
-                                <input name="id_image" type="file" data-file="{{ @$list->image ?? '' }}" class="form-control id_image necessary"
+                                <input name="id_image[]" type="file" data-file="{{ @$list->image ?? '' }}" class="form-control id_image necessary"
                                     accept="image/*,application/pdf">
 
                                 <input type="hidden" name="old_ids[]" class="old_ids" value="{{ $list->image ?? '' }}">
@@ -136,19 +149,29 @@
                             </div>
 
                             <div class="">
-                                @php
-                                    $filePath = $path . $list->image;
-                                    $fileUrl = $url . '/' . $list->image;
-                                @endphp
-                                @if ($list->image && file_exists($filePath))
-                                   <i class="fa-solid fa-check-circle text-success me-1"></i> <a href="{{ $fileUrl }}" target="_blank">View {{ $list->id_name }}</a>
-                                    <!-- <a href="{{ asset('js/plugins/pdfjs/web/viewer.html') }}?file={{ urlencode($fileUrl) }}" 
-                                       target="_blank">
-                                       View {{ $list->id_name ?? '' }}
-                                    </a> -->
+                                @if(!empty($list->image))
+                                    @php
+                                        $signedUrl = URL::signedRoute(
+                                            'secure.document.view',
+                                            [
+                                                'path'     => encrypt($list->image),
+                                                'mime'     => $list->document_mime,
+                                                'filename' => basename($list->image),
+                                                'mode'     => 'clean'
+                                            ],
+                                            now()->addMinutes(5)
+                                        );
+                                    @endphp
+                                    <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                    <a href="javascript:void(0);"
+                                    onclick="openSecureDocument('{{ $signedUrl }}')">
+                                    View Document
+                                    </a>
                                 @endif
-                                <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
-                                    jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
+                                 <small class="text-muted d-block">
+                                    <span class="text-danger">*</span>
+                                    Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB
+                                </small>
                             </div>
                         </div>
 
@@ -162,12 +185,12 @@
                 <div class="row id-item">
                     <div class="col-lg-6 col-md-6">
                         <label>PAN No.*</label>
-                        <input type="hidden" name="id_type" class="id_type" value="2">
-                        <input type="text" name="id_number" class="form-control id_number required necessary text-uppercase">
+                        <input type="hidden" name="id_type[]" class="id_type" value="2">
+                        <input type="text" name="id_number[]" class="form-control id_number required necessary text-uppercase">
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <label>PAN image or PDF*</label>
-                        <input type="file" name="id_image" class="form-control id_image required necessary">
+                        <input type="file" name="id_image[]" class="form-control id_image required necessary">
 
                         <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
                             jpg,jpeg,png,webp,pdf
@@ -182,7 +205,7 @@
 
                     <div class="col-lg-4 mb-2">
                         <label>ID Type *</label>
-                        <select name="id_type" class="form-select form-control id_type required necessary">
+                        <select name="id_type[]" class="form-select form-control id_type required necessary">
                             <option value="1">Adhar Card</option>
                             <option value="3">Voter ID Card</option>
                             <option value="4">Driving Licence</option>
@@ -192,13 +215,13 @@
 
                     <div class="col-lg-4 mb-2">
                         <label for="id_number">ID Number *</label>
-                        <input name="id_number" value="{{ old('id_number') }}" type="text"
+                        <input name="id_number[]" value="{{ old('id_number') }}" type="text"
                             class="form-control id_number required necessary text-uppercase">
                     </div>
 
                     <div class="col-lg-4 mb-2">
                         <label for="id_image">ID Image or PDF* </label>
-                        <input name="id_image" type="file" class="form-control id_image required necessary" accept="image/*,application/pdf">
+                        <input name="id_image[]" type="file" class="form-control id_image required necessary" accept="image/*,application/pdf">
 
                         <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
                             jpg,jpeg,png,webp,pdf
@@ -220,6 +243,27 @@
 
 </section>
 
+<!-- Secure Document Modal -->
+<div class="modal fade" id="secureDocumentModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Document Preview</h5>
+                <button type="button" class="close" data-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-0" style="height:80vh;">
+                <iframe id="secureDocumentFrame"
+                        src=""
+                        style="width:100%; height:100%; border:none;">
+                </iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @push('page-scripts')
 
     <script>
@@ -228,7 +272,7 @@
                     <div class="row id-item deletable-item align-items-center">
                     <div class="col-lg-4 mb-2">
                         <label>ID Type *</label>
-                        <select name="id_type" class="form-select form-control id_type required necessary">
+                        <select name="id_type[]" class="form-select form-control id_type required necessary">
                             <option value="" selected disabled>--Select ID--</option>
                             <option value="1">Adhar Card</option>
                             <option value="3">Voter ID Card</option>
@@ -239,13 +283,13 @@
 
                     <div class="col-lg-4 mb-2">
                         <label for="id_number">ID Number *</label>
-                        <input name="id_number" type="text" class="form-control id_number required necessary text-uppercase">
+                        <input name="id_number[]" type="text" class="form-control id_number required necessary text-uppercase">
                     </div>
 
                     <div class="col-lg-4 mb-2">
                         <label for="id_image">ID Image or PDF* </label>
                         <div class="d-flex justify-content-center align-items-center gap-2">
-                            <input name="id_image" type="file" class="form-control id_image required necessary"
+                            <input name="id_image[]" type="file" class="form-control id_image required necessary"
                             accept="image/*,application/pdf">
 
                             <a href="javascript:void(0);" class="delete-icon"><i class="fa-regular fa-trash-can"></i></a>
@@ -266,6 +310,18 @@
         function permanentAddressVisiblity() {
             $('#permanent-address, .p-address-heading').slideToggle();
         }
+
+
+    function openSecureDocument(url)
+{
+    $('#secureDocumentFrame').attr('src', url);
+    $('#secureDocumentModal').modal('show');
+}
+
+// optional: clear iframe when closed (security + memory)
+$('#secureDocumentModal').on('hidden.bs.modal', function () {
+    $('#secureDocumentFrame').attr('src', '');
+});
 
     </script>
 

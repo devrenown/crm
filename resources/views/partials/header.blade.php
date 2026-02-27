@@ -30,8 +30,9 @@
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img"><img
-                        src="{{ asset( auth()->user()->avatar ? 'storage/users/' .auth()->user()->avatar : 'images/user.jpg') }}"
-                        alt="User Image" style="height: 40px; width: 40px; object-fit: cover;">
+                    src="{{ asset( auth()->user()->avatar ? 'storage/' . auth()->user()->avatar : 'images/user.jpg') }}"
+                    alt="User Image"
+                    style="height: 40px; width: 40px; object-fit: cover;">
                     <span class="status online"></span></span>
                 <span>{{ auth()->user()->fullname }}</span>
             </a>
