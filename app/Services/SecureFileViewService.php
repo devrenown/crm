@@ -9,30 +9,53 @@ use setasign\Fpdi\PdfParser\StreamReader;
 class SecureFileViewService
 {
     public function streamDocument(
-        string $path,
-        string $mime,
-        string $filename,
-        ?string $originalName,
-        $user
-    ) {
-        $binary = $this->decryptFromPrivateDisk($path);
+    string $path,
+    string $mime,
+    string $filename,
+    ?string $originalName,
+    $user,
+    string $mode = 'watermark'
+) {
+    $binary = $this->decryptFromPrivateDisk($path);
 
-        $tenantName = $user->tenant->name ?? 'Tenant';
-        $timestamp  = now()->format('d-m-Y H:i');
-        $watermark  = "$tenantName | $timestamp";
-
-        $pdf = $this->initializePdf($user, $originalName, $mime, $tenantName);
-
-        if ($mime === 'application/pdf') {
-            $this->handlePdf($pdf, $binary, $watermark);
-        } elseif (str_starts_with($mime, 'image/')) {
-            $this->handleImage($pdf, $binary, $watermark);
-        } else {
-            abort(415, 'Unsupported document type');
-        }
-
-        return $this->streamResponse($pdf, $filename);
+    /*
+    |--------------------------------------------------------------------------
+    | CLEAN MODE (No watermark, No FPDI processing)
+    |--------------------------------------------------------------------------
+    */
+    if ($mode === 'clean') {
+        return response($binary, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => "inline; filename=\"$filename\"",
+            'Cache-Control' => 'no-store, no-cache, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | WATERMARK MODE (Existing System - unchanged)
+    |--------------------------------------------------------------------------
+    */
+
+    $tenantName = $user->tenant->name ?? 'Tenant';
+    $timestamp  = now()->format('d-m-Y H:i');
+    $watermark  = "$tenantName | $timestamp";
+
+    $pdf = $this->initializePdf($user, $originalName, $mime, $tenantName);
+
+    if ($mime === 'application/pdf') {
+        $this->handlePdf($pdf, $binary, $watermark);
+    } elseif (str_starts_with($mime, 'image/')) {
+        $this->handleImage($pdf, $binary, $watermark);
+    } else {
+        abort(415, 'Unsupported document type');
+    }
+
+    return $this->streamResponse($pdf, $filename);
+}
 
     private function decryptFromPrivateDisk(string $path): string
     {

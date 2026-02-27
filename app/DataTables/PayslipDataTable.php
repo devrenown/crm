@@ -35,7 +35,7 @@ class PayslipDataTable extends DataTable
             })
             ->addColumn('employee', function($row){
                 $user = $row->employee->user;
-                $img = !empty($user->avatar) ? asset('storage/users/'.$user->avatar): asset('images/user.jpg');
+                $img = !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg');
                 return Html::userAvatar($user->fullname, $img);
             })
             ->editColumn('type', function($row){

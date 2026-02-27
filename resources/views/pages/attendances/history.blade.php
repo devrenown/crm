@@ -50,30 +50,32 @@
                         @forelse ($attendances as $date => $records)
 
                             @php
-                                $totalMinutes = $records->sum(fn ($r) =>
-                                    $r->endTime ? $r->startTime->diffInMinutes($r->endTime) : 0
-                                );
+                                $totalMinutes = $records->sum(function ($r) {
+                                    if (!$r->startTime || !$r->endTime) return 0;
+
+                                    return \Carbon\Carbon::parse($r->startTime)
+                                        ->diffInMinutes(\Carbon\Carbon::parse($r->endTime));
+                                });
 
                                 $hours   = intdiv($totalMinutes, 60);
                                 $minutes = $totalMinutes % 60;
 
                                 $punchIn  = $records->min('startTime');
                                 $punchOut = $records->whereNotNull('endTime')->max('endTime');
-
-                                $recordDate = \Carbon\Carbon::parse($date);
                             @endphp
 
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ format_date($date) }}</td>
 
-                                <td>{{ $punchIn?->format('h:i A') }}</td>
+                                <td>{{ tz($date, 'd M Y') }}</td>
+
+                                <td>{{ tz($punchIn, 'h:i A') }}</td>
 
                                 <td>
-                                    @if (!$punchOut && $recordDate->lt(now()->startOfDay()))
+                                    @if (!$punchOut && \Carbon\Carbon::parse($date)->lt(now(app('tenant_timezone'))->startOfDay()))
                                         <span class="text-danger">Miss Out</span>
                                     @else
-                                        {{ $punchOut?->format('h:i A') }}
+                                        {{ tz($punchOut, 'h:i A') }}
                                     @endif
                                 </td>
 

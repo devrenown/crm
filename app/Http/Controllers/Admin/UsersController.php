@@ -90,7 +90,7 @@ class UsersController extends BaseController
         ]);
 
         if ($user && $request->hasFile('avatar')) {
-            $path = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
+            $path = $this->tenant->id . '/' . $user->id . '/';
             $fileName = self::upload($request->file('avatar'), $path);
 
             $user->update([
@@ -152,7 +152,7 @@ class UsersController extends BaseController
 
         $fileName = $user->avatar;
         if ($request->hasFile('avatar')) {
-            $path = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
+            $path = $this->tenant->id . '/' . $user->id . '/';
             $fileName = self::upload($request->file('avatar'), $path, $user->avatar ?? '');
         }
 
@@ -185,7 +185,7 @@ class UsersController extends BaseController
     public function destroy(User $user)
     {
         if ($user->avatar) {
-            $path = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
+            $path = $this->tenant->id . '/' . $user->id . '/';
             self::delete($user->avatar, $path);
         }
 

@@ -10,7 +10,7 @@
         <li>
             <a href="{{ route('app.chat').'?contact='.\Crypt::encrypt($user->id) }}">
                 <span class="chat-avatar-sm user-img">
-                    <img class="rounded-circle" src="{{ !empty($user->avatar) ? asset('storage/users/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('avatar') }}" style="object-fit: cover;">
+                    <img class="rounded-circle" src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('avatar') }}" style="object-fit: cover;">
                 </span> 
                 @php
                 $fullname = "$user->firstname $user->middlename $user->lastname";
@@ -35,7 +35,7 @@
     <li class="{{ !empty($requestContact) && ($user->id == \Crypt::decrypt($requestContact)) ? 'active': '' }}">
         <a href="{{ route('app.chat').'?contact='.$contactId }}">
             <span class="chat-avatar-sm user-img">
-                <img class="rounded-circle" src="{{ !empty($user->avatar) ? asset('storage/users/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('avatar') }}" style="object-fit: cover;">
+                <img class="rounded-circle" src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('avatar') }}" style="object-fit: cover;">
                 @if (!empty($user->is_online)) 
                 <span class="status online"></span> 
                 @else

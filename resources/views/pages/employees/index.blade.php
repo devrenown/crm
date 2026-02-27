@@ -77,11 +77,11 @@
                         <div class="profile-img">
                             @activeCan('view-employees')
                                 <a href="{{ route('employees.show', ['employee' => \Crypt::encrypt($employee->id)]) }}" class="avatar">
-                                    <img src="{{ !empty($employee->avatar) ? uploadedAsset($employee->avatar,'users') : asset('images/user.jpg') }}" alt="User Image">
+                                    <img src="{{ !empty($employee->avatar) ? asset('storage/' . $employee->avatar) : asset('images/user.jpg') }}" alt="User Image">
                                 </a>
                             @else
                                 <span class="avatar">
-                                    <img src="{{ !empty($employee->avatar) ? uploadedAsset($employee->avatar,'users') : asset('images/user.jpg') }}" alt="User Image">
+                                    <img src="{{ !empty($employee->avatar) ? asset('storage/' . $employee->avatar) : asset('images/user.jpg') }}" alt="User Image">
                                 </span>
                             @endactiveCan
 

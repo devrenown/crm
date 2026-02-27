@@ -74,6 +74,13 @@ class AppMenuListener
                 ->setActive(route_is('subscription.*'))
         );
 
+        /* ================= Demo Request ================= */
+        // $menu->canForActiveRole(
+        //     'view-demo-request',
+        //     Link::toRoute('demo-request', '<i class="la la-credit-card"></i> <span>' . __('Subscription') . '</span>')
+        //         ->setActive(route_is('subscription.*'))
+        // );
+
         /* ================= ORGANIZATIONS ================= */
         $menu->canAnyForActiveRole(['view-organizations'], function ($menu) {
             $menu->html('<span>Organizations</span>', ['class' => 'menu-title']);
@@ -191,12 +198,52 @@ class AppMenuListener
         }
 
         /* ================= TICKETS ================= */
+        // if (planFeature('modules.tickets')) {
+        //     $menu->canForActiveRole(
+        //         'view-tickets',
+        //         Link::toRoute('tickets.index', '<i class="la la-ticket"></i> <span>' . __('Tickets') . '</span>')
+        //             ->setActive(route_is('tickets.*'))
+        //     );
+        // }
+
+        /* ================= TICKETS ================= */
         if (planFeature('modules.tickets')) {
-            $menu->canForActiveRole(
+            $menu->canAnyForActiveRole([
                 'view-tickets',
-                Link::toRoute('tickets.index', '<i class="la la-ticket"></i> <span>' . __('Tickets') . '</span>')
-                    ->setActive(route_is('tickets.*'))
-            );
+                // 'view-my-tickets',
+            ], function ($menu) {
+
+                $menu->html('<span>Support</span>', ['class' => 'menu-title']);
+
+                $activeClass = route_is([
+                    'tickets.*',
+                    'my-tickets.*',
+                ]) ? 'active' : '';
+
+                $menu->submenu(
+                    Html::raw(
+                        '<a href="#" class="' . $activeClass . '">
+                            <i class="la la-ticket"></i>
+                            <span>' . __('Tickets') . '</span>
+                            <span class="menu-arrow"></span>
+                        </a>'
+                    ),
+                    Menu::new()
+                        ->addParentClass('submenu')
+
+                        ->canForActiveRole(
+                            'view-tickets',
+                            Link::toRoute('tickets.index', __('Tickets'))
+                                ->addClass(route_is(['tickets.*']) ? 'active' : '')
+                        )
+
+                        ->canForActiveRole(
+                            'view-tickets',
+                            Link::toRoute('my-tickets', __('My Tickets'))
+                                ->addClass(route_is(['my-tickets']) ? 'active' : '')
+                        )
+                );
+            });
         }
 
         /* ================= PAYROLL ================= */

@@ -28,3 +28,19 @@ function activeRoleCan(string $permission): bool
         ?->hasPermissionTo($permission) ?? false;
 }
 
+if (! function_exists('tz')) {
+
+    function tz($date, $format = 'd M Y H:i')
+    {
+        if (!$date) return null;
+
+        if (! $date instanceof \Carbon\Carbon) {
+            $date = \Carbon\Carbon::parse($date);
+        }
+
+        return $date
+            ->timezone(app('tenant_timezone'))
+            ->format($format);
+    }
+}
+

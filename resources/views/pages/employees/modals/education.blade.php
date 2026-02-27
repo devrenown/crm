@@ -69,9 +69,31 @@
                             </div>
                             <div class="col-md-6">
                                 <x-form.input-block>
-                                    <x-form.label calss="focus-label"> {{ __('File') }}</x-form.label>
+                                    <x-form.label> {{ __('File') }}</x-form.label>
                                     <x-form.input type="file" name="file" />
-                                    <input type="hidden" name="old_file" value="{{ @$education->file }}">
+                                    <input type="hidden" name="old_file" value="{{ $education->file ?? '' }}">
+
+                                    @if(!empty($education->file))
+                                        @php
+                                            $signedUrl = URL::signedRoute(
+                                                'secure.document.view',
+                                                [
+                                                    'path'     => encrypt($education->file),
+                                                    'mime'     => $education->document_mime ?? 'application/pdf',
+                                                    'filename' => basename($education->file),
+                                                    'mode'     => 'watermark'
+                                                ],
+                                                now()->addMinutes(5)
+                                            );
+                                        @endphp
+
+                                        <a href="javascript:void(0);"
+                                        onclick="openSecureDocument('{{ $signedUrl }}')"
+                                        class="d-block mt-1">
+                                            <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                            View File
+                                        </a>
+                                    @endif
                                 </x-form.input-block>
                             </div>
                         </div>

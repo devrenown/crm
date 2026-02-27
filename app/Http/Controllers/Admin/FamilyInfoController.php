@@ -43,8 +43,13 @@ class FamilyInfoController extends Controller
         ]);
         $fileName = null;
         if($request->hasFile('image')){
-            $path = 'storage/' . $this->tenant->domain . '/' . $request->user . '/family-members/'; 
-            $fileName = self::upload($request->file('image'), $path);
+            $path = $this->tenant->id . '/' . $request->user . '/family-members/'; 
+            $upload = self::upload(
+                $request->file('image'),
+                $path,
+            );
+
+            $fileName = $upload;
         }
         UserFamilyInfo::create([
             'user_id'       => $request->user,
@@ -90,10 +95,10 @@ class FamilyInfoController extends Controller
             'user' => 'required',
             'image' => 'nullable|file|image'
         ]);
-        $fileName = $family_information->image;
+        $fileName = $family_information->picture;
         if($request->hasFile('image')){
-            $path       = 'storage/' . $this->tenant->domain . '/' . $request->user . '/family-members/'; 
-            $fileName   = self::upload($request->file('image'), $path, $family_information->image ?? '');
+            $path       = $this->tenant->id . '/' . $request->user . '/family-members/'; 
+            $fileName   = self::upload($request->file('image'), $path, $family_information->picture ?? '');
         }
         $family_information->update([
             'user_id' => $request->user,
@@ -114,7 +119,7 @@ class FamilyInfoController extends Controller
     public function destroy(UserFamilyInfo $family_information)
     {
         if ($family_information->picture) {
-            $path       = 'storage/' . $this->tenant->domain . '/' . $family_information->user_id . '/family-members/';
+            $path = $this->tenant->id . '/' . $family_information->user_id . '/family-members/'; 
             self::delete($family_information->picture, $path);
         }
 

@@ -34,6 +34,9 @@ class TicketDataTable extends DataTable
             })
             ->addColumn('tk_id', function($row){
                 $param = ['ticket' => Crypt::encrypt($row->id)];
+                if (route_is('my-tickets')) {
+                    return '<a href="'.route('my-tickets.show',$param).'">'.$row->tk_id.'</a>';
+                }
                 return '<a href="'.route('tickets.show',$param).'">'.$row->tk_id.'</a>';
             })
             ->editColumn('status', function($row){
@@ -56,7 +59,7 @@ class TicketDataTable extends DataTable
             })
             ->addColumn('user', function($row){
                 if(!empty($row->user_id)){
-                    $img = !empty($row->avatar) ? asset('storage/users/'.$row->avatar): asset('images/user.jpg');
+                    $img = !empty($row->avatar) ? asset('storage/'.$row->avatar): asset('images/user.jpg');
                     $link = 'javascript:void(0)';
                     if(can('show-Employeeprofile')){
                         $link = route('employees.show', ['employee' => Crypt::encrypt($row->id)]);
@@ -83,14 +86,19 @@ class TicketDataTable extends DataTable
      */
     public function query()
     {
-        if(auth()->user()->type === UserType::SUPERADMIN && auth()->user()->type === UserType::ADMIN){
-           return Ticket::query();
-           
-        }else if (auth()->user()->type === UserType::EMPLOYEE) {
-           return Ticket::where('user_id', auth()->user()->id)->newQuery(); 
+        // if(activeRole() === UserType::SUPERADMIN->value && activeRole() === UserType::ADMIN->value){
+        //    return Ticket::query();
+        // }else if (activeRole() === UserType::EMPLOYEE->value) {
+        //    return Ticket::where('user_id', auth()->user()->id)->newQuery(); 
+        // }
+
+        if(route_is('my-tickets')){
+            return Ticket::where('created_by', auth()->user()->id)
+                ->where('user_id', '!=', auth()->user()->id)
+                ->newQuery();
         }
 
-        return Ticket::where('created_by', auth()->user()->id)->newQuery();
+        return Ticket::where('user_id', auth()->user()->id)->newQuery();
     }
 
     /**
@@ -121,7 +129,7 @@ class TicketDataTable extends DataTable
         return [
             Column::make('tk_id'),
             Column::make('subject'),
-            Column::make('user'),
+            Column::make('user')->visible(!route_is('my-tickets')),
             Column::make('created_at'),
             Column::make('priority'),
             Column::make('status'),

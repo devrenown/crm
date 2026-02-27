@@ -60,7 +60,7 @@ class UserProfileController extends Controller
         $fileName = $user->avatar;
         if ($request->hasFile('avatar')) {
 
-            $path =  $this->tenant->domain . '/'. $user->id . '/';
+            $path =  $this->tenant->id . '/'. $user->id . '/';
             $fileName   = self::upload($request->file('avatar'), $path, $user->avatar ?? '');
         }
         $user->update([

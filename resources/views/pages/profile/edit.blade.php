@@ -4,12 +4,12 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="profile-img-wrap edit-img">
-                    <img class="inline-block"
+                    <img class="inline-block user-profile"
                         src="{{ !empty($user->avatar) ? asset('storage/users/' . $user->avatar) : asset('assets/img/user.jpg') }}"
                         alt="User Image">
                     <div class="fileupload btn">
                         <span class="btn-text">edit</span>
-                        <x-form.input class="upload" type="file" name="avatar" />
+                        <x-form.input class="upload" type="file" name="avatar" onchange="document.querySelector('.user-profile').src = window.URL.createObjectURL(this.files[0])" />
                     </div>
                 </div>
                 <div class="row">

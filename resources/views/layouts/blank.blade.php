@@ -39,6 +39,7 @@
     @include('partials.scripts')
     @yield('modals')
     
+    
 </body>
 
 </html>

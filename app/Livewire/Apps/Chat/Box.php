@@ -55,28 +55,33 @@ class Box extends Component
     }
 
     // [On('echo:chat-message,ChatMessageSent')]
-    #[On('echo-private:chat.user.{authUserId},chat.message.sent')]
-    public function refreshMessages()
-    {
-        $this->dispatch('scroll-chat');
-    }
+   #[On('echo-private:chat.user.{authUserId},chat.message.sent')]
+public function refreshMessages()
+{
+    $this->dispatch('scroll-chat');
+    $this->reset(); // forces component refresh
+}
 
-    public function fetchMessages()
-    {
-        $user_id = $this->getUser()->id;
-        // mark unread as read
-        ChatMessage::where('user_id', $user_id)
-                ->where('receiver_id', auth()->user()->id)
-                ->update([
-                    'is_read' => true
-                ]);
-        return ChatMessage::where('from_id', Auth::user()->id)
-            ->where('receiver_id', $user_id)
-            ->orWhere('from_id', $user_id)
-            ->where('receiver_id', Auth::user()->id);
-            
-    }
+   public function fetchMessages()
+{
+    $user_id = $this->getUser()->id;
 
+    // mark unread as read
+    ChatMessage::where('from_id', $user_id)
+        ->where('receiver_id', auth()->id())
+        ->update([
+            'is_read' => true
+        ]);
+
+    return ChatMessage::where(function ($q) use ($user_id) {
+        $q->where('from_id', auth()->id())
+          ->where('receiver_id', $user_id);
+    })
+    ->orWhere(function ($q) use ($user_id) {
+        $q->where('from_id', $user_id)
+          ->where('receiver_id', auth()->id());
+    });
+}
 
     #[Js] 
     public function scrollDown()

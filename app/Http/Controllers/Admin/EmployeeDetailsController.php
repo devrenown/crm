@@ -12,11 +12,12 @@ use App\Http\Controllers\Controller;
 use App\Models\EmployeeSalaryDetail;
 use App\Models\EmployeeWorkExperience;
 use App\Http\Controllers\BaseController;
+use App\Traits\SecureFileUpload;
 use App\Traits\uploadFile;
 
 class EmployeeDetailsController extends BaseController
 {
-    use UploadFile;
+    use UploadFile, SecureFileUpload;
 
     public $tenant;
 
@@ -122,12 +123,32 @@ class EmployeeDetailsController extends BaseController
         $employeeExperiences = $employeeDetail->workExperience;
         $experiences = $request->experience;
         foreach ($experiences as $i => $experience) {
-            $fileName = null;
-            $dir = public_path("storage/employees/" . $employeeDetail->emp_id . "/work-experience");
-            $requestFile = $experience['file'] ?? null;
-            if (!empty($requestFile)) {
-                $fileName = random_str(7) . '.' . $requestFile->extension();
-                $requestFile->move($dir, $fileName);
+             $existing = isset($experience['id'])
+            ? EmployeeWorkExperience::find($experience['id'])
+            : null;
+
+            $oldFile  = $existing->file ?? null;
+            $filePath = $oldFile;
+            $fileMime = $existing->document_mime ?? null;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Handle File Upload Securely
+            |--------------------------------------------------------------------------
+            */
+            if (isset($experience['file']) 
+                && $experience['file'] instanceof \Illuminate\Http\UploadedFile) {
+
+                $path = $this->tenant->id . '/' . $userId . '/experience/';
+
+                $upload = self::uploadEncrypted(
+                    $experience['file'],
+                    $path,
+                    $oldFile
+                );
+
+                $filePath = $upload['path'] ?? $filePath;
+                $fileMime = $upload['mime'] ?? $fileMime;
             }
             EmployeeWorkExperience::updateOrCreate([
                 'employee_detail_id' => $employeeDetail->id,
@@ -202,16 +223,27 @@ class EmployeeDetailsController extends BaseController
 
         foreach ($educations as $i => $education) {
             
-            $requestFile = $education['file'] ?? null;
-            $fileName   = null;
-            $oldFile    = $education['old_file'] ?? null;
+            $existing = EmployeeEducation::find($education['id'] ?? null);
 
-            if (isset($requestFile)) {
-                $path = 'storage/'. $this->tenant->domain . '/'. $userId . '/education/';
-                $fileName = self::upload($requestFile, $path, $oldFile);
-            } else {
-                $fileName = $oldFile;
-            }
+                $oldFile  = $education['old_file'] ?? null;
+
+                $filePath = $oldFile;
+                $fileMime = $existing->document_mime ?? null;
+
+                // If new file uploaded
+                if (isset($education['file'])) {
+
+                    $path = $this->tenant->id . '/' . $userId . '/education/';
+
+                    $upload = self::uploadEncrypted(
+                        $education['file'],
+                        $path,
+                        $oldFile
+                    );
+
+                    $filePath = $upload['path'] ?? $oldFile;
+                    $fileMime = $upload['mime'] ?? $fileMime;
+                }
 
             EmployeeEducation::updateOrCreate([
                 'employee_detail_id' => $employeeDetail->id,
@@ -224,7 +256,8 @@ class EmployeeDetailsController extends BaseController
                 'grade'                 => $education['grade'] ?? '',
                 'start_date'            => $education['start_date'] ?? '',
                 'end_date'              => $education['end_date'] ?? '',
-                'file'                  => $fileName,
+                'file'                  => $filePath,
+                'document_mime'         => $fileMime,
             ]);
         }
         $notification = notify(__("Employee education has been added"));
@@ -239,7 +272,7 @@ class EmployeeDetailsController extends BaseController
         $userId = $request->user_id;
 
         $education = EmployeeEducation::findOrFail($request->education);
-        $path = 'storage/'. $this->tenant->domain . '/'. $userId . '/education/';
+        $path = $this->tenant->id . '/'. $userId . '/education/';
 
         if ($education->file) {
             self::delete($education->file, $path);

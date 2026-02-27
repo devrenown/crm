@@ -70,7 +70,7 @@ class ClientsController extends Controller
         $fileName = null;
         if ($request->hasFile('avatar')) {
 
-            $path       = 'storage/' . $this->tenant->domain . '/clients/';
+            $path       = $this->tenant->id . '/clients/';
             $imageName  = time() . '.' . $request->avatar->extension();
 
             $fileName   = self::upload($request->avatar, $path);
@@ -165,7 +165,7 @@ class ClientsController extends Controller
         $fileName = $user->avatar;
 
         if ($request->hasFile('avatar')) {
-            $path       = 'storage/' . $this->tenant->domain . '/clients/';
+            $path       = $this->tenant->id . '/clients/';
             $imageName  = time() . '.' . $request->avatar->extension();
 
             $fileName   = self::upload($request->avatar, $path, !empty($user->avatar) ?? null);
@@ -198,7 +198,7 @@ class ClientsController extends Controller
      */
     public function destroy(User $client)
     {
-        $path = 'storage/' . $this->tenant->domain . '/clients/';
+        $path = $this->tenant->id . '/clients/';
 
         if ($client->avatar) {
             self::delete($client->avatar, $path);

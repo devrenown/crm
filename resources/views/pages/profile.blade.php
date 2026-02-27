@@ -33,9 +33,11 @@
                         <div class="profile-view">
                             <div class="profile-img-wrap">
                                 <div class="profile-img">
-                                    <a href="#"><img
-                                    src="{{ $user->avatar ? asset('storage/users/' . $user->avatar) : asset('images/user.jpg') }}"
-                                    alt="User Image" style="object-fit: cover;"></a>
+                                    <a href="#"><img src="{{ $user->avatar 
+                                    ? asset('storage/' . $user->avatar) 
+                                    : asset('images/user.jpg') }}"
+                                alt="User Image"
+                                style="object-fit: cover;"></a>
 
                                     {{-- <a href="#"><img
                                     src="{{ $user->avatar }}"

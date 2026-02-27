@@ -33,6 +33,7 @@ use App\Http\Controllers\Leaves\{
     LeaveIndexController,
     LeaveCreateController,
     LeaveViewController,
+    LeaveEditController,
     LeaveApprovalController,
     LeaveDeleteController
 };
@@ -40,9 +41,11 @@ use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\RazorpayPaymentController;
 use App\Http\Controllers\ShiftManagementController;
+use App\Services\SecureFileViewService;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 
 Route::get('/', [DashboardController::class, 'front'])->name('front');
@@ -96,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
           Route::get('upgrade', 'upgrade')->name('subscription.upgrade'); 
         });
     });
+
+     
 
     Route::middleware(['onboarding', 'check_plan'])->group(function () {
 
@@ -162,7 +167,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('clockout-modal/{timeId?}', [EmployeeAttendanceController::class, 'clockoutModal'])->name('clockout-modal');
         Route::post('clockout', [EmployeeAttendanceController::class, 'clockout'])->name('clockout');
         Route::resource('tickets', TicketsController::class);
-        Route::get('assigned-tickets', [TicketsController::class, 'assignedTickets'])->name('assigned-tickets');
+        Route::get('my-tickets', [TicketsController::class, 'assignedTickets'])->name('my-tickets');
+        Route::get('my-tickets/{ticket}', [TicketsController::class, 'show'])->name('my-tickets.show');
         Route::post('assign-ticket', [TicketsController::class, 'assignUser'])->name('ticket.assign-user');
 
         Route::get('app-logs', fn() => redirect()->to('log-viewer'))->name('app.logs');
@@ -243,22 +249,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('leave-type', LeaveTypeController::class);
         Route::resource('leave-balances', LeaveBalanceController::class);
 
-        Route::get('/secure/document', function (Request $request) {
-            abort_unless($request->hasValidSignature(), 403);
-
-            $path     = decrypt($request->path);
-            $mime     = $request->mime;
-            $filename = $request->filename;
-
-            return app(\App\Services\SecureFileViewService::class)
-                ->streamDocument(
-                    $path,
-                    $mime,
-                    $filename,
-                    $filename,
-                    auth()->user()
-                );
-        })->name('secure.document.view')->middleware('auth');
 
         // =============== Shift management routes =================== //
         Route::get('shift', [ShiftManagementController::class, 'index'])->name('shift.index');
@@ -275,6 +265,34 @@ Route::middleware(['auth'])->group(function () {
         // =============== Switch role route =================== //
         Route::post('/switch-role', [DashboardController::class, 'switchRole'])->name('switch.role');
     });
+
+    Route::get('/secure/document', function (Request $request) {
+        //abort_unless($request->hasValidSignature(), 403);
+        if (!$request->filled('path')) {
+            abort(404, 'Missing file path');
+        }
+
+        try {
+            $path = decrypt($request->input('path'));
+        } catch (\Throwable $e) {
+            abort(403, 'Invalid file signature');
+        }
+    
+        $mime     = $request->input('mime');
+        $filename = $request->input('filename');
+        $mode     = $request->input('mode', 'watermark');
+
+        return app(\App\Services\SecureFileViewService::class)
+            ->streamDocument(
+                $path,
+                $mime,
+                $filename,
+                $filename,
+                auth()->user(),
+                $mode
+            );
+
+    })->name('secure.document.view')->middleware(['auth', 'signed']);
 
     Route::any('logout', [AuthController::class, 'logout'])->name('logout');
 

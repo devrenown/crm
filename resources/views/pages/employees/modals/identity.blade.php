@@ -2,11 +2,6 @@
     <form action="{{ route('onboard.identity', ['user_id' => $employeeDetail->user_id]) }}" id="identityForm" method="post" enctype="multipart/form-data">
         @csrf
         
-        @php
-            $path = public_path('upload/employee_ids/');
-            $url = asset('upload/employee_ids/');
-        @endphp
-        
       <div class="row">
           <h5 class="fs-6">Current Address</h5>
           
@@ -80,16 +75,26 @@
                             </div>
 
                             <div class="">
-                                @php
-                                    $filePath = $path . $list->image;
-                                    $fileUrl = $url . '/' . $list->image;
-                                @endphp
-                                @if ($list->image && file_exists($filePath))
-                                    <a href="{{ $fileUrl }}" target="_blank">View {{ $list->id_name }}</a>
-                                    <!-- <a href="{{ asset('js/plugins/pdfjs/web/viewer.html') }}?file={{ urlencode($fileUrl) }}" 
-                                       target="_blank">
-                                       View {{ $list->id_name ?? '' }}
-                                    </a> -->
+                                @if(!empty($list->image))
+                                    @php
+                                        $signedUrl = URL::signedRoute(
+                                            'secure.document.view',
+                                            [
+                                                'path'     => encrypt($list->image),
+                                                'mime'     => $list->document_mime ?? 'application/pdf',
+                                                'filename' => $list->id_name ?? basename($list->image),
+                                                'mode'     => 'watermark'
+                                            ],
+                                            now()->addMinutes(5)
+                                        );
+                                    @endphp
+
+                                    <a href="javascript:void(0);"
+                                    onclick="openSecureDocument('{{ $signedUrl }}')"
+                                    class="d-block mt-1">
+                                        <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                        View {{ $list->id_name }}
+                                    </a>
                                 @endif
                                 <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
                                     jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>

@@ -178,8 +178,8 @@
             <input type="hidden" name="old_image" id="old_image" value="{{ $user->avatar ?? '' }}">
 
             <div class="">
-                @if ($user->avatar && file_exists(public_path('storage/users/' . $user->avatar)))
-                    <img src="{{ asset('storage/users/' . $user->avatar) }}" alt="User Profile"
+                @if ($user->avatar && file_exists(public_path('storage/' . $user->avatar)))
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="User Profile"
                         style="height: 100px; width: 100px; object-fit: cover;">
                 @endif
 

@@ -115,7 +115,7 @@ class SettingsController extends Controller
         $logo_dark = $settings->logo_dark;
         $favicon = $settings->favicon;
 
-        $path = 'storage/' . $this->tenant->domain . '/settings/theme/';
+        $path = $this->tenant->id . '/settings/theme/';
 
         if ($request->hasFile('side_img')) {
             $side_img = self::upload($request->file('side_img'), $path, $settings->sidebar_img ?? '');
@@ -166,7 +166,7 @@ class SettingsController extends Controller
 
         $fileName = $settings->logo;
         if ($request->hasFile('logo')) {
-            $path = 'storage/' . $this->tenant->domain . '/settings/invoice/';
+            $path = $this->tenant->id . '/settings/invoice/';
             $fileName = self::upload($request->file('logo'), $path, $settings->logo ?? '');
         }
         $settings->prefix = $request->prefix ?? $settings->prefix;

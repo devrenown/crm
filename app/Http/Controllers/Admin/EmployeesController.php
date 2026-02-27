@@ -134,7 +134,7 @@ class EmployeesController extends Controller
         if ($user) {
 
             if ($request->hasFile('avatar')) {
-                $path      = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
+                $path      = $this->tenant->id . '/' . $user->id . '/';
                 $fileName  = self::upload($request->file('avatar'), $path);
 
                 $user->update([
@@ -223,7 +223,7 @@ class EmployeesController extends Controller
 
         $fileName  = $user->avatar;
         if ($request->hasFile('avatar')) {
-            $path      = 'storage/' . $this->tenant->domain . '/' . $user->id . '/';
+            $path      = $this->tenant->id . '/' . $user->id . '/';
             $fileName  = self::upload($request->file('avatar'), $path, $user->avatar ?? '');
         }
 
@@ -241,7 +241,7 @@ class EmployeesController extends Controller
             'avatar'                => $fileName,
             'reporting_manager'     => $request->reporting_manager ?? null,
             'sub_reporting_manager' => $request->sub_reporting_manager ?? null,
-            'is_active'             => !empty($request->status) ?? $user->is_active,
+            'is_active'             => !empty($request->status),
             'password'              => !empty($request->password) ? Hash::make($request->password) : $user->password
         ]);
         if (!empty($user)) {
@@ -257,10 +257,14 @@ class EmployeesController extends Controller
                 'designation_id'    => $request->designation,
             ]);
 
-            EmployeeShift::create([
-                'user_id'   => $user->id,
-                'shift_id'  => $request->shift,
-            ]);
+            // EmployeeShift::create([
+            //     'user_id'   => $user->id,
+            //     'shift_id'  => $request->shift,
+            // ]);
+            EmployeeShift::updateOrCreate(
+                ['user_id' => $user->id],
+                ['shift_id' => $request->shift]
+            );
         }
         $notification = notify(__("Employee has been updated"));
         return back()->with($notification);
@@ -272,7 +276,7 @@ class EmployeesController extends Controller
     public function destroy(User $employee)
     {
         if ($employee->avatar) {
-            $path      = 'storage/' . $this->tenant->domain . '/' . $employee->id . '/';
+            $path      = $this->tenant->id . '/' . $employee->id . '/';
             self::delete($employee->avatar, $path);
         }
         $employee->delete();

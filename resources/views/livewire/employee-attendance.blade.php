@@ -194,8 +194,12 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         <div class="text-center">
+                            @php
+                                $tz = app(\App\Services\TenantService::class)
+                                    ->timezone(auth()->user()->tenant_id);
+                            @endphp
                            
-                            {{ __('Timesheet') }} <small class="text-muted">{{ format_date(Date('Y-m-d')) }}</small>
+                            {{ __('Timesheet') }} <small class="text-muted">{{ format_date(now($tz)->toDateString()) }}</small>
                         </div>
                     </h5>
                     
@@ -343,6 +347,7 @@
                             @php
                                 $monthHoursOnly = (int) explode(':', $totalHoursThisMonth)[0];
                                 $weekPercent = min(($monthHoursOnly / $minHoursInMonth) * 100, 100);
+                                $monthPercent = min(($monthHoursOnly / $minHoursInMonth) * 100, 100);
                             @endphp
 
                             <div class="progress">
@@ -351,7 +356,7 @@
                                      aria-valuenow="{{ $monthHoursOnly }}"
                                      aria-valuemin="{{ $weekPercent }}"
                                      aria-valuemax="100" 
-                                     style="width: {{ $weekPercent }}%;">
+                                     style="width: {{ $monthPercent }}%;">
                                 </div>
                             </div>
                         </div>
@@ -373,7 +378,9 @@
                                 <p class="mb-0">{{ __('Punch In at') }}</p>
                                 <p class="res-activity-time">
                                     <i class="fa-regular fa-clock"></i>
-                                    {{ !empty($item->startTime) ? $item->startTime->format('H:i A'): '' }}
+                                    {{ $item->startTime instanceof \Carbon\Carbon
+                                    ? $item->startTime->copy()->timezone($tz)->format('h:i A')
+                                    : '' }}
                                 </p>
                             </li>
                             @if (!empty($item->endTime))
@@ -381,7 +388,9 @@
                                 <p class="mb-0">{{ __('Punch Out at') }}</p>
                                 <p class="res-activity-time">
                                     <i class="fa-regular fa-clock"></i>
-                                    {{ !empty($item->endTime) ? $item->endTime->format('H:i A'): '' }}
+                                    {{ $item->endTime instanceof \Carbon\Carbon
+                                    ? $item->endTime->copy()->timezone($tz)->format('h:i A')
+                                    : '' }}
                                 </p>
                             </li>
                             <hr>
@@ -412,23 +421,36 @@
                         @forelse ($attendances as $date => $records)
 
                             @php
-                                // Total minutes worked in the day
-                                $totalMinutes = $records->sum(function ($r) {
-                                    return $r->endTime
-                                        ? $r->startTime->diffInMinutes($r->endTime)
-                                        : 0;
+                                $tz = app(\App\Services\TenantService::class)
+                                    ->timezone(auth()->user()->tenant_id);
+
+                                $totalMinutes = $records->sum(function ($r) use ($tz) {
+
+                                    if (!$r->startTime instanceof \Carbon\Carbon ||
+                                        !$r->endTime instanceof \Carbon\Carbon) {
+                                        return 0;
+                                    }
+
+                                    $start = $r->startTime->copy()->timezone($tz);
+                                    $end   = $r->endTime->copy()->timezone($tz);
+
+                                    return $start->diffInMinutes($end);
                                 });
 
                                 $hours = intdiv($totalMinutes, 60);
                                 $minutes = $totalMinutes % 60;
 
-                                // Punch In = earliest startTime
-                                $punchIn = $records->min('startTime');
+                                $rawPunchIn = $records->min('startTime');
+                                $punchIn = $rawPunchIn instanceof \Carbon\Carbon
+                                    ? $rawPunchIn->copy()->timezone($tz)
+                                    : null;
 
-                                // Punch Out = latest endTime (ignore nulls)
-                                $punchOut = $records->whereNotNull('endTime')->max('endTime');
+                                $rawPunchOut = $records->whereNotNull('endTime')->max('endTime');
+                                $punchOut = $rawPunchOut instanceof \Carbon\Carbon
+                                    ? $rawPunchOut->copy()->timezone($tz)
+                                    : null;
 
-                                $recordDate = \Carbon\Carbon::parse($date);
+                                $recordDate = \Carbon\Carbon::parse($date, $tz);
                             @endphp
         
                             <tr>
@@ -440,7 +462,7 @@
                                 </td>
 
                                 <td>
-                                    @if (!$punchOut && $recordDate->lt(now()->startOfDay()))
+                                    @if (!$punchOut && $recordDate->lt(now($tz)->startOfDay()))
                                         <span class="text-danger">Miss Out</span>
                                     @else
                                         {{ $punchOut ? $punchOut->format('h:i A') : '' }}
@@ -523,58 +545,52 @@
         </div>
     </div>
 
-    <script>
-        /* -----------------------------
-           ANALOG CLOCK (FIXED)
-        ------------------------------ */
+   <script>
+    const tenantTimezone = @json($tz);
 
-        const clockEl = document.querySelector('.clock');
+    const weekday = [
+        "Sunday","Monday","Tuesday",
+        "Wednesday","Thursday","Friday","Saturday"
+    ];
 
-        const weekday = [
-            "Sunday","Monday","Tuesday",
-            "Wednesday","Thursday","Friday","Saturday"
-        ];
+    function clock() {
 
-        /* CLOCK FUNCTION */
-        function clock() {
+        const now = new Date(
+            new Date().toLocaleString("en-US", { timeZone: tenantTimezone })
+        );
 
-          const d   = new Date();
-          const h   = d.getHours();
-          const m   = d.getMinutes();
-          const s   = d.getSeconds();
-          const ms  = d.getMilliseconds();
+        const h  = now.getHours();
+        const m  = now.getMinutes();
+        const s  = now.getSeconds();
+        const ms = now.getMilliseconds();
 
-          const date    = d.getDate();
-          let month     = d.getMonth() + 1;
-          const year    = d.getFullYear();
+        const date  = now.getDate();
+        let month   = now.getMonth() + 1;
+        const year  = now.getFullYear();
 
-          /* CALCULATE DEGREES */
-           const sDeg = (s + ms / 1000) * 6;          // smooth sweep
-           const mDeg = (m + s / 60) * 6;
-           const hDeg = (h % 12 + m / 60) * 30;
+        const sDeg = (s + ms / 1000) * 6;
+        const mDeg = (m + s / 60) * 6;
+        const hDeg = (h % 12 + m / 60) * 30;
 
-          /* ELEMENTS */
-          const hEl = document.querySelector('.hour-hand');
-          const mEl = document.querySelector('.minute-hand');
-          const sEl = document.querySelector('.second-hand');
-          const dateEl = document.querySelector('.date');
-          const dayEl = document.querySelector('.day');
+        const hEl = document.querySelector('.hour-hand');
+        const mEl = document.querySelector('.minute-hand');
+        const sEl = document.querySelector('.second-hand');
+        const dateEl = document.querySelector('.date');
+        const dayEl = document.querySelector('.day');
 
-          /* APPLY TRANSFORMS (DO NOT OVERWRITE CSS) */
-          hEl.style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
-          mEl.style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
-          sEl.style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
+        hEl.style.transform = `translateX(-50%) rotate(${hDeg}deg)`;
+        mEl.style.transform = `translateX(-50%) rotate(${mDeg}deg)`;
+        sEl.style.transform = `translateX(-50%) rotate(${sDeg}deg)`;
 
-          /* DATE & DAY */
-          if (month < 10) month = "0" + month;
-          dateEl.innerHTML = `${date}/${month}/${year}`;
-          dayEl.innerHTML = weekday[d.getDay()];
-
-          requestAnimationFrame(clock);
-        }
+        if (month < 10) month = "0" + month;
+        dateEl.innerHTML = `${date}/${month}/${year}`;
+        dayEl.innerHTML = weekday[now.getDay()];
 
         requestAnimationFrame(clock);
-    </script>
+    }
+
+    requestAnimationFrame(clock);
+</script>
       
     @script
         <script defer type="module">
