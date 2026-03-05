@@ -1,5 +1,5 @@
 @php
-    $inputId = random_str(5) ?? $name.'-ckeditor_id';
+    $inputId = 'editor_' . random_str(5);
     if (!empty($id) && isset($id)) {
         $inputId = $id;
     }

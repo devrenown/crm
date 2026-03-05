@@ -28,7 +28,7 @@
                     <p class="mb-2"><a href="{{ url('/#pricing') }}" class="text-white text-decoration-none">Pricing</a></p>
                     <p class="mb-2"><a href="{{ url('/#how-it-works') }}" class="text-white text-decoration-none">How it Works</a></p>
                     <p class="mb-2"><a href="{{ url('/#testimonials') }}" class="text-white text-decoration-none">Testimonials</a></p>
-                    <p class="mb-2"><a href="{{ url('/#contact') }}" class="text-white text-decoration-none">Contact</a></p>
+                    <p class="mb-2"><a href="{{ url('/#contact-section') }}" class="text-white text-decoration-none">Contact</a></p>
                 </div>
 
                 <!-- Support -->

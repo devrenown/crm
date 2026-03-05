@@ -29,7 +29,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="fw-bold text-white">Phone Number</label>
-                                <input type="number" id="phone" name="phone" class="form-control" placeholder="+91 6748463765" required>
+                                <input type="number" id="phone" name="phone" class="form-control" placeholder="Enter Your Contact Number" required>
                             </div>
                             <div class="mb-3">
                                 <label for="message" class="fw-bold text-white">Message</label>

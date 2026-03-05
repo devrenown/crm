@@ -32,8 +32,8 @@ use App\Http\Controllers\EmployeeAttendanceController;
 use App\Http\Controllers\Leaves\{
     LeaveIndexController,
     LeaveCreateController,
-    LeaveViewController,
     LeaveEditController,
+    LeaveViewController,
     LeaveApprovalController,
     LeaveDeleteController
 };

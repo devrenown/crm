@@ -125,7 +125,8 @@
                 @endphp
                 
                 <h3 class="">
-                    <span class="fw-bold" style="color: {{ $theme->color_scheme }}">{{ $name }}</span>
+                    <span class="fw-bold" style="color: {{ $theme->color_scheme }}">{{ Theme('name') ?? config('app.name') }}</span>
+                   
                 </h3>
             </div>
 

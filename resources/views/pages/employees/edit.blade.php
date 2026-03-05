@@ -144,7 +144,7 @@
             <div class="col-sm-6">
                 <div class="status-toggle">
                     <x-form.label>{{ __('Status') }}</x-form.label>
-                    <input type="checkbox" id="status" class="form-control check" name="status" {{ $employee->is_active == 1 ? 'checked' : '' }} />
+                    <input type="checkbox" id="edit-emp-status" class="form-control check" name="status" {{ $employee->is_active == 1 ? 'checked' : '' }} />
                     <label for="status" class="checktoggle">checkbox</label>
                 </div>
             </div>
@@ -154,3 +154,9 @@
         </div>
     </form>
 </div>
+
+<script>
+    $(document).on('click', '.checktoggle', function () {
+        $('#edit-emp-status').prop('checked', !$('#edit-emp-status').prop('checked'));
+    });
+</script>

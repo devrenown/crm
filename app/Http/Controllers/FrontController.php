@@ -19,12 +19,12 @@ class FrontController extends Controller
    {
 
     $validate = $request->validate([
-        'name'                  => 'required|string|min:3',
-        'organization'          => 'required|string',
-        'company_size'          => 'required',
-        'email'                 => 'required|email|string',
-        'contact'               => 'required|numeric',
-        'g-recaptcha-response'  => 'required',
+        'r_name'                  => 'required|string|min:3',
+        'r_organization'          => 'required|string',
+        'r_company_size'          => 'required',
+        'r_email'                 => 'required|email|string',
+        'r_contact'               => 'required|numeric',
+        'g-recaptcha-response'    => 'required',
     ]);
 
     if (!$validate) {
@@ -35,11 +35,11 @@ class FrontController extends Controller
     }
 
     $create = DemoRequest::create([
-        'name'          => $validate['name'],
-        'organization'  => $validate['organization'],
-        'size'          => $validate['company_size'],
-        'email'         => $validate['email'],
-        'contact'       => $validate['contact'],
+        'name'          => $validate['r_name'],
+        'organization'  => $validate['r_organization'],
+        'size'          => $validate['r_company_size'],
+        'email'         => $validate['r_email'],
+        'contact'       => $validate['r_contact'],
         'additional'    => $request->additional
     ]);
 
@@ -64,7 +64,7 @@ class FrontController extends Controller
         'name'                  => 'required|string|min:3',
         'email'                 => 'required|email|string',
         'phone'                 => 'required|numeric',
-        'message'               => 'nullable|string',
+        'message'               => 'nullable|string|max:500',
         // 'g-recaptcha-response'  => 'required',
     ]);
 

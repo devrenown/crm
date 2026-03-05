@@ -43,6 +43,7 @@
         .wizard>.content {
             min-height: 70vh !important;
             background: #ffffff !important;
+            min-height: 70vh !important;
         }
 
         .wizard>.actions a,

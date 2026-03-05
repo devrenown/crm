@@ -20,7 +20,7 @@
                 </li>
                 <li class="nav-item"><a class="nav-link position-relative fs-19 me-2 pb-0" href="{{ url('/#testimonials') }}">Testimonials</a>
                 </li>
-                <li class="nav-item"><a class="nav-link position-relative fs-19 me-2 pb-0" href="{{ url('/#contact') }}">Contact</a></li>
+                <li class="nav-item"><a class="nav-link position-relative fs-19 me-2 pb-0" href="{{ url('/#contact-section') }}">Contact</a></li>
             </ul>
             
             @if (Auth::check())

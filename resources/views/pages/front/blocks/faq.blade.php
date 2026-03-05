@@ -34,7 +34,7 @@
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>No. You can start your 15-day free trial without providing any credit card details. We believe you should experience the full value of the platform before committing.</p> 
+                        <p>No, You can start your 15-day free trial without providing any credit card details. We believe you should experience the full value of the platform before committing.</p> 
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Absolutely. Renown System uses enterprise-grade security protocols, encrypted data transmission (SSL), secure cloud infrastructure, and regular system monitoring to protect your data at all times.</p>
+                        <p>Absolutely, Renown System uses enterprise-grade security protocols, encrypted data transmission (SSL), secure cloud infrastructure, and regular system monitoring to protect your data at all times.</p>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 </h2>
                 <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Yes. You can upgrade or downgrade your subscription at any time as your business needs evolve. Changes take effect seamlessly without disrupting your operations.</p>
+                        <p>Yes, You can upgrade or downgrade your subscription at any time as your business needs evolve. Changes take effect seamlessly without disrupting your operations.</p>
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                 </h2>
                 <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Yes. Renown System supports integrations with popular business tools, accounting software, CRM platforms, and third-party applications. API access is also available on selected plans.</p>
+                        <p>Yes, Renown System supports integrations with popular business tools, accounting software, CRM platforms, and third-party applications. API access is also available on selected plans.</p>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                 </h2>
                 <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Yes. We provide guided onboarding, training resources, and dedicated support to ensure your team gets up to speed quickly and confidently.</p>
+                        <p>Yes, We provide guided onboarding, training resources, and dedicated support to ensure your team gets up to speed quickly and confidently.</p>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                 </h2>
                 <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p>Absolutely. Renown System is designed to grow with you. Whether you're managing a small team or scaling across multiple departments, our platform adapts to your expanding operational needs.</p>
+                        <p>Absolutely, Renown System is designed to grow with you. Whether you're managing a small team or scaling across multiple departments, our platform adapts to your expanding operational needs.</p>
                     </div>
                 </div>
             </div>

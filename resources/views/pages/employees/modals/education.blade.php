@@ -89,7 +89,7 @@
 
                                         <a href="javascript:void(0);"
                                         onclick="openSecureDocument('{{ $signedUrl }}')"
-                                        class="d-block mt-1">
+                                        class="d-block mt-1 view-edu-file">
                                             <i class="fa-solid fa-check-circle text-success me-1"></i>
                                             View File
                                         </a>
@@ -174,25 +174,48 @@
 
 <script type="module" defer>
   $(document).ready(function(){
-      $('.repeater').repeater({
-          show: function () {
-              $(this).slideDown();
-              $('.datepicker').each(function(){
-                  $(this).datetimepicker({
-                      format: 'YYYY-MM-DD',
-                      icons: {
-                          up: "fa fa-angle-up",
-                          down: "fa fa-angle-down",
-                          next: 'fa fa-angle-right',
-                          previous: 'fa fa-angle-left'
-                      }
-                  });
-              })
-          },
-          hide: function (deleteElement) {
-              $(this).slideUp(deleteElement);
-          },
-      })
-  })
+
+    $('.repeater').repeater({
+
+        show: function () {
+
+            // Remove DB delete button from cloned row
+            $(this).find('.deleteBtn').remove();
+            $(this).find('.view-edu-file').remove();
+
+            // Add repeater delete button if not exists
+            if ($(this).find('.repeater-delete').length === 0) {
+                $(this).find('.card-title').append(`
+                    <a href="javascript:void(0);"
+                       data-repeater-delete
+                       type="button"
+                       class="delete-icon repeater-delete">
+                       <i class="fa-regular fa-trash-can"></i>
+                    </a>
+                `);
+            }
+
+            $(this).slideDown();
+
+            $('.datepicker').datetimepicker('destroy');
+
+            $('.datepicker').datetimepicker({
+                format: 'YYYY-MM-DD',
+                icons: {
+                    up: "fa fa-angle-up",
+                    down: "fa fa-angle-down",
+                    next: 'fa fa-angle-right',
+                    previous: 'fa fa-angle-left'
+                }
+            });
+        },
+
+        hide: function (deleteElement) {
+            $(this).slideUp(deleteElement);
+        }
+
+    });
+
+});
 </script>
 
