@@ -40,6 +40,9 @@ trait SecureFileUpload
 
     // Encrypt file
     $data = file_get_contents($file->getRealPath());
+    if ($data === false) {
+    throw new \RuntimeException('Failed to read uploaded file');
+    }
     $encrypted = FileEncryptionService::encrypt($data);
 
     // Store encrypted file

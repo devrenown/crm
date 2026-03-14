@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\Tenant;
 use App\Models\Asset;
 use App\Models\Plan;
+use App\Models\Attendance;
 use App\Enums\UserType;
 use App\Helpers\AppMenu;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use Modules\Sales\Models\Invoice;
 use LaravelLang\LocaleList\Locale;
 use Modules\Sales\Models\Estimate;
 use Modules\Accounting\Models\Budget;
+use Modules\Project\Models\Task;
 use App\Http\Controllers\BaseController;
 use Spatie\Permission\PermissionRegistrar;
 use App\Enums\TenantStatus;
@@ -146,7 +148,7 @@ class DashboardController extends BaseController
             })->get();
         }
 
-        $query = User::where(['type' => UserType::EMPLOYEE->value, 'is_active' => true])
+        $pQuery = User::where(['type' => UserType::EMPLOYEE->value, 'is_active' => true])
         ->with(['attendances' => function ($q) {
             $q->whereDate('created_at', Carbon::today())
               ->orderBy('created_at')
@@ -157,27 +159,50 @@ class DashboardController extends BaseController
         });
 
         if (activeRole() === UserType::TL->value) {
+            $pQuery->where('reporting_manager', auth()->id());
+        }
+
+        $persents = $pQuery->get();
+
+        $query = User::where([
+            'type' => UserType::EMPLOYEE->value,
+            'is_active' => true
+        ])
+        ->with([
+            'employeeDetail.department',
+            'firstAttendanceToday',
+            'lastAttendanceToday'
+        ])
+        ->withCount([
+            'attendances as today_attendance_count' => function ($q) {
+                $q->whereDate('created_at', today());
+            }
+        ]);
+
+        if (activeRole() === UserType::TL->value) {
             $query->where('reporting_manager', auth()->id());
         }
 
-        $totalActiveUser = User::where('is_active', true)->count(); 
+        $employeesAttendance = $query->get();
 
-        $persents = $query->get();
 
-        // Invoices
-        $allInvoiceCount = Invoice::count();
-        // Assets
-        $allAssetCount = Asset::count();
+        // dd($employeesAttendance);
+        
+        $presentCount   = $employeesAttendance->where('today_attendance_count', '>', 0)->count();
+        $absentCount    = $employeesAttendance->where('today_attendance_count', 0)->count();
 
-        // Assets
-        $allUsersCount = User::count();
+        $allInvoiceCount    = Invoice::count();
+        $allAssetCount      = Asset::count();
+        $allUsersCount      = User::count();
+        $totalActiveUser    = User::where('is_active', true)->count();
 
-        $this->data['absentees']        = $absentees;
-        $this->data['persents']         = $persents;
-        $this->data['allInvoiceCount']  = $allInvoiceCount;
-        $this->data['allAssetCount']    = $allAssetCount;
-        $this->data['allUsersCount']    = $allUsersCount;
-        $this->data['totalActiveUser']  = $totalActiveUser;
+        $this->data['presentCount']         = $presentCount;
+        $this->data['absentCount']          = $absentCount;
+        $this->data['employeesAttendance']  = $employeesAttendance;
+        $this->data['allInvoiceCount']      = $allInvoiceCount;
+        $this->data['allAssetCount']        = $allAssetCount;
+        $this->data['allUsersCount']        = $allUsersCount;
+        $this->data['totalActiveUser']      = $totalActiveUser;
 
         if (activeRole() === UserType::TL->value) {
             $this->data['thisMonthTotalEmployees'] = User::where(['type' => UserType::EMPLOYEE->value, 'reporting_manager' => auth()->id()])->whereMonth('created_at', Carbon::now())->count() ?? 0;
@@ -256,10 +281,16 @@ class DashboardController extends BaseController
 
         // =================== Event Queries End ==================== //
 
+        $tasks = Task::with(['createdBy', 'followers', 'project'])
+                ->latest()
+                ->limit(10)
+                ->get();
+
         $this->data['clients']                      = (!empty($clients) && $clients->count() > 0) ? $clients: null;
         $this->data['thisMonthClients']             = $thisMonthClients;
         $this->data['employees']                    = (!empty($employees) && $employees->count() > 0) ? $employees: null;
         $this->data['tickets']                      = (!empty($tickets) && $tickets->count() > 0) ? $tickets: null;
+        $this->data['tasks']                        = $tasks;
         $this->data['projects']                     = $projects;
         $this->data['recentProjects']               = $recentProjects;
         $this->data['ReportingManagerList']         = User::reportingManagerList();

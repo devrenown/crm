@@ -48,13 +48,11 @@
   <div class="content container">
     <div class="onboarding-card text-center position-relative">
 
-      <!-- Company Logo -->
       <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/user.jpg') }}" 
           alt="User" 
           class="rounded-circle position-absolute border bg-white" 
           style="height: 5rem; width: 5rem; top: -2.5rem; transform: translate(-50%);">
 
-      <!-- Title -->
       <h3 class="fw-bold mt-5 mt-lg-3">Employee Onboarding Guide</h3>
       <p class="text-muted">
          Welcome to the team! <i class="fa-solid fa-champagne-glasses text-primary"></i>
@@ -99,7 +97,6 @@
           <p class="fw-semibold">Click “Proceed” when you’re ready to begin your onboarding journey.</p>
       </div>
 
-      <!-- Call to Action -->
       <div class="mt-4 text-center">
         <a href="{{ route('onboard') }}" class="btn btn-primary btn-lg">Proceed</a>
       </div>

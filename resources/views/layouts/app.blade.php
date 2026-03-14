@@ -97,7 +97,7 @@
 </script>
 @endpush
 
-    <script>
+    <!-- <script>
         function openSecureDocument(url) {
             document.getElementById('globalDocumentFrame').src = url;
             let modal = new bootstrap.Modal(document.getElementById('globalDocumentModal'));

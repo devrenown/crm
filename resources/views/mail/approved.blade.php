@@ -67,7 +67,7 @@
 
 <div class="container">
     <div class="header">
-        <h1>🎉 Onboarding Approved!</h1>
+        <h1>Onboarding Approved !</h1>
     </div>
 
     <div class="body">

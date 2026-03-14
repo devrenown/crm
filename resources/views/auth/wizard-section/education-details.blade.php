@@ -95,7 +95,7 @@
                         </div>
                     @endforeach
                 @else
-                    <!-- Default empty education card for first entry -->
+                    
                     <div class="card education-item deletable-item">
                         <div class="card-body">
                             <h3 class="card-title">Education Information <span class="delete-icon"><i class="fa-regular fa-trash-can"></i></span></h3>
@@ -151,7 +151,6 @@
     </form>
 </section>
 
-<!-- Secure Document Modal -->
 <div class="modal fade" id="secureDocumentModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">

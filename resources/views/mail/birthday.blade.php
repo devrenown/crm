@@ -75,7 +75,7 @@
     <div class="header">
         <h1>Happy Birthday {{ $user->firstname }}!</h1>
         <img
-            src="{{ $user->avatar ? asset('storage/users/'.$user->avatar) : asset('images/default-avatar.png') }}"
+            src="{{ $user->avatar ? asset('storage/'.$user->avatar) : asset('images/default-avatar.png') }}"
             alt="{{ $user->fullname }}"
             class="avatar"
         >

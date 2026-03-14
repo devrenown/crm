@@ -1,567 +1,564 @@
 @php
 
-  $tenant = app('tenant');
+  use Carbon\Carbon;
 
+  $tenant           = app('tenant');
   $subscription     = $tenant->currentSubscription;
-
-  $tenantNow = \Carbon\Carbon::now(app('tenant_timezone'));
-  $subscriptionEnd = \Carbon\Carbon::parse($subscription->end_date)->timezone(app('tenant_timezone'));
-
-  $remainingDays = max(0, $tenantNow->diffInDays($subscriptionEnd, false));
-
+  $tenantNow        = \Carbon\Carbon::now(app('tenant_timezone'));
+  $subscriptionEnd  = \Carbon\Carbon::parse($subscription->end_date)->timezone(app('tenant_timezone'));
+  $remainingDays    = max(0, $tenantNow->diffInDays($subscriptionEnd, false));
   $isExpired        = $remainingDays === 0 ? true : false;
+  $today            = Carbon::today()->format('m-d');
 
 @endphp
 
 <style>
 
     .user-img .status {
-
         border: 2px solid #ffffff;
-
         height: 10px;
-
         width: 10px;
-
         margin: 0;
-
         position: absolute;
-
         left: 5px;
-
         bottom: 12px;
-
         border-radius: 50%;
-
         display: inline-block;
-
     }
 
+    .card {
+        margin-bottom: 0;
+    }
+
+    .card-dashboard {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+
+    .welcome-card {
+        color: #ffffff;
+        border-radius: 15px;
+    }
+
+    .badge-soft-secondary {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .badge-soft-primary {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .badge-soft-success {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .badge-soft-danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .badge-soft-warning {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+
+    .small-muted {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .employee-card {
+        border-radius: 18px;
+        border: none;
+        background: #ffffff;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        max-height: 20rem;
+    }
+
+    /* Top icon */
+    .icon-box {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #a855f7, #ec4899);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .card-icon {
+        height: 50px;
+        width: 50px;
+    }
+
+    .row>div:nth-child(1) .card-dashboard .card-icon {
+        background: #ad46ff;
+    }
+    .row>div:nth-child(2) .card-dashboard .card-icon {
+        background: #fdc700;
+    }
+    .row>div:nth-child(3) .card-dashboard .card-icon {
+        background: #e60076;
+    }
+    .row>div:nth-child(4) .card-dashboard .card-icon {
+        background: #2b7fff;
+    }
+    .row>div:nth-child(5) .card-dashboard .card-icon {
+        background: #22c55e;
+        /* Green */
+    }
+    .row>div:nth-child(6) .card-dashboard .card-icon {
+        background: #f97316;
+        /* Orange */
+    }
+    .row>div:nth-child(7) .card-dashboard .card-icon {
+        background: #14b8a6;
+        /* Teal */
+    }
+    .row>div:nth-child(8) .card-dashboard .card-icon {
+        background: #6366f1;
+        /* Indigo */
+    }
+    /* Center text inside donut */
+    .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .donut-center h2 {
+       font-size: 3.5rem;
+    }
+    /* Floating badges */
+    .present-badge {
+        position: absolute;
+        top: 35%;
+        right: 0;
+        background: #ffffff;
+        color: #16a34a;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+    }
+    .absent-badge {
+        position: absolute;
+        bottom: 30%;
+        left: 0;
+        background: #ffffff;
+        color: #ea580c;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+    }
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+    }
+    .attendance-table-wrapper {
+        max-height: 310px;
+        min-height: 310px;
+        overflow-y: auto;
+    }
+    .invoice-table-wrapper {
+       max-height: 295px;
+       min-height: 295px;
+       overflow-y: auto; 
+    }
+    /* Make thead sticky */
+    .attendance-table-wrapper thead th, .invoice-table-wrapper thead th {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        /* same as table-light */
+        z-index: 2;
+    }
+    
+    /* Gradients */
+    .bg-gradient-purple {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+    }
+    .bg-gradient-pink {
+        background: linear-gradient(135deg, #f43f5e, #ec4899);
+    }
+    .bg-gradient-blue {
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+    }
 </style>
 
 
 
 @if (number_format($remainingDays) <= 7)
 
+    <marquee>
+        @if($isExpired)
+        <div class="text-danger">
+            <strong>Your subscription has expired.</strong>
+            Access to this workspace is currently restricted for all users under this organization.
+            To avoid service interruption, data access limitations, or user lockouts, please
+            renew or upgrade your subscription as soon as possible. Once renewed, all features,
+            user access, and integrations will be restored immediately.
+        </div>
+        @else
+        <div class="text-primary">
+            <strong>Subscription expiry notice:</strong>
+            This organization’s subscription will expire in
 
+            <strong>
+                {{ number_format($remainingDays, 1) }}
+                day{{ number_format($remainingDays) > 1 ? 's' : '' }}
+            </strong>.
 
-<marquee>
+            To ensure uninterrupted access for all users, continued data availability,
+            and smooth operation across modules, we recommend renewing or upgrading your plan
+            before the expiration date.
+        </div>
+        @endif
+    </marquee>
+@endif
 
-    @if($isExpired)
+<!-- Attendance chart & count cards -->
+<div class="row gx-3 mb-3">
+    <!-- LEFT : Employee Chart -->
+    <div class="col-lg-4 mb-3">
+        <div class="card employee-card p-4 position-relative">
 
-    <div class="text-danger">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="m-0 fw-bold fs-5">Employee</h5>
+                    <p class="text-muted small mb-0">Attendance distribution</p>
+                </div>
+                <div class="icon-box shadow p-2">
+                    <img src="{{ asset('images/icons/present-absent') }}.svg" alt="">
+                </div>
+            </div>
 
-        <strong>Your subscription has expired.</strong>
+            <div
+                class="position-relative text-center flex-grow-1 d-flex align-items-center justify-content-center">
+                <canvas id="employeeChart" style="height: 235px;"></canvas>
 
-        Access to this workspace is currently restricted for all users under this organization.
+                <div class="donut-center">
+                    <h2 class="fw-bold mb-0">{{ !empty($employees) ? $employees->count(): 0 }}</h2>
+                    <div class="text-muted small">Total</div>
+                    <div class="fw-semibold small">Employee</div>
+                </div>
 
-        To avoid service interruption, data access limitations, or user lockouts, please
+                <div class="present-badge shadow-sm">
+                    <strong>{{ $presentCount }}</strong> present
+                </div>
 
-        renew or upgrade your subscription as soon as possible. Once renewed, all features,
+                <div class="absent-badge shadow-sm">
+                    <strong>{{ $absentCount }}</strong> Absent
+                </div>
+            </div>
 
-        user access, and integrations will be restored immediately.
-
+        </div>
     </div>
 
-    @else
+    <!-- RIGHT : Cards Wrapper -->
+    <div class="col-lg-8 mb-3">
+        <div class="row g-3">
 
-    <div class="text-primary">
+            @activeCan('view-clients')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/clients.svg') }}" class="w-100" alt="Clients">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Clients</p>
+                    <p class="fw-bold fs-1 m-0">{{ !empty($clients) ? $clients->count() : 0 }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-        <strong>Subscription expiry notice:</strong>
+            @activeCan('view-employees')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/employees.svg') }}" class="w-100" alt="Employees">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Total Employee</p>
+                    <p class="fw-bold fs-1 m-0">{{ !empty($employees) ? $employees->count(): 0 }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-        This organization’s subscription will expire in
+            @activeCan('view-employees')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/users.svg') }}" class="w-100" alt="Active users">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Active users</p>
+                    <p class="fw-bold fs-1 m-0">{{ $totalActiveUser }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-        <strong>
+            @if (activeRole() === \App\Enums\UserType::ADMIN->value)
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/users.svg') }}" class="w-100" alt="Users">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Total Users</p>
+                    <p class="fw-bold fs-1 m-0">{{ $allUsersCount }}</p>
+                </div>
+            </div>
+            @endif
 
-            {{ number_format($remainingDays, 1) }}
+            @activeCan('view-projects')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/projects.svg') }}" class="w-100">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Projects</p>
+                    <p class="fw-bold fs-1 m-0">{{ !empty($projects) ? $projects->count(): 0 }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-            day{{ number_format($remainingDays) > 1 ? 's' : '' }}
+            @activeCan('view-invoices')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/projects.svg') }}" class="w-100" alt="Invoices">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Invoices</p>
+                    <p class="fw-bold fs-1 m-0">{{ $allInvoiceCount }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-        </strong>.
+            @activeCan('view-assets')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/clients.svg') }}" class="w-100" alt="Assets">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Assets</p>
+                    <p class="fw-bold fs-1 m-0">{{ $allAssetCount }}</p>
+                </div>
+            </div>
+            @endactiveCan
 
-        To ensure uninterrupted access for all users, continued data availability,
-
-        and smooth operation across modules, we recommend renewing or upgrading your plan
-
-        before the expiration date.
-
+            @activeCan('view-tickets')
+            <div class="col-6 col-md-4 col-xl-3">
+                <div class="card card-dashboard p-3">
+                    <div class="card-icon p-2 rounded-4 shadow mb-3">
+                        <img src="{{ asset('images/icons/employees.svg') }}" class="w-100" alt="Tickets">
+                    </div>
+                    <p class="fs-6 m-0 mb-2">Tickets</p>
+                    <p class="fw-bold fs-1 m-0">{{ !empty($tickets) ? $tickets->count(): 0 }}</p>
+                </div>
+            </div>
+            @endactiveCan
+        </div>
     </div>
+</div>
 
-    @endif
+<!-- Attendance + Celebrations -->
+<div class="row gx-3 mb-3">
 
-</marquee>
+    <!-- Celebrations -->
+    <div class="col-md-4 mb-3 mb-md-0 mb-lg-0">
+        <div class="card border-0 shadow-sm rounded-4 p-3 pt-2">
 
+            <!-- Header -->
+            <div class="d-flex align-items-center mb-3">
+                <img src="{{ asset('images/icons/celebrations.svg') }}" class="me-2" alt="Celebrations">
+                <p class="m-0 fw-bold fs-5">Celebrations</p>
+            </div>
 
+            <!-- Scrollable Area -->
+            <div class="overflow-auto" style="max-height: 310px; min-height: 310px;">
 
-{{-- <div class="card {{ $isExpired ? 'border-danger' : 'border-warning' }} mb-3">
+                <!-- Item -->
 
-    <div class="card-body d-flex justify-content-between align-items-center">
+                @if ($upcomingBirthdays->count() > 0)
+                    @foreach ($upcomingBirthdays as $index => $user)
+                    @php
+                        $years = Carbon::parse($user->dob)->diffInYears(Carbon::today());
+                        $birthday = Carbon::parse($user->dob)->format('m-d');
+                    @endphp
 
-        <div>
-
-            <h6 class="mb-1 {{ $isExpired ? 'text-danger' : 'text-warning' }}">
-
-                {{ $isExpired ? 'Subscription Expired' : 'Subscription Expiring Soon' }}
-
-            </h6>
-
-
-
-            <p class="mb-0 small">
-
-                @if ($isExpired)
-
-                    Your subscription has <strong>expired</strong>. Please renew to continue.
-
-                @else
-
-                    Your plan will expire in
-
-                    <strong>
-
-                        {{ number_format($remainingDays, 1) }}
-
-                        day{{ number_format($remainingDays) > 1 ? 's' : '' }}
-
-                    </strong>.
-
+                    <div
+                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3">
+                                <img src="{{ $user->avatar ? asset('storage/', $user->avatar) : asset('images/user.jpg') }}">
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">BIRTHDAY</small>
+                                <div class="fw-semibold">{{ $user->fullname }}</div>
+                                <small class="text-muted">{{ @$user->employeeDetail->designation->name ?? 'Employee' }}</small>
+                            </div>
+                        </div>
+                        <span class="badge rounded-pill {{ $birthday == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                            {{
+                                $birthday == $today ? 'Today 🥳'
+                                : ($birthday == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                : Carbon::parse($user->dob)->format('d M'))
+                            }}
+                        </span>
+                    </div>
+                    @endforeach
                 @endif
 
-            </p>
+                <!-- Work anniversary -->
+                @if ($upcomingWorkAnniversaries->count() > 0)
+
+                    @foreach ($upcomingWorkAnniversaries as $index => $anni)
+
+                    @php
+                        $years = Carbon::parse($anni->date_joined)->diffInYears(Carbon::today());
+                        $anniversary = date('m-d', strtotime($anni->date_joined));
+                    @endphp
+                    <div
+                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3">
+                                <img src="{{ $anni->avatar ? asset('storage/', $anni->avatar) : asset('images/user.jpg') }}">
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">WORK ANNIVERSARY</small>
+                                <div class="fw-semibold">{{ $anni->fullname }}</div>
+                                <small class="text-muted">{{ number_format($years) }} Years</small>
+                            </div>
+                        </div>
+                        <span class="badge rounded-pill {{ $anniversary == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                            {{ 
+                                $anniversary == $today ? 'Today 🥳'  
+                                : ($anniversary == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                : date('d M', strtotime($anni->date_joined)))
+                            }}
+                        </span>
+                    </div>
+                    @endforeach
+                @endif
+
+                @if ($upcomingProbationCompleted->count() > 0)
+
+                    @foreach ($upcomingProbationCompleted as $index => $prob)
+                    @php
+                        $end   = Carbon::parse($prob->probation_end_date)->format('m-d');
+                    @endphp
+
+                    <div
+                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3">
+                                <img src="{{ $prob->avatar ? asset('storage/', $prob->avatar) : asset('images/user.jpg') }}">
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">PROBATION PERIOD</small>
+                                <div class="fw-semibold">{{ $prob->fullname }}</div>
+                                <small class="text-muted">{{ @$prob->employeeDetail->designation->name ?? 'Employee' }}</small>
+                            </div>
+                        </div>
+                        <span class="badge rounded-pill {{ $end == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                            {{ 
+                                $end == $today ? 'Today 🥳' 
+                                : ($end == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                : Carbon::parse($prob->probation_end_date)->format('d M'))
+                            }}
+                        </span>
+                    </div>
+                    @endforeach
+                @endif
+
+            </div>
+
+            <!-- Button -->
+            <button class="btn w-100 mt-2 text-white fw-semibold rounded-3 btn-primary">
+                View All Celebrations →
+            </button>
 
         </div>
-
-
-
-        <a href="{{ route('subscription.upgrade') }}"
-
-           class="btn {{ $isExpired ? 'btn-danger' : 'btn-warning' }} btn-sm">
-
-            {{ $isExpired ? 'Renew Now' : 'Renew' }}
-
-        </a>
-
     </div>
 
-</div> --}}
+    <!-- Attendance -->
+    <div class="col-md-8">
+        <div class="card card-dashboard p-3" id="attendance-card">
+            <div class="card-header d-flex justify-content-between">
+                <div>
+                    <p class="m-0 fw-bold fs-5">Today's Attendance</p>
+                    <p class="text-muted text-sm">Punch In & Punch Out Records</p>
+                </div>
+                <div>
+                    <a href="{{ route('attendances.index') }}" class="btn btn-sm btn-primary">View All</a>
+                </div>
+            </div>
 
-@endif
+            <div class="table-responsive attendance-table-wrapper">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Punch In</th>
+                            <th>Punch Out</th>
+                            <th>Platform</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($employeesAttendance as $record)
+                        <tr>
+                            <td>
+                                <img src="{{ $record->avatar ? asset('storage/' . $record->avatar) : asset('images/user.jpg') }}" alt="" class="border rounded-circle"
+                                    style="height: 35px; width: 35px;">
+                                {{ $record->fullname }}
+                            </td>
+                            <td>{{ $record->employeeDetail?->department?->name ?? '---' }}</td>
 
+                            @if (!empty($record->firstAttendanceToday))
+                            
+                            <td>{{ $record->firstAttendanceToday?->created_at ? tz($record->firstAttendanceToday->created_at, 'h:i A') : '--' }}</td>
+                            <td>{{ $record->lastAttendanceToday?->endDate ? tz($record->lastAttendanceToday->endDate, 'h:i A') : '--' }}</td>
+                            <td class="text-primary fw-semibold">{{ $record->firstAttendanceToday?->platform ?? '---' }}</td>
+                            <td><span class="badge badge-soft-success">Present</span></td>
+                            @else
+                            <td class="text-danger">---</td>
+                            <td class="text-danger">---</td>
+                            <td class="text-danger">---</td>
+                            <td class="text-danger"><span class="badge badge-soft-danger">Absent</span></td>
+                            @endif
+                        </tr>
+                        @endforeach
 
-
-<div class="row mb-3">
-
-    {{-- ============== Birthday Card ================== --}}
-
-    @include('pages.dashboards.events.birthday')
-
-
-
-    {{-- ============= Work Anniversary ================ --}}
-
-    @include('pages.dashboards.events.work-anniversary')
-
-
-
-    {{-- ============= Probation Period ================ --}}
-
-    @include('pages.dashboards.events.probation-period')
-
-
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Statistics, Widget, Tasks -->
+<div class="row gx-3 mb-3">
 
+    <div class="col-md-4 mb-3 mb-md-0 mb-lg-0">
 
-<div class="row">
-
-    @activeCan('view-projects')
-
-    @if (!empty($projects))
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
+        <div class="card card-dashboard flex-fill dash-statistics">
 
             <div class="card-body">
 
-                <span class="dash-widget-icon"><i class="fa-solid fa-cubes"></i></span>
+                <p class="mb-2 fs-5 fw-bold">{{ __('Statistics') }}</p>
 
-                <div class="dash-widget-info">
-
-                    <h3>{{ !empty($projects) ? $projects->count(): 0 }}</h3>
-
-                    <span>{{ __('Projects') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endif
-
-    @endactiveCan
-
-    @activeCan('view-clients')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-user-tie"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ !empty($clients) ? $clients->count() : 0 }}</h3>
-
-                    <span>{{ __('Clients') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-    @activeCan('view-tickets')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-ticket"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ !empty($tickets) ? $tickets->count(): 0 }}</h3>
-
-                    <span>{{ __('Tickets') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-    @activeCan('view-employees')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ !empty($employees) ? $employees->count(): 0 }}</h3>
-
-                    <span>{{ __('Employees') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-    @activeCan('view-invoices')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-file-invoice"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ $allInvoiceCount }}</h3>
-
-                    <span>{{ __('Invoices') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-    @activeCan('view-assets')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-file-invoice-dollar"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ $allAssetCount }}</h3>
-
-                    <span>{{ __('Assets') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-
-
-    @activeCan('view-employees')
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-user-check"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ $totalActiveUser }}</h3>
-
-                    <span>{{ __('Total Active users') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-
-
-    @if (activeRole() === \App\Enums\UserType::ADMIN->value)
-
-    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3 p-1">
-
-        <div class="card dash-widget">
-
-            <div class="card-body">
-
-                <span class="dash-widget-icon"><i class="fa-solid fa-users"></i></span>
-
-                <div class="dash-widget-info">
-
-                    <h3>{{ $allUsersCount }}</h3>
-
-                    <span>{{ __('Total Users') }}</span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endif
-
-
-
-</div>
-
-        
-
-@if (!empty(module('Sales')))
-
-    <div class="row p-2">
-
-        <div class="col-md-12">
-
-            <div class="row">
-
-                @activeCan('view-employees')
-
-                <div class="card col-lg-3 col-md-6">
-
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between mb-3">
-
-                            <div>
-
-                                <span class="d-block">{{ __('New Employees') }}</span>
-
-                            </div>
-
-                        </div>
-
-                        <h3 class="mb-3">{{ $thisMonthTotalEmployees  }}</h3>
-
-                        <div class="progress height-five mb-2">
-
-                            <div class="progress-bar bg-primary w-70" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-
-                        </div>
-
-                        <p class="mb-0">{{ __('Previous Month Employees') }} {{ $prevMonthTotalEmployees }}</p>
-
-                    </div>
-
-                </div>
-
-                @endactiveCan
-
-
-
-                @activeCan('view-expenses')
-
-                <div class="card col-lg-3 col-md-6">
-
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between mb-3">
-
-                            <div>
-
-                                <span class="d-block">{{ __('Expenses') }}</span>
-
-                            </div>
-
-                        </div>
-
-                        <h3 class="mb-3">{{ LocaleSettings('currency_symbol').' '.$thisMonthExpenses }}</h3>
-
-                        <div class="progress height-five mb-2">
-
-                            <div class="progress-bar bg-primary w-70" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-
-                        </div>
-
-                        <p class="mb-0">{{ __('Previous Month') }} <span class="text-muted">{{ LocaleSettings('currency_symbol').' '.$prevMonthExpenses }}</span></p>
-
-                    </div>
-
-                </div>
-
-                @endactiveCan
-
-
-
-                @activeCan('view-estimates')
-
-                <div class="card col-lg-3 col-md-6">
-
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between mb-3">
-
-                            <div>
-
-                                <span class="d-block">{{ __('Estimates') }}</span>
-
-                            </div>
-
-                        </div>
-
-                        <h3 class="mb-3">{{ LocaleSettings('currency_symbol').' '.$thisMonthEstimates }}</h3>
-
-                        <div class="progress height-five mb-2">
-
-                            <div class="progress-bar bg-primary w-70" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-
-                        </div>
-
-                        <p class="mb-0">{{ __('Previous Month') }} <span class="text-muted">{{ LocaleSettings('currency_symbol').' '.$prevMonthEstimates }}</span></p>
-
-                    </div>
-
-                </div>
-
-                @endactiveCan
-
-
-
-                @activeCan('view-invoices')
-
-                <div class="card col-lg-3 col-md-6">
-
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between mb-3">
-
-                            <div>
-
-                                <span class="d-block">{{ __('Invoices') }}</span>
-
-                            </div>
-
-                        </div>
-
-                        <h3 class="mb-3">{{ LocaleSettings('currency_symbol').' '.$thisMonthInvoices }}</h3>
-
-                        <div class="progress height-five mb-2">
-
-                            <div class="progress-bar bg-primary w-70" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-
-                        </div>
-
-                        <p class="mb-0">{{ __('Previous Month') }} <span class="text-muted">{{ LocaleSettings('currency_symbol').' '.$thisMonthInvoices }}</span></p>
-
-                    </div>
-
-                </div>
-
-                @endactiveCan
-
-            </div>
-
-        </div>  
-
-    </div>
-
-@endif
-
-        
-
-<!-- Statistics Widget -->
-
-<div class="row">
-
-    <div class="col-md-12 col-lg-12 col-xl-4 d-flex">
-
-        <div class="card flex-fill dash-statistics">
-
-            <div class="card-body">
-
-                <h5 class="card-title">{{ __('Statistics') }}</h5>
-
-                <div class="stats-list">
+                <div class="stats-list" style="min-height: 315px; max-height: 315px; overflow-y: auto;">
 
                     @activeCan('view-invoices')
 
@@ -663,860 +660,761 @@
 
     </div>
 
-    
+    <div class="col-md-4 mb-3 mb-md-0 mb-lg-0">
+        <div class="row g-2">
 
-    @activeCan('view-employees')
+            <!-- New Employees -->
+            @activeCan('view-employees')
+            <div class="col-6">
+                <div class="card card-dashboard p-3">
+                    <div class="d-flex">
 
-    @if (!empty($absentees) && $absentees->count() > 0)
-
-    <div class="col-md-12 col-lg-6 col-xl-4 d-flex">
-
-        <div class="card flex-fill">
-
-
-
-            <h4 class="card-title p-3 mb-0">{{ __('Today Absent') }} <span class="badge bg-inverse-danger ms-2">{{ $absentees->count() }}</span></h4>
-
-
-
-            <div class="card-body" style="max-height: 25rem; overflow-y: scroll;">
-
-                @foreach ($absentees as $user)
-
-                <div class="leave-info-box">
-
-                    <div class="media d-flex align-items-center">
-
-                        <a @activeCan('show-Employeeprofile') href="{{ route('employees.index') }}" @else href="#" @endactiveCan class="avatar"><img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar) : asset('images/user.jpg') }}" alt="{{ __('Image') }}"></a>
-
-                        <div class="media-body flex-grow-1">
-
-                            <div class="text-sm my-0">{{ $user->fullname }}</div>
-
-                        </div>
+                        <canvas id="empChart" width="60" height="60"></canvas>
 
                     </div>
 
+                    <p class="text-muted mt-2 mb-1 small">New Employees</p>
+                    <h3 class="fw-bold">{{ $thisMonthTotalEmployees }}</h3>
+
+                    <p class="text-muted small mb-0">
+                        Previous Month <strong>{{ $prevMonthTotalEmployees }}</strong>
+                    </p>
                 </div>
-
-                @endforeach     
-
-                @activeCan('view-attendances')                  
-
-                <div class="load-more text-center">
-
-                    <a class="text-dark" href="{{ route('attendances.index') }}">{{ __('Load More') }}</a>
-
-                </div>
-
-                @endactiveCan
-
             </div>
-
-        </div>
-
-    </div>
-
-    @endif
-
-    @endactiveCan
-
-
-
-    @activeCan('view-employees')
-
-    <div class="col-md-12 col-lg-6 col-xl-4 d-flex">
-
-        <div class="card flex-fill">
-
-
-
-            <h4 class="card-title p-3 mb-0">{{ __('Today Present') }} <span class="badge bg-inverse-success ms-2">{{ $persents->count() }}</span></h4>
-
-
-
-            <div class="card-body" style="max-height: 25rem; overflow-y: scroll;">
-
-
-
-                <table class="table table-responsive">
-
-                    <tr>
-
-                        <th>#</th>
-
-                        <th>Employee</th>
-
-                        <th>Name</th>
-
-                        <th>Shift</th>
-
-                        <th>Location</th>
-
-                        <th>Platform</th>
-
-                        <th>Clock In</th>
-
-                    </tr>
-
-
-
-                    @foreach ($persents as $key => $user)
-
-
-
-                    @php
-
-                        $attendance = $user->attendances->first();
-
-                    @endphp
-
-                    <tr>
-
-                        <td>{{ ++$key }}</td>
-
-                        <td class="position-relative">
-
-                            <span class="user-img">
-
-                                <img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar) : asset('images/user.jpg') }}" alt="{{ __('Image') }}" class="avatar">
-
-                                <span class="status bg-{{$user->is_online == 1 ? 'success' : 'danger'}}"></span>
-
-                            </span>
-
-                        </td>
-
-                        <td>{{ $user->fullname }}</td>
-
-                        <td>{{ @$user->shift->shift->name ?? 'N/A' }}</td>
-
-                        <td>{{ $attendance->location ?? 'N/A' }}</td>
-
-                        <td>{{ $attendance->platform ?? 'N/A' }}</td>
-
-                        <td>{{ tz($attendance->created_at, 'H:i A') }}</td>
-
-                    </tr>
-
-                    @endforeach
-
-                </table>
-
-
-
-            </div>
-
-        </div>
-
-    </div>
-
-    @endactiveCan
-
-
-
-</div>
-
-<!-- /Statistics Widget -->
-
-
-
-@activeCan('view-invoices')        
-
-@if (!empty(module('Sales')) && module('Sales')->isEnabled())
-
-    <div class="row">
-
-        <div class="col-md-12 d-flex">
-
-            <div class="card card-table flex-fill">
-
-                <div class="card-header">
-
-                    <h3 class="card-title mb-0">{{ __('Invoices') }}</h3>
-
-                </div>
-
-                <div class="card-body">
-
-                    <div class="table-responsive">
-
-                        <table class="table table-nowrap custom-table mb-0">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>{{ __('Invoice ID') }}</th>
-
-                                    <th>{{ __('Client') }}</th>
-
-                                    <th>{{ __('Due Date') }}</th>
-
-                                    <th>{{ __('Total') }}</th>
-
-                                    <th>{{ __('Status') }}</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @if (!empty($thisMonthInvoiceList))
-
-                                    @foreach ($thisMonthInvoiceList as $invoice)
-
-                                    <tr>
-
-                                        <td><a @activeCan('show-invoice') target="_blank" href="{{ route('invoices.show', ['invoice' => Crypt::encrypt($invoice->id)]) }}" @else href="#" @endactiveCan>{{ $invoice->inv_id }}</a></td>
-
-                                        <td>
-
-                                            <h2>{{ $invoice->client->user->fullname ?? '' }}</h2>
-
-                                        </td>
-
-                                        <td>{{ tz($invoice->expiryDate, 'd M Y') ?? '' }}</td>
-
-                                        <td>{{ LocaleSettings('currency_symbol') }} {{ $invoice->grand_total }}</td>
-
-                                        <td>
-
-                                            <span class="badge bg-inverse-{{ $invoice->statusName['color'] ?? 'primary' }}">{{ $invoice->statusName['name'] ?? '' }}</span>
-
-                                        </td>
-
-                                    </tr>
-
-                                    @endforeach
-
-                                @endif
-
-                            </tbody>
-
-                        </table>
+            @endactiveCan
+
+            <!-- Expenses -->
+            @activeCan('view-expenses')
+            <div class="col-6">
+                <div class="card card-dashboard p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <canvas id="expChart" width="60" height="60"></canvas>
 
                     </div>
 
+                    <p class="text-muted mt-2 mb-1 small">Expenses</p>
+                    <h3 class="fw-bold">{{ LocaleSettings('currency_symbol').' '.$thisMonthExpenses }}</h3>
+
+                    <p class="text-muted small mb-0">
+                        Previous Month {{ LocaleSettings('currency_symbol') }} <strong>{{ $prevMonthExpenses }}</strong>
+                    </p>
                 </div>
+            </div>
+            @endactiveCan
 
-                @activeCan('view-invoices')
+            <!-- Estimates -->
+            @activeCan('view-estimates')
+            <div class="col-6">
+                <div class="card card-dashboard p-3">
+                    <div class="d-flex justify-content-between align-items-center">
 
-                <div class="card-footer">
+                        <canvas id="estChart" width="60" height="60"></canvas>
 
-                    <a target="_blank" href="{{ route('invoices.index') }}">{{ __('View all invoices') }}</a>
+                    </div>
 
+                    <p class="text-muted mt-2 mb-1 small">Estimates</p>
+                    <h3 class="fw-bold">{{ LocaleSettings('currency_symbol').' '.$thisMonthEstimates }}</h3>
+
+                    <p class="text-muted small mb-0">
+                        Previous Month {{ LocaleSettings('currency_symbol') }} <strong>{{ $prevMonthEstimates }}</strong>
+                    </p>
                 </div>
-
-                @endactiveCan
-
             </div>
+            @endactiveCan
 
-        </div>
 
-    </div>
+            <!-- Invoices -->
+            @activeCan('view-invoices')
+            <div class="col-6">
+                <div class="card card-dashboard p-3">
+                    <div class="d-flex justify-content-between align-items-center">
 
-@endif
+                        <canvas id="invChart" width="60" height="60"></canvas>
 
-@endactiveCan
+                    </div>
 
-        
+                    <p class="text-muted mt-2 mb-1 small">Invoices</p>
+                    <h3 class="fw-bold">{{ LocaleSettings('currency_symbol').' '.$thisMonthInvoices }}</h3>
 
-<div class="row">
-
-    @activeCan('view-clients')
-
-    <div class="col-md-6 d-flex">
-
-        <div class="card card-table flex-fill">
-
-            <div class="card-header">
-
-                <h3 class="card-title mb-0">{{ __('Clients') }}</h3>
-
-            </div>
-
-            <div class="card-body">
-
-                <div class="table-responsive">
-
-                    <table class="table custom-table mb-0">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>{{ __('Name') }}</th>
-
-                                <th>{{ __('Email') }}</th>
-
-                                <th>{{ __('Status') }}</th>
-
-                                @activeAnyCan(['edit-client','delete-client'])
-
-                                <th class="text-end">{{ __('Action') }}</th>
-
-                                @endactiveAnyCan
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @if (!empty($thisMonthClients) && $thisMonthClients->count() > 0)
-
-                                @foreach ($thisMonthClients as $client)
-
-                                <tr>
-
-                                    @php
-
-                                        $img = !empty($client->avatar) ? asset('storage/users/'.$client->avatar): asset('images/user.jpg');
-
-                                        $link = (auth()->user()->can('show-ClientProfile')) ? route('clients.show', ['client' => Crypt::encrypt($client->id)]): '#';
-
-                                    @endphp
-
-                                    <td>
-
-                                        {!! \Spatie\Menu\Laravel\Html::userAvatar($client->fullname, $img, $link) !!}
-
-                                    </td>
-
-                                    <td>{{ $client->email }}</td>
-
-                                    <td>
-
-                                        {{ $client->status->name ?? '' }}
-
-                                    </td>
-
-                                    @activeAnyCan(['edit-client','delete-client'])
-
-                                    <td class="text-end">
-
-                                        <div class="dropdown dropdown-action">
-
-                                            <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-
-                                            <div class="dropdown-menu dropdown-menu-right">
-
-                                                @activeCan('edit-client')
-
-                                                <a class="dropdown-item" href="javascript:void(0)" data-url="{{ route('clients.edit', ['client' => \Crypt::encrypt($client->id)]) }}" data-ajax-modal="true"
-
-                                                    data-title="Edit Client" data-size="lg"><i class="fa-solid fa-pencil m-r-5"></i>
-
-                                                    {{ __('Edit') }}
-
-                                                </a>
-
-                                                @endactiveCan
-
-                                                @activeCan('delete-client')
-
-                                                <a class="dropdown-item deleteBtn" data-route="{{ route('clients.destroy', $client->id) }}" data-title="{{ __('Delete Client') }}"
-
-                                                    data-question="Are you sure you want to delete?" href="javascript:void(0)">
-
-                                                    <i class="fa-regular fa-trash-can m-r-5"></i>
-
-                                                    {{ __('Delete') }}
-
-                                                </a>
-
-                                                @endactiveCan
-
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                    @endactiveAnyCan
-
-                                </tr>  
-
-                                @endforeach
-
-                            @endif
-
-                        </tbody>
-
-                    </table>
-
+                    <p class="text-muted small mb-0">
+                        Previous Month {{ LocaleSettings('currency_symbol') }} <strong>{{ $prevMonthInvoices }}</strong>
+                    </p>
                 </div>
-
             </div>
-
-            @activeCan('view-clients')
-
-            <div class="card-footer">
-
-                <a href="{{ route('clients.index') }}">{{ __('View all clients') }}</a>
-
-            </div>
-
             @endactiveCan
 
         </div>
-
     </div>
 
-    @endactiveCan
+    <div class="col-md-4">
+        <div class="card card-dashboard p-3">
 
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="m-0 p-0 fw-bold fs-5">Active Tasks</p>
 
-
-    @activeCan('view-projects')
-
-    @if (module('Project') && module('Project')->isEnabled())
-
-    <div class="col-md-6 d-flex">
-
-        <div class="card card-table flex-fill">
-
-            <div class="card-header">
-
-                <h3 class="card-title mb-0">{{ __('Recent Projects') }}</h3>
-
+                {{-- <a href="{{ route('project.taskboard',['id' => \Crypt::encrypt($project->id)]) }}" class="btn btn-sm btn-primary rounded-3">View All</a> --}}
             </div>
 
-            <div class="card-body">
+            <div id="task-container" style="max-height: 310px; min-height: 310px; overflow-y: auto;">
 
-                <div class="table-responsive">
+                <!-- Task -->
+                @forelse($tasks as $task)
 
-                    <table class="table custom-table mb-0">
+                @php
+                    $statusMap = [
+                        1 => ['label' => 'Pending', 'class' => 'badge-soft-secondary'],
+                        2 => ['label' => 'In Progress', 'class' => 'badge-soft-primary'],
+                        3 => ['label' => 'On Hold', 'class' => 'badge-soft-warning'],
+                        4 => ['label' => 'Completed', 'class' => 'badge-soft-success'],
+                        5 => ['label' => 'Cancelled', 'class' => 'badge-soft-danger'],
+                    ];
 
-                        <thead>
+                    $priorityMap = [
+                        1 => ['label' => 'High', 'class' => 'badge-soft-danger'],
+                        2 => ['label' => 'Medium', 'class' => 'badge-soft-warning'],
+                        3 => ['label' => 'Low', 'class' => 'badge-soft-primary'],
+                    ];
 
-                            <tr>
+                    $status     = $statusMap[$task->status] ?? ['label' => 'Unknown', 'class' => 'badge-soft-dark'];
+                    $priority   = $priorityMap[$task->priority] ?? ['label' => 'Unknown', 'class' => 'badge-soft-dark'];
+                @endphp
 
-                                <th>{{ __('Project Name') }} </th>
+                <div class="card p-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <strong class="text-capitalize">{{ $task->name }}</strong>
 
-                                <th>{{ __('Date') }}</th>
+                            @if (!empty($task->followers) && $task->followers->count() > 0)
+                                <div class="project-members m-b-15">
+                                    <ul class="team-members">
+                                        @foreach ($task->followers as $member)
+                                            <li>
+                                                <a href="@activeCan('show-Employeeprofile') {{ route('employees.show', ['employee' => \Crypt::encrypt($member->user->id)]) }} @else # @endactiveCan"
+                                                    data-bs-toggle="tooltip" title="{{ $member->user->fullname }}">
+                                                    <img src="{{ !empty($member->user->avatar) ? uploadedAsset($member->user->avatar, 'users') : asset('images/user.jpg') }}"
+                                                        alt="{{ __('Avatar') }}">
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
 
-                                <th>{{ __('Priority') }}</th>
+                        <span class="badge {{ $priority['class'] }}">
+                            {{ $priority['label'] }}
+                        </span>
+                    </div>
 
-                                @activeAnyCan(['edit-project', 'delete-project'])   
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="small text-muted mt-2">
+                            {{ date('d M Y', strtotime($task->startDate)) }} - {{ date('d M Y', strtotime($task->endDate)) }}
+                        </div>
+                        
+                        <div>
 
-                                <th class="text-end">{{ __('Action') }}</th>
+                            <span class="badge {{ $status['class'] }}">
+                                {{ $status['label'] }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="text-center py-5">
+                    <img src="{{ asset('images/icons/no-task.svg') }}" style="width:80px; opacity:0.6;">
+                    <p class="mt-3 mb-1 fw-semibold text-muted">No tasks found</p>
+                    <small class="text-muted">Tasks will appear here once they are created.</small>
+                </div>
+                @endforelse
+            </div>
 
-                                @endactiveAnyCan
+        </div>
+    </div>
+    
+</div>
+<!-- /Statistics Widget, Tasks -->
 
-                            </tr>
+<!-- Expenses & invoices -->
+<div class="row gx-3">
+    <div class="col-md-6">
+        <div class="card card-dashboard p-3 mb-3">
+            <p class="m-0 fs-5 fw-bold">Expenses</p>
+            <canvas id="expensesChart" style="max-height: 320px;"></canvas>
+        </div>
+    </div>
 
-                        </thead>
+    @activeCan('view-invoices')
+    <div class="col-md-6 mb-3 mb-md-0 mb-lg-0">
+        <div class="card card-dashboard p-3">
+            <div class="card-header d-flex justify-content-between">
+                <p class="m-0 fs-5 fw-bold">Current Month Invoices</p>
+                <a href="{{ route('invoices.index') }}" class="btn btn-sm btn-primary">View all Invoices</a>
+            </div>
 
-                        <tbody>
+            <div class="table-responsive invoice-table-wrapper">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Due Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @forelse ($thisMonthInvoiceList as $invoice)
+                        <tr>
+                            <td><a @activeCan('show-invoice') target="_blank" href="{{ route('invoices.show', ['invoice' => Crypt::encrypt($invoice->id)]) }}" @else href="#" @endactiveCan>{{ $invoice->inv_id }}</a></td>
+                            <td>{{ $invoice->client->user->fullname ?? '' }}</td>
+                            <td>{{ tz($invoice->expiryDate, 'd M Y') ?? '' }}</td>
+                            <td>{{ LocaleSettings('currency_symbol') }} {{ $invoice->grand_total }}</td>
+                            <td><span class="badge badge-soft-{{ $invoice->statusName['color'] ?? 'primary' }}">{{ $invoice->statusName['name'] ?? '' }}</span></td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <div class="mb-3">
+                                        <i class="bi bi-receipt fs-1 text-muted"></i>
+                                    </div>
+                                    <h6 class="text-muted mb-1">No Invoices Found</h6>
+                                    <p class="text-secondary small mb-0">
+                                        There are no invoices available for this month.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endactiveCan
+</div>
+<!-- /Expenses & invoices -->
 
-                            @if (!empty($recentProjects) && $recentProjects->count() > 0)
+<!-- Clients & Projects -->
+<div class="row gx-3">
+    @activeCan('view-clients')
+    <div class="col-lg-6 mb-3 mb-md-0 mb-lg-0">
+        <div class="card card-dashboard p-3" style="min-height: 350px; max-height: 350px;">
 
-                            @foreach ($recentProjects as $project) 
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="m-0 fs-5 fw-bold">Clients</p>
+                <a href="{{ route('clients.index') }}" class="btn btn-sm btn-primary">View all Clients</a>
+            </div>
 
-                            <tr>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            @activeAnyCan(['edit-client','delete-client'])
+                            <th></th>
+                            @endactiveAnyCan
+                        </tr>
+                    </thead>
 
-                                <td>
+                    <tbody>
+                        
+                        @forelse ($thisMonthClients as $client)
 
-                                    @activeCan('show-project')
+                        @php
 
-                                        <h2><a target="_blank" href="{{ route('projects.show', ['project' => \Crypt::encrypt($project->id)]) }}">{{ $project->name }}</a></h2>
+                            $img = !empty($client->avatar) ? asset('storage/'.$client->avatar): asset('images/user.jpg');
 
-                                    @else   
+                            $link = (auth()->user()->can('show-ClientProfile')) ? route('clients.show', ['client' => Crypt::encrypt($client->id)]): '#';
+                        @endphp
 
-                                    <h2><a href="#">{{ $project->name }}</a></h2>
+                        <tr>
+                            <td>
+                                {!! \Spatie\Menu\Laravel\Html::userAvatar($client->fullname, $img, $link) !!}
+                            </td>
+                            <td class="text-muted small">
+                                {{ $client->email }}
+                            </td>
+                            <td>
+                                <span class="badge badge-soft-{{ $client->is_active ? 'success' : 'danger' }}">{{ $client->is_active ? 'Active' : 'Deactive' }}</span>
+                            </td>
+                            @activeAnyCan(['edit-client','delete-client'])
+                            <td align="center">
+                                <div class="dropdown dropdown-action position-static">
 
-                                    @endactiveCan
+                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 
-                                    <small class="block text-ellipsis m-b-15">
+                                    <div class="dropdown-menu dropdown-menu-end">
 
-                                        <span class="text-xs">{{ $project->tasks->count() ?? 0 }}</span> <span class="text-muted">{{ __('Opened Tasks') }}</span>
+                                        @activeCan('edit-client')
 
-                                        <span class="text-xs">{{ $project->tasks->count() ?? 0 }}</span> <span class="text-muted">{{ __('Tasks Completed') }}</span>
+                                        <a class="dropdown-item" href="javascript:void(0)" data-url="{{ route('clients.edit', ['client' => \Crypt::encrypt($client->id)]) }}" data-ajax-modal="true"
 
-                                    </small>
+                                            data-title="Edit Client" data-size="lg"><i class="fa-solid fa-pencil m-r-5"></i>
 
-                                </td>
+                                            {{ __('Edit') }}
 
-                                
+                                        </a>
 
-                                <td>
+                                        @endactiveCan
 
-                                    {{ tz($project->startDate, 'd M Y') }} - {{ tz($project->endDate, 'd M Y') }}
+                                        @activeCan('delete-client')
 
-                                </td>
+                                        <a class="dropdown-item deleteBtn" data-route="{{ route('clients.destroy', $client->id) }}" data-title="{{ __('Delete Client') }}"
 
-                                <td>
+                                            data-question="Are you sure you want to delete?" href="javascript:void(0)">
 
-                                    {{ $project->priority }}
+                                            <i class="fa-regular fa-trash-can m-r-5"></i>
 
-                                </td>
+                                            {{ __('Delete') }}
 
-                                @activeAnyCan(['edit-project','delete-project'])
+                                        </a>
 
-                                <td class="text-end">
-
-                                    <div class="dropdown dropdown-action">
-
-                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-
-                                        <div class="dropdown-menu dropdown-menu-right">
-
-                                            @activeCan('edit-project')
-
-                                            <a class="dropdown-item" href="javascript:void(0)" data-url="{{ route('projects.edit', ['project' => ($project->id)]) }}" data-ajax-modal="true"
-
-                                                data-title="Edit Project" data-size="lg">
-
-                                                <i class="fa-solid fa-pencil m-r-5"></i>
-
-                                                {{ __('Edit') }}
-
-                                            </a>
-
-                                            @endactiveCan
-
-                                            @activeCan('delete-project')
-
-                                            <a class="dropdown-item deleteBtn" data-route="{{ route('projects.destroy', $project->id) }}" data-title="Delete Project"
-
-                                                data-question="Are you sure you want to delete project?" href="javascript:void(0)">
-
-                                                <i class="fa-regular fa-trash-can m-r-5"></i>
-
-                                                {{ __('Delete') }}
-
-                                            </a>
-
-                                            @endactiveCan
-
-                                        </div>
+                                        @endactiveCan
 
                                     </div>
 
-                                </td>
+                                </div>
+                            </td>
+                            @endactiveAnyCan
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <div class="mb-3">
+                                        <i class="bi bi-person-lines-fill fs-1 text-muted"></i>
+                                    </div>
+                                    <h6 class="text-muted mb-1">No Clients Found</h6>
+                                    <p class="text-secondary small mb-0">
+                                        There are no clients available for this month.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
 
-                                @endactiveAnyCan
-
-                            </tr>
-
-                            @endforeach
-
-                            @endif
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
+                    </tbody>
+                </table>
             </div>
-
-            @activeCan('view-projects')
-
-            <div class="card-footer">
-
-                <a href="{{ route('projects.index') }}">{{ __('View all projects') }}</a>
-
-            </div>
-
-            @endactiveCan
 
         </div>
-
     </div>
-
-    @endif
-
     @endactiveCan
 
-</div>
+    @activeCan('view-projects')
+    <div class="col-lg-6">
+        <div class="card card-dashboard p-3" style="min-height: 350px; max-height: 350px;">
 
-
-
-<div class="row">
-
-    <div class="col-md-12">
-
-        <div class="row">
-
-            @activeCan('view-budgets')
-
-            <div class="col-md-6 text-center">
-
-                <div class="card">
-
-                    <div class="card-body">
-
-                        <h3 class="card-title">{{ __('Budget') }}</h3>
-
-                        <div id="bar-charts"></div>
-
-                    </div>
-
-                </div>
-
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="m-0 fw-bold fs-5">Recent Projects</h6>
+                <a href="{{ route('projects.index') }}" class="btn btn-sm btn-primary">View all Projects</a>
             </div>
 
-            @endactiveCan
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
 
+                    <thead class="table-light">
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Date</th>
+                            <th>Priority</th>
+                            @activeAnyCan(['edit-project', 'delete-project'])
+                            <th></th>
+                            @endactiveAnyCan
+                        </tr>
+                    </thead>
 
+                    <tbody>
 
-            @activeAnyCan(['view-estimates', 'view-invoices'])
+                        @forelse ($recentProjects as $project)
+                        <tr>
+                            <td>
+                                @activeCan('show-project')
+                                <strong><a target="_blank" href="{{ route('projects.show', ['project' => \Crypt::encrypt($project->id)]) }}">{{ $project->name }}</a></strong>
+                                @else
+                                <strong>{{ $project->name }}</strong>
+                                @endactiveCan
 
-            <div class="col-md-6 text-center">
+                                <div class="small text-muted">
+                                    <span class="text-xs">{{ $project->tasks->count() ?? 0 }}</span> <span class="text-muted">{{ __('Opened Tasks') }}</span>
 
-                <div class="card">
+                                    <span class="text-xs">{{ $project->tasks->count() ?? 0 }}</span> <span class="text-muted">{{ __('Tasks Completed') }}</span>
+                                </div>
+                            </td>
 
-                    <div class="card-body">
+                            <td class="small text-muted">
+                                {{ tz($project->startDate, 'd M Y') }} - {{ tz($project->endDate, 'd M Y') }}
+                            </td>
 
-                        <h3 class="card-title">{{ __('Estimates & Invoices Overview') }}</h3>
+                            <td>
+                                @php
+                                $projectPriorityMap = [
+                                  'High'    => ['class' => 'badge-soft-danger'],
+                                  'Medium'  => ['class' => 'badge-soft-warning'],
+                                  'Low'     => ['class' => 'badge-soft-primary']
+                                ];
 
-                        <div id="line-charts"></div>
+                                $priorityBadgeClass = $projectPriorityMap[$project->priority];
+                                @endphp
+                                <span class="badge {{ $priorityBadgeClass['class'] }}">{{ $project->priority }}</span>
+                            </td>
+                            @activeAnyCan(['edit-project', 'delete-project'])
+                            <td>
+                                <div class="dropdown dropdown-action position-static">
 
-                    </div>
+                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 
-                </div>
+                                    <div class="dropdown-menu dropdown-menu-end">
 
+                                        @activeCan('edit-project')
+
+                                        <a class="dropdown-item" href="javascript:void(0)" data-url="{{ route('projects.edit', ['project' => ($project->id)]) }}" data-ajax-modal="true"
+
+                                            data-title="Edit Project" data-size="lg">
+
+                                            <i class="fa-solid fa-pencil m-r-5"></i>
+
+                                            {{ __('Edit') }}
+
+                                        </a>
+
+                                        @endactiveCan
+
+                                        @activeCan('delete-project')
+
+                                        <a class="dropdown-item deleteBtn" data-route="{{ route('projects.destroy', $project->id) }}" data-title="Delete Project"
+
+                                            data-question="Are you sure you want to delete project?" href="javascript:void(0)">
+
+                                            <i class="fa-regular fa-trash-can m-r-5"></i>
+
+                                            {{ __('Delete') }}
+
+                                        </a>
+
+                                        @endactiveCan
+
+                                    </div>
+
+                                </div>
+                            </td>
+                            @endactiveAnyCan
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <div class="mb-3">
+                                        <i class="bi bi-kanban fs-1 text-muted"></i>
+                                    </div>
+                                    <h6 class="text-muted mb-1">No Projects Found</h6>
+                                    <p class="text-secondary small mb-0">
+                                        There are no projects available for this month.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+
+                    </tbody>
+
+                </table>
             </div>
-
-            @endactiveAnyCan
-
-
-
-            @activeCan('view-expenses')
-
-            <div class="col-md-6 text-center">
-
-                <div class="card">
-
-                    <div class="card-body">
-
-                        <h3 class="card-title">{{ __('Expenses') }}</h3>
-
-                        <div id="monthly_expense_barchart"></div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            @endactiveCan
 
         </div>
+    </div>
+    @endactiveCan
+</div>
+<!-- /Clients & Projects -->
 
+<!-- Budget & Estimates -->
+<div class="row gx-3 my-3">
+
+    <div class="col-lg-6 mb-3 mb-md-0 mb-lg-0">
+        <div class="card card-dashboard p-3">
+            <p class="mb-1 fs-5 fw-bold">Budget</p>
+            <canvas id="budgetChart" style="height:320px;"></canvas>
+        </div>
     </div>
 
+    <div class="col-lg-6">
+        <div class="card card-dashboard p-3">
+            <p class="mb-1 fs-5 fw-bold">Estimates & Invoices Overview</p>
+            <canvas id="invoiceChart" style="height:320px;"></canvas>
+        </div>
+    </div>
 </div>
 
-
-
+{{-- dd($monthly_expense) --}}
 
 
 @push('page-scripts')
 
     <!-- ChartJS -->
 
-    <script defer src="{{ asset('js/plugins/morris/morris.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script defer src="{{ asset('js/plugins/morris/morris.min.js') }}"></script> -->
 
     <script defer src="{{ asset('js/plugins/raphael/raphael.min.js') }}"></script>
 
     <script type="module" defer>
-
-    $(document).ready(function() {
-
-            let currency_symbol = "{{ LocaleSettings('currency_symbol') }}"
-
-            @activeCan('view-budgets')
-
-            @if(!empty($budget_collection))
-
-            Morris.Bar({
-
-                element: 'bar-charts',
-
-                redrawOnParentResize: true,
-
-                data: [
-
-                    { y: 'Jan', a: "{{$budget_collection->get(0)->sum('total_revenue')}}", b: "{{$budget_collection->get(0)->sum('total_expense')}}" },
-
-                    { y: 'Feb', a: "{{$budget_collection->get(1)->sum('total_revenue')}}", b: "{{$budget_collection->get(1)->sum('total_expense')}}" },
-
-                    { y: 'Mar', a: "{{$budget_collection->get(2)->sum('total_revenue')}}", b: "{{$budget_collection->get(2)->sum('total_expense')}}" },
-
-                    { y: 'Apr', a: "{{$budget_collection->get(3)->sum('total_revenue')}}", b: "{{$budget_collection->get(3)->sum('total_expense')}}"},
-
-                    { y: 'May', a: "{{$budget_collection->get(4)->sum('total_revenue')}}", b: "{{$budget_collection->get(4)->sum('total_expense')}}" },
-
-                    { y: 'Jun', a: "{{$budget_collection->get(5)->sum('total_revenue')}}", b: "{{$budget_collection->get(5)->sum('total_expense')}}"},
-
-                    { y: 'Jul', a: "{{$budget_collection->get(6)->sum('total_revenue')}}", b: "{{$budget_collection->get(6)->sum('total_expense')}}" },
-
-                    { y: 'Aug', a: "{{$budget_collection->get(7)->sum('total_revenue')}}", b: "{{$budget_collection->get(7)->sum('total_expense')}}"},
-
-                    { y: 'Sept', a: "{{$budget_collection->get(8)->sum('total_revenue')}}", b: "{{$budget_collection->get(8)->sum('total_expense')}}"},
-
-                    { y: 'Oct', a: "{{$budget_collection->get(9)->sum('total_revenue')}}", b: "{{$budget_collection->get(9)->sum('total_expense')}}"},
-
-                    { y: 'Nov', a: "{{$budget_collection->get(10)->sum('total_revenue')}}", b: "{{$budget_collection->get(10)->sum('total_expense')}}"},
-
-                    { y: 'Dec', a: "{{$budget_collection->get(11)->sum('total_revenue')}}", b: "{{$budget_collection->get(11)->sum('total_expense')}}"},
-
-                ],
-
-                xkey: 'y',
-
-                ykeys: ['a', 'b'],
-
-                labels: ["{{ __('Expected Revenue') }}", "{{ __('Expected Expenses') }}"],
-
-                lineColors: ['#ff9b44','#fc6075'],
-
-                lineWidth: '3px',
-
-                barColors: ['#ff9b44','#fc6075'],
-
-                resize: true,
-
-                redraw: true
-
-            });
-
-            @endif
-
-            @endactiveCan
-
-
-
-            // Line Chart
-
-            @activeAnyCan(['view-estimates', 'view-invoices'])
-
-            @if(!empty($invoice_collection))
-
-            Morris.Line({
-
-                element: 'line-charts',
-
-                redrawOnParentResize: true,
-
-                data: [
-
-                    { y: 1, a: "{{$invoice_collection->get(0)->sum('grand_total')}}", b: "{{$estimates_collection->get(0)->sum('grand_total')}}" },
-
-                    { y: 2, a: "{{$invoice_collection->get(1)->sum('grand_total')}}", b: "{{$estimates_collection->get(1)->sum('grand_total')}}" },
-
-                    { y: 3, a: "{{$invoice_collection->get(2)->sum('grand_total')}}", b: "{{$estimates_collection->get(2)->sum('grand_total')}}" },
-
-                    { y: 4, a: "{{$invoice_collection->get(3)->sum('grand_total')}}", b: "{{$estimates_collection->get(3)->sum('grand_total')}}"},
-
-                    { y: 5, a: "{{$invoice_collection->get(4)->sum('grand_total')}}", b: "{{$estimates_collection->get(4)->sum('grand_total')}}" },
-
-                    { y: 6, a: "{{$invoice_collection->get(5)->sum('grand_total')}}", b: "{{$estimates_collection->get(5)->sum('grand_total')}}"},
-
-                    { y: 7, a: "{{$invoice_collection->get(6)->sum('grand_total')}}", b: "{{$estimates_collection->get(6)->sum('grand_total')}}" },
-
-                    { y: 8, a: "{{$invoice_collection->get(7)->sum('grand_total')}}", b: "{{$estimates_collection->get(7)->sum('grand_total')}}"},
-
-                    { y: 9, a: "{{$invoice_collection->get(8)->sum('grand_total')}}", b: "{{$estimates_collection->get(8)->sum('grand_total')}}"},
-
-                    { y: 10, a: "{{$invoice_collection->get(9)->sum('grand_total')}}", b: "{{$estimates_collection->get(9)->sum('grand_total')}}"},
-
-                    { y: 11, a: "{{$invoice_collection->get(10)->sum('grand_total')}}", b: "{{$estimates_collection->get(10)->sum('grand_total')}}"},
-
-                    { y: 12, a: "{{$invoice_collection->get(11)->sum('grand_total')}}", b: "{{$estimates_collection->get(11)->sum('grand_total')}}"},
-
-                ],
-
-                xkey: 'y',
-
-                ykeys: ['a', 'b'],
-
-                labels: ['Invoices', 'Estimates'],
-
-                lineColors: ['#ff9b44','#fc6075'],
-
-                lineWidth: '3px',
-
-                resize: true,
-
-                redraw: true
-
-            });
-
-            @endif
-
-            @endactiveAnyCan
-
-
-
-            @activeCan('view-expenses')
-
-            @if(!empty($monthly_expense))
-
-            Morris.Bar({
-
-                element: 'monthly_expense_barchart',
-
-                data: [
-
-                    @if(!empty($monthly_expense))
-
-                    @foreach ($monthly_expense as $key => $expense)
-
-                    @php
-
-                        $m = $key;
-
-                    @endphp
-
-                    { y: "{{ \Carbon\Carbon::create(0,$m,1)->format('M') }}", a: "{{ !empty($expense->get($key)) ? $expense->get($key)->sum('amount'): 0}}", b: "{{ !empty($expense->get($key)) ? $expense->get($key)->count() : 0}}"},
-
-                    @endforeach
-
-                    @endif
-
-                ],
-
-                xkey: 'y',
-
-                ykeys: ['a', 'b'],
-
-                labels: [`Total Expense (${currency_symbol})`, 'Total Expenses'],
-
-                lineColors: ['#ff9b44','#fc6075'],
-
-                lineWidth: '3px',
-
-                barColors: ['#ff9b44','#fc6075'],
-
-                resize: true,
-
-                redraw: true
-
-            });
-
-            @endif
-
-            @endactiveCan
-
-        });
-
-
 
         @if (session('events'))
 
             @foreach (session('events') as $event)
 
                 Livewire.dispatch('{{ $event }}');
-
             @endforeach
-
         @endif
 
+    </script>
+
+    <script>
+        const shadowPlugin = {
+            id: 'shadowPlugin',
+            beforeDatasetsDraw(chart) {
+                const { ctx } = chart;
+
+                ctx.save();
+                ctx.shadowColor = 'rgba(0,0,0,0.15)';
+                ctx.shadowBlur = 20;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 10;
+            },
+            afterDatasetsDraw(chart) {
+                chart.ctx.restore();
+            }
+        };
+
+        new Chart(document.getElementById('employeeChart'), {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: ['{{ $presentCount }}', '{{ $absentCount }}'],
+                    backgroundColor: ['#10b981', '#f59e0b'],
+                    borderWidth: 2,
+                    hoverOffset: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                rotation: -90,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                }
+            },
+            plugins: [shadowPlugin]
+        });
+
+        function createMiniChart(id, color, percent = 10) {
+
+            const centerText = {
+                id: 'centerText',
+                beforeDraw(chart) {
+                    const { width, height, ctx } = chart;
+
+                    ctx.restore();
+                    ctx.font = (height / 3.5) + "px sans-serif";
+                    ctx.textBaseline = "middle";
+                    ctx.textAlign = "center";
+                    ctx.fillStyle = "#6c757d";
+
+                    ctx.fillText(percent + "%", width / 2, height / 2);
+                    ctx.save();
+                }
+            };
+
+            new Chart(document.getElementById(id), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [percent, 100 - percent],
+                        backgroundColor: [color, '#eee'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                },
+                plugins: [centerText]
+            });
+        }
+
+        new Chart(document.getElementById('expensesChart'), {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach ($monthly_expense as $key => $expense)
+                        "{{ Carbon::create()->month($key+1)->format('M') }}",
+                    @endforeach
+                ],
+                datasets: [{
+                    data: [
+                        @foreach ($monthly_expense as $key => $expense)
+                            {{ $expense->sum('amount') }},
+                        @endforeach
+                    ],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59,130,246,0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        /* Budget Chart */
+        new Chart(document.getElementById('budgetChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                datasets: [
+                    {
+                        label: 'Expected Revenue',
+                        data: [
+                            {{ $budget_collection->get(0)->sum('total_revenue') }},
+                            {{ $budget_collection->get(1)->sum('total_revenue') }},
+                            {{ $budget_collection->get(2)->sum('total_revenue') }},
+                            {{ $budget_collection->get(3)->sum('total_revenue') }},
+                            {{ $budget_collection->get(4)->sum('total_revenue') }},
+                            {{ $budget_collection->get(5)->sum('total_revenue') }},
+                            {{ $budget_collection->get(6)->sum('total_revenue') }},
+                            {{ $budget_collection->get(7)->sum('total_revenue') }},
+                            {{ $budget_collection->get(8)->sum('total_revenue') }},
+                            {{ $budget_collection->get(9)->sum('total_revenue') }},
+                            {{ $budget_collection->get(10)->sum('total_revenue') }},
+                            {{ $budget_collection->get(11)->sum('total_revenue') }}
+                        ],
+                        borderColor: '#ff4d4f',
+                        backgroundColor: '#ff4d4f',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        fill: false
+                    },
+                    {
+                        label: 'Expected Expenses',
+                        data: [
+                            {{ $budget_collection->get(0)->sum('total_expense') }},
+                            {{ $budget_collection->get(1)->sum('total_expense') }},
+                            {{ $budget_collection->get(2)->sum('total_expense') }},
+                            {{ $budget_collection->get(3)->sum('total_expense') }},
+                            {{ $budget_collection->get(4)->sum('total_expense') }},
+                            {{ $budget_collection->get(5)->sum('total_expense') }},
+                            {{ $budget_collection->get(6)->sum('total_expense') }},
+                            {{ $budget_collection->get(7)->sum('total_expense') }},
+                            {{ $budget_collection->get(8)->sum('total_expense') }},
+                            {{ $budget_collection->get(9)->sum('total_expense') }},
+                            {{ $budget_collection->get(10)->sum('total_expense') }},
+                            {{ $budget_collection->get(11)->sum('total_expense') }}
+                        ],
+                        borderColor: '#20c997',
+                        backgroundColor: '#20c997',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { }
+                }
+            }
+        });
+
+        /* Estimates & Invoices Chart */
+        new Chart(document.getElementById('invoiceChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                datasets: [
+                    {
+                        label: 'Invoices',
+                        data: [
+                            {{ $invoice_collection->get(0)->sum('grand_total') }},
+                            {{ $invoice_collection->get(1)->sum('grand_total') }},
+                            {{ $invoice_collection->get(2)->sum('grand_total') }},
+                            {{ $invoice_collection->get(3)->sum('grand_total') }},
+                            {{ $invoice_collection->get(4)->sum('grand_total') }},
+                            {{ $invoice_collection->get(5)->sum('grand_total') }},
+                            {{ $invoice_collection->get(6)->sum('grand_total') }},
+                            {{ $invoice_collection->get(7)->sum('grand_total') }},
+                            {{ $invoice_collection->get(8)->sum('grand_total') }},
+                            {{ $invoice_collection->get(9)->sum('grand_total') }},
+                            {{ $invoice_collection->get(10)->sum('grand_total') }},
+                            {{ $invoice_collection->get(11)->sum('grand_total') }}
+                        ],
+                        borderColor: '#ff4d4f',
+                        backgroundColor: '#ff4d4f',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        fill: false
+                    },
+                    {
+                        label: 'Estimates',
+                        data: [
+                            {{ $estimates_collection->get(0)->sum('grand_total') }},
+                            {{ $estimates_collection->get(1)->sum('grand_total') }},
+                            {{ $estimates_collection->get(2)->sum('grand_total') }},
+                            {{ $estimates_collection->get(3)->sum('grand_total') }},
+                            {{ $estimates_collection->get(4)->sum('grand_total') }},
+                            {{ $estimates_collection->get(5)->sum('grand_total') }},
+                            {{ $estimates_collection->get(6)->sum('grand_total') }},
+                            {{ $estimates_collection->get(7)->sum('grand_total') }},
+                            {{ $estimates_collection->get(8)->sum('grand_total') }},
+                            {{ $estimates_collection->get(9)->sum('grand_total') }},
+                            {{ $estimates_collection->get(10)->sum('grand_total') }},
+                            {{ $estimates_collection->get(11)->sum('grand_total') }}
+                        ],
+                        borderColor: '#ff4d4f',
+                        borderDash: [6,6],
+                        tension: 0.4,
+                        pointRadius: 4,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { }
+                }
+            }
+        });
+
+        createMiniChart('empChart', '#7c3aed', 10);  
+        createMiniChart('expChart', '#22c55e', 10);   
+        createMiniChart('estChart', '#2563eb', 10);   
+        createMiniChart('invChart', '#f97316', 10);  
     </script>
 
 @endpush

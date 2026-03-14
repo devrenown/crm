@@ -29,11 +29,11 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
 
                 $now = Carbon::now($timezone);
 
-                logger()->info('AUTO CLOCKOUT JOB STARTED', [
-                    'tenant_id' => $tenant->id,
-                    'timezone'  => $timezone,
-                    'run_at'    => $now->toDateTimeString(),
-                ]);
+                // logger()->info('AUTO CLOCKOUT JOB STARTED', [
+                //     'tenant_id' => $tenant->id,
+                //     'timezone'  => $timezone,
+                //     'run_at'    => $now->toDateTimeString(),
+                // ]);
 
                 // Fetch all open attendance timestamps for this tenant
                 $timestamps = AttendanceTimestamp::whereNull('endTime')
@@ -78,32 +78,32 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                         }
 
                         // Auto clock-out 5 minutes after shift end
-                        $autoClockoutAt = $shiftEnd->copy()->addMinutes(5);
+                        $autoClockoutAt = $shiftEnd->copy()->addMinutes(60);
 
                         // Prevent auto clock-out at midnight
-                        if ($autoClockoutAt->format('H:i:s') === '00:00:00') {
-                            logger()->warning('AUTO CLOCKOUT BLOCKED AT MIDNIGHT', [
-                                'tenant_id' => $tenant->id,
-                                'user_id' => $user->id,
-                                'attendance_id' => $attendance->id,
-                                'shift_id' => $shift->id,
-                                'auto_clockout_at' => $autoClockoutAt->toDateTimeString(),
-                            ]);
-                            continue;
-                        }
+                        // if ($autoClockoutAt->format('H:i:s') === '00:00:00') {
+                        //     logger()->warning('AUTO CLOCKOUT BLOCKED AT MIDNIGHT', [
+                        //         'tenant_id' => $tenant->id,
+                        //         'user_id' => $user->id,
+                        //         'attendance_id' => $attendance->id,
+                        //         'shift_id' => $shift->id,
+                        //         'auto_clockout_at' => $autoClockoutAt->toDateTimeString(),
+                        //     ]);
+                        //     continue;
+                        // }
 
                         // Shift about to end (optional alert)
-                        $alertTime = $shiftEnd->copy()->subMinutes(5);
-                        if ($now->between($alertTime, $shiftEnd)) {
-                            logger()->info('SHIFT ABOUT TO END', [
-                                'tenant_id' => $tenant->id,
-                                'user_id' => $user->id,
-                                'attendance_id' => $attendance->id,
-                                'shift_id' => $shift->id,
-                                'shift_end' => $shiftEnd->toDateTimeString(),
-                                'current_time' => $now->toDateTimeString(),
-                            ]);
-                        }
+                        // $alertTime = $shiftEnd->copy()->subMinutes(30);
+                        // if ($now->between($alertTime, $shiftEnd)) {
+                        //     logger()->info('SHIFT ABOUT TO END', [
+                        //         'tenant_id' => $tenant->id,
+                        //         'user_id' => $user->id,
+                        //         'attendance_id' => $attendance->id,
+                        //         'shift_id' => $shift->id,
+                        //         'shift_end' => $shiftEnd->toDateTimeString(),
+                        //         'current_time' => $now->toDateTimeString(),
+                        //     ]);
+                        // }
 
                         // Execute auto clock-out if open
                         if ($timestamp->endTime === null && $now->greaterThanOrEqualTo($autoClockoutAt)) {
@@ -114,14 +114,14 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                                 'endDate' => $autoClockoutAt->toDateString()
                             ]);
 
-                            logger()->info('AUTO CLOCK-OUT EXECUTED', [
-                                'tenant_id' => $tenant->id,
-                                'user_id' => $user->id,
-                                'attendance_id' => $attendance->id,
-                                'shift_id' => $shift->id,
-                                'clockout_at' => $autoClockoutAt->toDateTimeString(),
-                                'now' => $now->toDateTimeString(),
-                            ]);
+                            // logger()->info('AUTO CLOCK-OUT EXECUTED', [
+                            //     'tenant_id' => $tenant->id,
+                            //     'user_id' => $user->id,
+                            //     'attendance_id' => $attendance->id,
+                            //     'shift_id' => $shift->id,
+                            //     'clockout_at' => $autoClockoutAt->toDateTimeString(),
+                            //     'now' => $now->toDateTimeString(),
+                            // ]);
                         }
 
                     } catch (\Exception $e) {
@@ -134,10 +134,10 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                     }
                 }
 
-                logger()->info('AUTO CLOCKOUT JOB FINISHED', [
-                    'tenant_id' => $tenant->id,
-                    'ended_at' => Carbon::now($timezone)->toDateTimeString(),
-                ]);
+                // logger()->info('AUTO CLOCKOUT JOB FINISHED', [
+                //     'tenant_id' => $tenant->id,
+                //     'ended_at' => Carbon::now($timezone)->toDateTimeString(),
+                // ]);
             }
         });
     }

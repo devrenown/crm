@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Settings\LocalizationSettings;
 use LaravelLang\Locales\Facades\Locales;
 use LaravelLang\Routes\Events\LocaleHasBeenSetEvent;
+use App\Services\TenantService;
 
 class SettingsController extends Controller
 {
@@ -94,6 +95,9 @@ class SettingsController extends Controller
             LocaleHasBeenSetEvent::dispatch($locale);
         }
         $settings->save();
+        // Clear tenant timezone cache
+        TenantService::clearTimezoneCache($this->tenant->id);
+        
         $notification = notify(__("Locale Settings has been updated"));
         return redirect()->route('settings.locale')->with($notification);
     }

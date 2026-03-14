@@ -104,7 +104,7 @@ class AuthController extends BaseController
                     if (!$user->active_role) {
                         $user->update(['active_role' => $activeRole]);
                     }
-
+                
                     return redirect()->route('dashboard');
                 }
                 return back()->withInput($request->only('email'))->withErrors(['password' => 'Invalid Email or Password']);

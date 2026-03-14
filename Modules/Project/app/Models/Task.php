@@ -18,7 +18,7 @@ class Task extends Model implements HasMedia
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'tenant_id','project_id','project_task_board_id','name','priority','startDate','endDate','description','created_by'
+        'tenant_id','project_id','project_task_board_id','name','priority','startDate','endDate','description','created_by', 'status'
     ];
 
     public function project()

@@ -4,317 +4,569 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Attendance;
-use Livewire\Attributes\Js;
-use Livewire\Attributes\On;
-use Illuminate\Support\Carbon;
 use App\Models\AttendanceTimestamp;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Jenssegers\Agent\Agent;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
+
 
 class EmployeeAttendance extends Component
 {
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
-
-    public $forProject,$project, $clockedIn, $timeStarted;
-    public $totalHours = 0;
+    public $forProject, $project, $clockedIn = false, $timeStarted;
+    public $totalHours = '00:00:00';
     public $timeId = null;
     public $todayActivity;
-    
-    public $totalHoursToday = 0;
-    public $totalHoursThisMonth = 0;
-    public $totalHoursThisWeek = 0;
 
-    public $totalMinutesToday = 0;
-    public $totalMinutesThisWeek = 0;
-    public $totalMinutesThisMonth = 0;
+    public $totalHoursToday = '00:00';
+    public $totalHoursThisWeek = '00:00';
+    public $totalHoursThisMonth = '00:00';
+    public $projects = [];
+    public $tz;
 
     public $timestampId, $title, $status, $description;
 
-    public function clockin()
+    /* =====================================================
+
+        HELPER: TENANT TIMEZONE
+
+    ===================================================== */
+
+    // private function tz()
+
+    // {
+
+    //     return app('tenant_timezone');
+
+    // }
+
+
+    public function mount()
     {
-        try{
+        $this->tz = app('tenant_timezone') ?? 'Asia/Kolkata';
+        $this->projects = \Modules\Project\Models\Project::where(
+        'tenant_id',
+        auth()->user()->tenant_id
+
+         )->get();
+
+    }
+
+    private function tz()
+    {
+        return $this->tz;
+    }
+
+    /* =====================================================
+        CLOCK IN
+    ===================================================== */
+
+    public function clockin()
+
+    {
+
+        try {
 
             $user  = auth()->user();
+
+            $alreadyOpen = AttendanceTimestamp::where('user_id', $user->id)
+
+                ->whereNull('endTime')
+
+                ->exists();
+
+
+
+            if ($alreadyOpen) {
+
+                $this->dispatch('Notification', __('Already clocked in'));
+
+                return;
+
+            }
+
             $agent = new Agent();
-            
-            if($this->forProject){
+
+            $tz = $this->tz();
+
+
+
+            if ($this->forProject) {
+
                 $this->validate([
+
                     'project' => 'required',
+
                 ]);
+
             }
-            $todayAttendance = Attendance::where('user_id', $user->id)
-                    ->whereDate('created_at', Carbon::today())->first();
-            if(!empty($todayAttendance)){
-                $attendance = $todayAttendance;
-            }else{
+
+
+
+            $startOfDayUtc = now($tz)->startOfDay()->utc();
+
+            $endOfDayUtc   = now($tz)->endOfDay()->utc();
+
+
+
+            // $attendance = Attendance::where('user_id', $user->id)
+
+            //     ->whereBetween('startDate', [$startOfDayUtc, $endOfDayUtc])
+
+            //     ->first();
+
+            $attendance = Attendance::where('user_id', $user->id)
+
+                ->whereNull('endDate')
+
+                ->latest()
+
+                ->first();
+
+
+
+            if (!$attendance) {
+
                 $attendance = Attendance::create([
+
                     'user_id'   => $user->id,
-                    'startDate' => now(),
+
+                    'startDate' => now('UTC'),
+
                     'location'  => $user->employeeDetail->department->location ?? null,
+
                     'platform'  => $agent->platform(),
+
                     'endDate'   => null,
+
                 ]);
+
             }
+
+
+
             $timestamp = AttendanceTimestamp::create([
+
                 'user_id' => $user->id,
+
                 'attendance_id' => $attendance->id,
+
                 'project_id' => $this->project,
-                'startTime' => now(),
+
+                'startTime' => now('UTC'),
+
                 'endTime' => null,
+
                 'location' => $user->employeeDetail->department->location ?? null,
+
                 'billable' => false,
-                'ip' => request()->ip() ?? null,
+
+                'ip' => request()->ip(),
+
             ]);
 
 
-            logger()->info('User Clocked In', [
-            'user_id'      => $user->id,
-            'tenant_id'    => $user->tenant_id,
-            'attendance_id'=> $attendance->id,
-            'timestamp_id' => $timestamp->id,
-            'start_time'   => $timestamp->startTime,
-            'project_id'   => $this->project,
-            'ip'           => request()->ip(),
-        ]);
 
             $this->dispatch('IsClockedIn');
+
             $this->dispatch('refreshAttendance');
+
             $this->dispatch('fetchStatistics');
-            $this->dispatch('Notification',__('You have clockin successfully'));
-            // $this->js("bootstrap.Modal.getInstance(document.getElementById('clockin_modal')).hide()");
+
+            $this->dispatch('Notification', __('You have clockin successfully'));
+
+
+
             $this->js("$('#clockin_modal').modal('hide');");
-        }catch(\Exception $e){
-            $this->dispatch('Notification',__('Something went wrong'));
+
+
+
+        } catch (\Exception $e) {
+
+            $this->dispatch('Notification', __('Something went wrong'));
+
         }
+
     }
 
-    // <===== Not in used this function is located in EmployeeAttendanceController =====>
-    public function clockout()
-    {
-        try{
-            $timestamp = AttendanceTimestamp::find(Crypt::decrypt($this->timestampId));
 
-            $this->validate([
-                'title'         => 'required|string|max:255',
-                'status'        => 'required|integer',
-                'description'   => 'nullable|string',
-            ]);
 
-            $timestamp->attendance->update([
-                'endDate'       => now(),
-                'title'         => $this->title,
-                'status'        => $this->status,
-                'description'   => $this->description,
-            ]);
+    /* =====================================================
 
-            $timestamp->update([
-                'endTime' => now(),
-            ]);
+        TODAY ACTIVITY
 
-            $this->dispatch('IsClockedIn');
-            $this->dispatch('refreshAttendance');
-            $this->dispatch('Notification',__('You have clockout successfully'));
-        }catch(\Exception $e){
-            $this->dispatch('Notification',__('Something went wrong'));
-        }
-    }
+    ===================================================== */
+
+
 
     #[On('refreshAttendance')]
-    public function getAttendance()
-    {
-        $userId = auth()->id();
 
-        $this->todayActivity = AttendanceTimestamp::where('user_id', $userId)
-            ->whereDate('created_at', Carbon::today())
-            ->orderBy('created_at', 'desc')
+    public function getAttendance()
+
+    {
+
+        $tz = $this->tz();
+
+        $startOfDayUtc = now($tz)->startOfDay()->utc();
+
+        $endOfDayUtc   = now($tz)->endOfDay()->utc();
+
+
+
+        $this->todayActivity = AttendanceTimestamp::where('user_id', auth()->id())
+
+            //->whereBetween('created_at', [$startOfDayUtc, $endOfDayUtc])
+
+            ->whereBetween('startTime', [$startOfDayUtc, $endOfDayUtc])
+
+            ->orderByDesc('created_at')
+
             ->get();
+
     }
+
+
+
+    /* =====================================================
+
+        STATISTICS (TZ SAFE)
+
+    ===================================================== */
+
+
 
     #[On('fetchStatistics')]
-    public function statistics()
-    {
-        $userId = auth()->user()->id;
 
-        // TODAY
-        $this->totalHoursToday = AttendanceTimestamp::where('user_id', $userId)
-        ->whereDate('created_at', Carbon::today())
-        ->whereNotNull('endTime')
-        ->get()
-        ->sum(function ($row) {
-            return Carbon::parse($row->startTime)
-                ->diffInMinutes(Carbon::parse($row->endTime));
-        });
+public function statistics()
 
-        // THIS WEEK
-        $this->totalHoursThisWeek = AttendanceTimestamp::where('user_id', $userId)
-        ->whereBetween('created_at', [
-            Carbon::now()->startOfWeek(),
-            Carbon::now()->endOfWeek()
+{
+
+    $tz = $this->tz();
+
+    $userId = auth()->id();
+
+    $now = now($tz);
+
+
+
+    // TODAY
+
+    $todayRecords = AttendanceTimestamp::where('user_id', $userId)
+
+        ->whereBetween('startTime', [
+
+            $now->copy()->startOfDay()->utc(),
+
+            $now->copy()->endOfDay()->utc()
+
         ])
-        ->whereNotNull('endTime')
-        ->get()
-        ->sum(function ($row) {
-            return Carbon::parse($row->startTime)
-                ->diffInMinutes(Carbon::parse($row->endTime));
-        });
 
-         // THIS MONTH
-        $this->totalHoursThisMonth = AttendanceTimestamp::where('user_id', $userId)
-        ->whereMonth('created_at', Carbon::now()->month)
-        ->whereYear('created_at', Carbon::now()->year)
-        ->whereNotNull('endTime')
-        ->get()
-        ->sum(function ($row) {
-            return Carbon::parse($row->startTime)
-                ->diffInMinutes(Carbon::parse($row->endTime));
-        });
+        ->get();
 
-        // Convert minutes → HH:MM
-        $this->totalHoursToday     = $this->formatMinutes($this->totalHoursToday);
-        $this->totalHoursThisWeek  = $this->formatMinutes($this->totalHoursThisWeek);
-        $this->totalHoursThisMonth = $this->formatMinutes($this->totalHoursThisMonth);
-    }
+
+
+    $this->totalHoursToday = $this->formatMinutes(
+
+        $this->sumMinutes(
+
+            $todayRecords,
+
+            $now->copy()->startOfDay(),
+
+            $now->copy()->endOfDay()
+
+        )
+
+    );
+
+
+
+    // WEEK
+
+    $weekRecords = AttendanceTimestamp::where('user_id', $userId)
+
+        ->whereBetween('startTime', [
+
+            $now->copy()->startOfWeek()->utc(),
+
+            $now->copy()->endOfWeek()->utc()
+
+        ])
+
+        ->get();
+
+
+
+    $this->totalHoursThisWeek = $this->formatMinutes(
+
+        $this->sumMinutes(
+
+            $weekRecords,
+
+            $now->copy()->startOfWeek(),
+
+            $now->copy()->endOfWeek()
+
+        )
+
+    );
+
+
+
+    // MONTH
+
+    $monthRecords = AttendanceTimestamp::where('user_id', $userId)
+
+        ->whereBetween('startTime', [
+
+            $now->copy()->startOfMonth()->utc(),
+
+            $now->copy()->endOfMonth()->utc()
+
+        ])
+
+        ->get();
+
+
+
+    $this->totalHoursThisMonth = $this->formatMinutes(
+
+        $this->sumMinutes(
+
+            $monthRecords,
+
+            $now->copy()->startOfMonth(),
+
+            $now->copy()->endOfMonth()
+
+        )
+
+    );
+
+}
+
+
+
+    private function sumMinutes($records, Carbon $from, Carbon $to): int
+
+        {
+
+            $tz = $this->tz();
+
+
+
+            return $records->sum(function ($r) use ($from, $to, $tz) {
+
+
+
+                if (!$r->startTime instanceof Carbon) {
+
+                    return 0;
+
+                }
+
+
+
+                $start = $r->startTime->copy()->timezone($tz);
+
+
+
+                $endRaw = $r->endTime ?? now('UTC');
+
+                $end = $endRaw instanceof Carbon
+
+                    ? $endRaw->copy()->timezone($tz)
+
+                    : Carbon::parse($endRaw)->timezone($tz);
+
+
+
+                $start = $start->lt($from) ? $from : $start;
+
+                $end = $end->gt($to) ? $to : $end;
+
+
+
+                if ($end->lte($start)) return 0;
+
+
+
+                return $start->diffInMinutes($end);
+
+            });
+
+        }
+
+
+
+    /* =====================================================
+
+        LIVE CLOCKED-IN STATUS
+
+    ===================================================== */
+
+
 
     #[On('IsClockedIn')]
-    public function getClockInData()
-    {
-        $todayClockin = Attendance::where('user_id', auth()->user()->id)
-                    ->whereDate('created_at', Carbon::today())
-                    ->first();
-        if(!empty($todayClockin)){
-            $latestClockin = $todayClockin->timestamps()->latest()->whereNull('endTime')->first() ?? null;
-            if(!empty($latestClockin)){
-                $this->clockedIn = true;
-                $this->timeId = Crypt::encrypt($latestClockin->id);
-                // $this->timeStarted = $latestClockin->startTime;
-                $this->timeStarted = $latestClockin->startTime->toDateTimeString();
 
-                $diffInMinutes = $latestClockin->startTime->diffInMinutes(Carbon::now());
-                $hours = intdiv($diffInMinutes, 60);
-                $minutes = $diffInMinutes % 60;
-                $this->totalHours = sprintf('%02d:%02d', $hours, $minutes);
-                // $this->totalHours = Carbon::now()->diff($latestClockin->startTime)->h;
-            }
-        }
+public function getClockInData()
+
+{
+
+    $latest = AttendanceTimestamp::where('user_id', auth()->id())
+
+        ->whereNull('endTime')
+
+        ->latest()
+
+        ->first();
+
+
+
+    if ($latest) {
+
+        $this->clockedIn = true;
+
+        $this->timeId = Crypt::encrypt($latest->id);
+
+        $this->timeStarted = $latest->startTime;
+
+        $this->updateLiveHours();
+
+    } else {
+
+        $this->clockedIn = false;
+
+        $this->timeId = null;
+
+        $this->timeStarted = null;
+
+        $this->totalHours = '00:00:00';
+
     }
+
+}
+
+
+
+
 
     public function updateLiveHours()
+
     {
+
         if (!$this->clockedIn || !$this->timeStarted) {
+
             $this->totalHours = '00:00:00';
+
             return;
+
         }
 
-        $start = \Carbon\Carbon::parse($this->timeStarted);
-        $now   = now();
 
-        $diffInSeconds = $start->diffInSeconds($now);
 
-        $hours   = intdiv($diffInSeconds, 3600);
-        $minutes = intdiv($diffInSeconds % 3600, 60);
-        $seconds = $diffInSeconds % 60;
+        $tz = $this->tz();
 
-        $this->totalHours = sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+
+
+        $start = Carbon::parse($this->timeStarted)->timezone($tz);
+
+        $now   = now($tz);
+
+
+
+        $diff = $start->diffInSeconds($now);
+
+
+
+        $this->totalHours = sprintf(
+
+            '%02d:%02d:%02d',
+
+            intdiv($diff, 3600),
+
+            intdiv($diff % 3600, 60),
+
+            $diff % 60
+
+        );
+
     }
 
 
-
-//     #[On('IsClockedIn')]
-// public function getClockInData()
-// {
-//     $user = auth()->user();
-//     $tenantTz = \App\Services\TenantService::timezone($user->tenant_id);
-//     $now = \Illuminate\Support\Carbon::now($tenantTz);
-
-//     // Get current shift based on now
-//     $shiftAssignment = $user->employeeShifts()
-//         ->where('created_at', '<=', $now)
-//         ->latest('created_at')
-//         ->with('shift')
-//         ->first();
-
-//     $shift = $shiftAssignment?->shift;
-
-//     if (!$shift || !$shift->start_time || !$shift->end_time) {
-//         $this->clockedIn = false;
-//         $this->timeId = null;
-//         $this->timeStarted = null;
-//         $this->totalHours = 0;
-//         return;
-//     }
-
-//     // Parse shift start/end in tenant timezone
-//     $shiftStart = \Illuminate\Support\Carbon::parse($shift->start_time, $tenantTz);
-//     $shiftEnd = \Illuminate\Support\Carbon::parse($shift->end_time, $tenantTz);
-
-//     // Handle night shifts crossing midnight
-//     if ($shiftEnd->lessThanOrEqualTo($shiftStart)) {
-//         $shiftEnd->addDay();
-//     }
-
-//     // Find active attendance timestamp within the current shift
-//     $latestTimestamp = AttendanceTimestamp::where('user_id', $user->id)
-//         ->whereNull('endTime')
-//         ->whereHas('attendance', fn($q) => $q->where('tenant_id', $user->tenant_id))
-//         ->get()
-//         ->filter(function($t) use ($shiftStart, $shiftEnd, $tenantTz) {
-//             $clockIn = \Illuminate\Support\Carbon::parse($t->startTime, $tenantTz);
-//             return $clockIn->between($shiftStart, $shiftEnd);
-//         })
-//         ->sortByDesc('startTime')
-//         ->first();
-
-//     if ($latestTimestamp) {
-//         $this->clockedIn = true;
-//         $this->timeId = Crypt::encrypt($latestTimestamp->id);
-//         $this->timeStarted = $latestTimestamp->startTime;
-
-//         $diffInMinutes = $latestTimestamp->startTime->diffInMinutes($now);
-//         $hours = intdiv($diffInMinutes, 60);
-//         $minutes = $diffInMinutes % 60;
-//         $this->totalHours = sprintf('%02d:%02d', $hours, $minutes);
-//     } else {
-//         $this->clockedIn = false;
-//         $this->timeId = null;
-//         $this->timeStarted = null;
-//         $this->totalHours = 0;
-//     }
-// }
 
     private function formatMinutes($minutes)
+
     {
+
         return sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
+
     }
 
-   
-    public function render()
-    {
-        $dates = AttendanceTimestamp::where('user_id', auth()->id())
-        ->whereNotNull('attendance_id')
-        ->selectRaw('DATE(created_at) as date')
-        ->groupBy('date')
-        ->orderBy('date', 'desc')
+
+
+    /* =====================================================
+
+        RENDER
+
+    ===================================================== */
+
+
+
+   public function render()
+
+{
+
+    $tz = $this->tz();
+
+
+
+    $paginator = AttendanceTimestamp::where('user_id', auth()->id())
+
+        ->whereNotNull('startTime')
+
+        ->orderByDesc('startTime')
+
         ->paginate(10);
 
-        $records = AttendanceTimestamp::where('user_id', auth()->id())
-        ->whereIn(
-            \DB::raw('DATE(created_at)'),
-            $dates->pluck('date')
-        )
-        ->orderBy('created_at')
-        ->get()
-        ->groupBy(fn ($r) => $r->created_at->format('Y-m-d'))
-        ->sortKeysDesc();
 
-        return view('livewire.employee-attendance', [
-            'attendances' => $records,
-            'attendancePaginator' => $dates,
-        ]);
-    }
-        
+
+    // Group only the current page
+
+    $records = $paginator->getCollection()
+
+        ->groupBy(function ($r) use ($tz) {
+
+            return $r->startTime
+
+                ->copy()
+
+                ->timezone($tz)
+
+                ->format('Y-m-d');
+
+        });
+
+
+
+    // Replace collection inside paginator
+
+    $paginator->setCollection($records);
+
+
+
+    return view('livewire.employee-attendance', [
+
+        'attendances' => $records,
+
+        'attendancePaginator' => $paginator,
+
+    ]);
+
+}
+
 }

@@ -80,7 +80,13 @@ class LeaveCreateController extends Controller
             $days = 0;
             $shortLeaveHours = 0;
             $isHalfDay = 0;
-            $term = 'Fullday'; // default
+            $terms = collect($request->term_details)->pluck('term')->unique();
+
+            if ($terms->count() === 1) {
+                $term = $terms->first(); // single type
+            } else {
+                $term = 'Mixed'; // multiple types
+            }
             foreach ($request->term_details as $td) {
                 if ($td['term'] === 'Fullday') {
                     $days += 1;

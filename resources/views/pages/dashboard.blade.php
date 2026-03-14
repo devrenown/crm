@@ -8,17 +8,11 @@
 @section('page-content')
     <div class="content container-fluid">
 
-        <!-- Page Header -->
-        <x-breadcrumb>
-            <x-slot name="title">{{ __('Welcome') }}
-                {{ !empty(auth()->user()->fullname) ? auth()->user()->fullname . ' !' : '' }}</x-slot>
-            <ul class="breadcrumb">
-                <li class="breadcrumb-item active">
-                    <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-                </li>
-            </ul>
-        </x-breadcrumb>
-        <!-- /Page Header -->
+        <!-- Welcome Header -->
+        <div class="welcome-card px-4 mb-4 d-flex align-items-center justify-content-between">
+            <h4 class="fw-bold mb-0">Welcome Back, {{ !empty(auth()->user()->fullname) ? auth()->user()->fullname . ' !' : '' }}</h4>
+            <img src="{{ asset('images/welcome-icon.png') }}" alt="">
+        </div>
 
         @activeRole('Super Admin')
             @include('pages.dashboards.super-admin')

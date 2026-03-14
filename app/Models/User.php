@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserType;
 use App\Models\AttendanceTimestamp;
+use App\Models\Attendance;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -15,6 +16,7 @@ use App\Models\EmployeeIdentityProof;
 use App\Traits\BelongsToTenant;
 use App\Models\Tenant;
 use App\Models\EmployeeShift;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -93,6 +95,21 @@ class User extends Authenticatable
     public function attendanceTimestamps()
     {
         return $this->hasMany(AttendanceTimestamp::class,'user_id');
+    }
+    
+    public function firstAttendanceToday(): HasOne
+    {
+        return $this->hasOne(Attendance::class, 'user_id')
+            ->whereDate('created_at', today())
+            ->orderBy('created_at', 'asc');
+    }
+
+    public function lastAttendanceToday(): HasOne
+    {
+        return $this->hasOne(Attendance::class, 'user_id')
+            ->whereDate('endDate', today())
+            ->whereNotNull('endDate')
+            ->latestOfMany('created_at');
     }
 
     public function clientDetail(){

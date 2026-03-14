@@ -107,22 +107,44 @@ class SecureFileViewService
         }
     }
 
+    // private function handleImage($pdf, string $binary, string $watermark)
+    // {
+    //     $tmp = tempnam(sys_get_temp_dir(), 'img');
+    //     file_put_contents($tmp, $binary);
+
+    //     [$imgWidth, $imgHeight] = getimagesize($tmp);
+
+    //     $mmWidth  = 210;
+    //     $mmHeight = $imgHeight * ($mmWidth / $imgWidth);
+
+    //     $pdf->AddPage('P', [$mmWidth, $mmHeight]);
+    //     //$pdf->Image($tmp, 0, 0, $mmWidth, $mmHeight);
+    //     $pdf->Image($tmp, 0, 0, '', '', '', '', '', false, 300);
+
+    //     unlink($tmp);
+
+    //     $size = ['width' => $mmWidth, 'height' => $mmHeight];
+    //     $this->applyWatermark($pdf, $watermark, $size);
+    // }
+
     private function handleImage($pdf, string $binary, string $watermark)
     {
         $tmp = tempnam(sys_get_temp_dir(), 'img');
         file_put_contents($tmp, $binary);
 
-        [$imgWidth, $imgHeight] = getimagesize($tmp);
+        $pdf->AddPage();
 
-        $mmWidth  = 210;
-        $mmHeight = $imgHeight * ($mmWidth / $imgWidth);
-
-        $pdf->AddPage('P', [$mmWidth, $mmHeight]);
-        $pdf->Image($tmp, 0, 0, $mmWidth, $mmHeight);
+        // Draw image
+        $pdf->Image($tmp, 10, 10, 190);
 
         unlink($tmp);
 
-        $size = ['width' => $mmWidth, 'height' => $mmHeight];
+        // Apply watermark on top
+        $size = [
+            'width' => $pdf->getPageWidth(),
+            'height' => $pdf->getPageHeight()
+        ];
+
         $this->applyWatermark($pdf, $watermark, $size);
     }
 

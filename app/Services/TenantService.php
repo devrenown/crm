@@ -12,6 +12,7 @@ use App\Enums\TenantStatus;
 use App\Enums\UserType;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TenantOnboardMail;
+use Illuminate\Support\Facades\Cache;
 
 class TenantService 
 {
@@ -139,20 +140,55 @@ class TenantService
      * @param int $tenantId
      * @return string
      */
+// 	public static function timezone(int $tenantId): string
+// 	{
+// 		$tz = DB::table('settings')
+// 			->where('tenant_id', $tenantId)
+// 			->where('group', 'localization')
+// 			->where('name', 'timezone')
+// 			->value('payload');
+	
+// 		if (!$tz) {
+// 			return config('app.timezone');
+// 		}
+// 		// Remove quotes and fix escaped slashes
+// 		return str_replace('\/', '/', trim($tz, "\"'"));
+// 	}
+
+    private static array $runtimeCache = [];
 	public static function timezone(int $tenantId): string
 	{
-		$tz = DB::table('settings')
-			->where('tenant_id', $tenantId)
-			->where('group', 'localization')
-			->where('name', 'timezone')
-			->value('payload');
-	
-		if (!$tz) {
-			return config('app.timezone');
+		if (isset(self::$runtimeCache[$tenantId])) {
+			return self::$runtimeCache[$tenantId];
 		}
-	
-		// Remove quotes and fix escaped slashes
-		return str_replace('\/', '/', trim($tz, "\"'"));
+
+		return self::$runtimeCache[$tenantId] = Cache::remember(
+			"tenant:$tenantId:timezone",
+			86400,
+			function () use ($tenantId) {
+
+				$tz = DB::table('settings')
+					->where('tenant_id', $tenantId)
+					->where('group', 'localization')
+					->where('name', 'timezone')
+					->value('payload');
+
+				if (!$tz) {
+					return config('app.timezone');
+				}
+
+				return str_replace('\/', '/', trim($tz, "\"'"));
+			}
+		);
+	}
+
+	public static function clearTimezoneCache(int $tenantId): void
+	{
+		Cache::forget("tenant:$tenantId:timezone");
+
+		if (isset(self::$runtimeCache[$tenantId])) {
+			unset(self::$runtimeCache[$tenantId]);
+		}
 	}
 	
 

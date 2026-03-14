@@ -66,7 +66,7 @@
 
         <!-- Header -->
         <div class="header">
-            <img src="{{  asset($companyLogo ? 'storage/settings/theme/' . $companyLogo : 'images/company-placeholder.png') }}" alt="Logo">
+            <img src="{{  asset($companyLogo ? 'storage/' . $companyLogo : 'images/company-placeholder.png') }}" alt="Logo">
             <h2>Welcome to {{ $company->name }}</h2>
         </div>
 
