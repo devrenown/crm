@@ -10,14 +10,11 @@
                     </span>
 
                     <h1 class="hero-title">
-                        <span class="text-gradient fw-bold">RENOWN SYSTEM</span> – <br> Grow
-                        Smarter, <br> Sell Faster
+                        <span class="text-gradient fw-bold text-uppercase">RENOWN SYSTEM </span> – <br>The Best CRM Solution for, <br> Business Growth.
                     </h1>
 
                     <p class="hero-text mb-5">
-                        One powerful CRM to manage leads, sales, and customers.
-                        Automate workflows, improve team efficiency, and scale
-                        your business with confidence.
+                        Give your small business a unified CRM solution that elevates operational efficiency through workflow automation and powers growth with advanced performance analytics.
                     </p>
 
                     <div class="d-flex gap-3 flex-wrap">

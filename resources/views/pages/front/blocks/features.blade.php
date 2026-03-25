@@ -4,13 +4,12 @@
         <span class="section-title-badge">Key Features</span>
 
         <h2 class="section-title mt-5">
-            <span class="text-gradient fw-bold">POWERFUL FEATURES</span>
-            FOR MODERN BUSINESS
+            <span class="text-uppercase">Powerful CRM</span>
+            Solutions for Small Businesses
         </h2>
 
         <p class="section-subtitle">
-            Everything you need to manage sales, employees, and operations
-            in one unified platform
+            One platform. One source of truth. Delivering 360° customer management through seamless team collaboration.
         </p>
 
         <div class="row g-4 mt-4">

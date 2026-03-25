@@ -1,11 +1,10 @@
 <section class="how-it-works-section bg-white py-5" id="how-it-works">
     <div class="container-fluid px-lg-5">
         <div class="text-center">
-            <span class="section-title-badge">How It Works</span>
+            <span class="section-title-badge">How Renown System Works</span>
             <div class="mt-4 mb-5">
-                <h3 class="fs-1"><span class="text-gradient fw-bold">HOW RENOWN</span> SYSTEM WORKS</h3>
-                <p class="fs-5 text-secondary mt-3 lh-base">Get started in 4 simple steps and transform your <br> business
-                    operations</p>
+                <h2 class="section-title mb-3 mt-4"><span class="text-uppercase">Launch Your Business</span> CRM in 4 Simple Steps </h2>
+                <p class="fs-5 text-secondary mt-3 lh-base">Our easy-to-install CRM for small businesses integrates quickly with your workflows and streamline operations without friction.</p>
             </div>
 
             <div class="main row">

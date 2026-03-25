@@ -118,8 +118,8 @@
                 <span class="section-title-badge">Pricing Plans</span>
             </div>
 
-            <p class="fs-1"><span class="text-gradient fw-bold">SIMPLE, TRANSPARENT</span> PRICING</p>
-            <p class="fs-5 text-secondary lh-base mt-3">Choose the plan that fits your business. All plans include a <br> 15-day
+            <h2 class="section-title mb-3 mt-4">SIMPLE, TRANSPARENT PRICING</h2>
+            <p class="fs-5 text-secondary lh-base mt-3">Choose the plan that fits your business. All plans include a 15-day
                 free trial.</p>
         </div>
 

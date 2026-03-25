@@ -143,7 +143,6 @@
         top: 35%;
         right: 0;
         background: #ffffff;
-        color: #16a34a;
         padding: 6px 12px;
         border-radius: 12px;
         font-size: 13px;
@@ -153,7 +152,6 @@
         bottom: 30%;
         left: 0;
         background: #ffffff;
-        color: #ea580c;
         padding: 6px 12px;
         border-radius: 12px;
         font-size: 13px;
@@ -386,98 +384,109 @@
             <!-- Scrollable Area -->
             <div class="overflow-auto" style="max-height: 310px; min-height: 310px;">
 
+                @if ($upcomingBirthdays->isEmpty() && $upcomingWorkAnniversaries->isEmpty() && $upcomingProbationCompleted->isEmpty())
+
+                    <div class="d-flex flex-column justify-content-center align-items-center text-center mt-5">
+                        <img src="{{ asset('images/icons/celebrations.svg') }}" style="width:60px; opacity:.5;" class="mb-2">
+                        <p class="text-muted mb-0 fw-semibold">No celebrations coming up</p>
+                        <small class="text-muted">There are no birthdays, anniversaries, or milestones in the next 7 days </small>
+                    </div>
+                @else
+
                 <!-- Item -->
 
-                @if ($upcomingBirthdays->count() > 0)
-                    @foreach ($upcomingBirthdays as $index => $user)
-                    @php
-                        $years = Carbon::parse($user->dob)->diffInYears(Carbon::today());
-                        $birthday = Carbon::parse($user->dob)->format('m-d');
-                    @endphp
+                    @if ($upcomingBirthdays->count() > 0)
+                        @foreach ($upcomingBirthdays as $index => $user)
+                        @php
+                            $years = Carbon::parse($user->dob)->diffInYears(Carbon::today());
+                            $birthday = Carbon::parse($user->dob)->format('m-d');
+                        @endphp
 
-                    <div
-                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3">
-                                <img src="{{ $user->avatar ? asset('storage/', $user->avatar) : asset('images/user.jpg') }}">
+                        <div
+                            class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <img src="{{ $user->avatar ? asset('storage/', $user->avatar) : asset('images/user.jpg') }}">
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">BIRTHDAY</small>
+                                    <div class="fw-semibold">{{ $user->fullname }}</div>
+                                    <small class="text-muted">{{ @$user->employeeDetail->designation->name ?? 'Employee' }}</small>
+                                </div>
                             </div>
-                            <div>
-                                <small class="text-muted fw-semibold">BIRTHDAY</small>
-                                <div class="fw-semibold">{{ $user->fullname }}</div>
-                                <small class="text-muted">{{ @$user->employeeDetail->designation->name ?? 'Employee' }}</small>
-                            </div>
+                            <span class="badge rounded-pill {{ $birthday == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                                {{
+                                    $birthday == $today ? 'Today 🥳'
+                                    : ($birthday == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                    : Carbon::parse($user->dob)->format('d M'))
+                                }}
+                            </span>
                         </div>
-                        <span class="badge rounded-pill {{ $birthday == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                            {{
-                                $birthday == $today ? 'Today 🥳'
-                                : ($birthday == now()->addDay()->format('m-d') ? 'Tomorrow'
-                                : Carbon::parse($user->dob)->format('d M'))
-                            }}
-                        </span>
-                    </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
 
-                <!-- Work anniversary -->
-                @if ($upcomingWorkAnniversaries->count() > 0)
+                    <!-- Work anniversary -->
+                    @if ($upcomingWorkAnniversaries->count() > 0)
 
-                    @foreach ($upcomingWorkAnniversaries as $index => $anni)
+                        @foreach ($upcomingWorkAnniversaries as $index => $anni)
 
-                    @php
-                        $years = Carbon::parse($anni->date_joined)->diffInYears(Carbon::today());
-                        $anniversary = date('m-d', strtotime($anni->date_joined));
-                    @endphp
-                    <div
-                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3">
-                                <img src="{{ $anni->avatar ? asset('storage/', $anni->avatar) : asset('images/user.jpg') }}">
+                        @php
+                            $years = Carbon::parse($anni->date_joined)->diffInYears(Carbon::today());
+                            $anniversary = date('m-d', strtotime($anni->date_joined));
+                        @endphp
+                        <div
+                            class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <img src="{{ $anni->avatar ? asset('storage/', $anni->avatar) : asset('images/user.jpg') }}">
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">WORK ANNIVERSARY</small>
+                                    <div class="fw-semibold">{{ $anni->fullname }}</div>
+                                    <small class="text-muted">{{ number_format($years) }} Years</small>
+                                </div>
                             </div>
-                            <div>
-                                <small class="text-muted fw-semibold">WORK ANNIVERSARY</small>
-                                <div class="fw-semibold">{{ $anni->fullname }}</div>
-                                <small class="text-muted">{{ number_format($years) }} Years</small>
-                            </div>
+                            <span class="badge rounded-pill {{ $anniversary == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                                {{ 
+                                    $anniversary == $today ? 'Today 🥳'  
+                                    : ($anniversary == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                    : date('d M', strtotime($anni->date_joined)))
+                                }}
+                            </span>
                         </div>
-                        <span class="badge rounded-pill {{ $anniversary == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                            {{ 
-                                $anniversary == $today ? 'Today 🥳'  
-                                : ($anniversary == now()->addDay()->format('m-d') ? 'Tomorrow'
-                                : date('d M', strtotime($anni->date_joined)))
-                            }}
-                        </span>
-                    </div>
-                    @endforeach
-                @endif
+                        @endforeach
+                    @endif
 
-                @if ($upcomingProbationCompleted->count() > 0)
+                    @if ($upcomingProbationCompleted->count() > 0)
 
-                    @foreach ($upcomingProbationCompleted as $index => $prob)
-                    @php
-                        $end   = Carbon::parse($prob->probation_end_date)->format('m-d');
-                    @endphp
+                        @foreach ($upcomingProbationCompleted as $index => $prob)
+                        @php
+                            $end   = Carbon::parse($prob->probation_end_date)->format('m-d');
+                        @endphp
 
-                    <div
-                        class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar me-3">
-                                <img src="{{ $prob->avatar ? asset('storage/', $prob->avatar) : asset('images/user.jpg') }}">
+                        <div
+                            class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <img src="{{ $prob->avatar ? asset('storage/', $prob->avatar) : asset('images/user.jpg') }}">
+                                </div>
+                                <div>
+                                    <small class="text-muted fw-semibold">PROBATION PERIOD</small>
+                                    <div class="fw-semibold">{{ $prob->fullname }}</div>
+                                    <small class="text-muted">{{ @$prob->employeeDetail->designation->name ?? 'Employee' }}</small>
+                                </div>
                             </div>
-                            <div>
-                                <small class="text-muted fw-semibold">PROBATION PERIOD</small>
-                                <div class="fw-semibold">{{ $prob->fullname }}</div>
-                                <small class="text-muted">{{ @$prob->employeeDetail->designation->name ?? 'Employee' }}</small>
-                            </div>
+                            <span class="badge rounded-pill {{ $end == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
+                                {{ 
+                                    $end == $today ? 'Today 🥳' 
+                                    : ($end == now()->addDay()->format('m-d') ? 'Tomorrow'
+                                    : Carbon::parse($prob->probation_end_date)->format('d M'))
+                                }}
+                            </span>
                         </div>
-                        <span class="badge rounded-pill {{ $end == $today ? 'bg-primary text-white' : 'bg-light text-dark' }}">
-                            {{ 
-                                $end == $today ? 'Today 🥳' 
-                                : ($end == now()->addDay()->format('m-d') ? 'Tomorrow'
-                                : Carbon::parse($prob->probation_end_date)->format('d M'))
-                            }}
-                        </span>
-                    </div>
-                    @endforeach
+                        @endforeach
+                    @endif
+
                 @endif
 
             </div>
@@ -560,98 +569,115 @@
 
                 <div class="stats-list" style="min-height: 315px; max-height: 315px; overflow-y: auto;">
 
-                    @activeCan('view-invoices')
+                    @if(
+                        (isset($invoices) && $invoices->count() > 0) ||
+                        (isset($tickets) && $tickets->count() > 0)
+                    )
 
-                    @if (!empty($invoices) && $invoices->count() > 0)
+                        @activeCan('view-invoices')
 
-                    <div class="stats-info">
+                        @if (!empty($invoices) && $invoices->count() > 0)
 
-                        <p>{{ __('Declined Invoices') }} <strong>{{ $invoices->where('status', '4')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
+                        <div class="stats-info">
 
-                        <div class="progress">
+                            <p>{{ __('Declined Invoices') }} <strong>{{ $invoices->where('status', '4')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
 
-                            <div class="progress-bar bg-danger w-31" role="progressbar" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress">
 
-                        </div>
+                                <div class="progress-bar bg-danger w-31" role="progressbar" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>
 
-                    </div>
-
-                    <div class="stats-info">
-
-                        <p>{{ __('Partially Paid Invoices') }} <strong>{{ $invoices->where('status', '3')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
-
-                        <div class="progress">
-
-                            <div class="progress-bar bg-info w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
 
                         </div>
 
-                    </div>
+                        <div class="stats-info">
 
-                    <div class="stats-info">
+                            <p>{{ __('Partially Paid Invoices') }} <strong>{{ $invoices->where('status', '3')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
 
-                        <p>{{ __('Paid Invoices') }} <strong>{{ $invoices->where('status', '2')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
+                            <div class="progress">
 
-                        <div class="progress">
+                                <div class="progress-bar bg-info w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
 
-                            <div class="progress-bar bg-success w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
 
                         </div>
 
-                    </div>
+                        <div class="stats-info">
+
+                            <p>{{ __('Paid Invoices') }} <strong>{{ $invoices->where('status', '2')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
+
+                            <div class="progress">
+
+                                <div class="progress-bar bg-success w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+
+                            </div>
+
+                        </div>
 
                         
 
-                    <div class="stats-info">
+                        <div class="stats-info">
 
-                        <p>{{ __('Sent Invoices') }} <strong>{{ $invoices->where('status', '1')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
+                            <p>{{ __('Sent Invoices') }} <strong>{{ $invoices->where('status', '1')->count() }} <small>/ {{ $invoices->count() }}</small></strong></p>
 
-                        <div class="progress">
+                            <div class="progress">
 
-                            <div class="progress-bar bg-primary w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-primary w-31" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+
+                            </div>
+
+                        </div>                                
+
+                        @endif
+
+                        @endactiveCan
+
+
+
+                        @activeCan('view-tickets')
+
+                        @if (!empty($tickets) && $tickets->count() > 0)
+
+                        <div class="stats-info">
+
+                            <p>{{ __('Open Tickets') }} <strong>{{ $tickets->where('status', \App\Enums\TicketStatus::NEW)->count() }} <small>/ {{ $tickets->count() }}</small></strong></p>
+
+                            <div class="progress">
+
+                                <div class="progress-bar bg-danger w-62" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
+
+                            </div>
 
                         </div>
 
-                    </div>                                
+                        <div class="stats-info">
 
-                    @endif
+                            <p>{{ __('Closed Tickets') }} <strong>{{ $tickets->where('status', \App\Enums\TicketStatus::CLOSED)->count() }} <small>/ {{ $tickets->count() }}</small></strong></p>
 
-                    @endactiveCan
+                            <div class="progress">
 
+                                <div class="progress-bar bg-info w-22" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
 
-
-                    @activeCan('view-tickets')
-
-                    @if (!empty($tickets) && $tickets->count() > 0)
-
-                    <div class="stats-info">
-
-                        <p>{{ __('Open Tickets') }} <strong>{{ $tickets->where('status', \App\Enums\TicketStatus::NEW)->count() }} <small>/ {{ $tickets->count() }}</small></strong></p>
-
-                        <div class="progress">
-
-                            <div class="progress-bar bg-danger w-62" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
 
                         </div>
 
+                        @endif
+
+                        @endactiveCan
+
+                    @else
+
+                    {{-- EMPTY STATE --}}
+                    <div class="d-flex flex-column justify-content-center align-items-center text-center mt-5">
+                        <div class="mb-3">
+                            <i class="bi bi-graph-up-arrow fs-1 text-muted"></i>
+                        </div>
+                        <p class="text-muted fw-semibold mb-1">No statistics available</p>
+                        <small class="text-muted">Invoice and ticket statistics will appear here.</small>
                     </div>
 
-                    <div class="stats-info">
-
-                        <p>{{ __('Closed Tickets') }} <strong>{{ $tickets->where('status', \App\Enums\TicketStatus::CLOSED)->count() }} <small>/ {{ $tickets->count() }}</small></strong></p>
-
-                        <div class="progress">
-
-                            <div class="progress-bar bg-info w-22" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
-
-                        </div>
-
-                    </div>
-
                     @endif
-
-                    @endactiveCan
-
                 </div>
 
             </div>
@@ -823,7 +849,7 @@
                 </div>
                 @empty
                 <div class="text-center py-5">
-                    <img src="{{ asset('images/icons/no-task.svg') }}" style="width:80px; opacity:0.6;">
+                    <img src="{{ asset('images/icons/no-task.svg') }}" style="width:40px; opacity:0.6;">
                     <p class="mt-3 mb-1 fw-semibold text-muted">No tasks found</p>
                     <small class="text-muted">Tasks will appear here once they are created.</small>
                 </div>
@@ -1198,7 +1224,7 @@
             data: {
                 datasets: [{
                     data: ['{{ $presentCount }}', '{{ $absentCount }}'],
-                    backgroundColor: ['#10b981', '#f59e0b'],
+                    backgroundColor: ['#FF9748', '#FF2C2F'],
                     borderWidth: 2,
                     hoverOffset: 4,
                 }]

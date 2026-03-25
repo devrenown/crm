@@ -5,10 +5,9 @@
                 <span class="section-title-badge">Testimonial</span>
             </div>
 
-            <p class="fs-1 text-uppercase"><span class="text-gradient fw-bold">Loved by </span> Businesses Worldwide
-            </p>
-            <p class="fs-5 text-secondary mt-3 lh-base">See what our customers have to say about transforming their <br>
-                operations with Renown System.</p>
+            <h2 class="section-title mb-3 mt-4"><span class="text-uppercase">Trusted CRM </span> for Businesses Worldwide
+            </h2>
+            <p class="fs-5 text-secondary mt-3 lh-base">Discover how Renown System powers growing businesses like yours worldwide.</p>
         </div>
 
         <div class="slider-container mt-5">

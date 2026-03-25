@@ -57,6 +57,88 @@ class DashboardController extends BaseController
         $this->data['pageTitle'] = __('Dashboard');
         $user = auth()->user();
 
+        // =================== Event Queries Start ==================== //
+
+        $start = Carbon::today()->format('m-d');
+        $end   = Carbon::today()->addDays(7)->format('m-d');
+
+        $today      = Carbon::today();
+        $endDate    = Carbon::today()->addDays(7);
+        $probationDays = (int)$this->companySettings->probation_period;
+
+        // 1. Define the base query
+        $baseQuery = User::where('users.is_active', true)->join('employee_details', 'users.id', '=', 'employee_details.user_id')
+            ->select('users.id', 'users.firstname', 'users.middlename', 'users.lastname', 'users.avatar', 'employee_details.user_id', 'employee_details.dob', 'employee_details.date_joined', 'users.is_active')
+            ->with('employeeDetail');
+
+
+        $upcomingBirthdays = (clone $baseQuery)
+        ->where(function ($q) use ($start, $end) {
+            if ($start <= $end) {
+                $q->whereRaw("DATE_FORMAT(employee_details.dob, '%m-%d') BETWEEN ? AND ?", [$start, $end]);
+            } else {
+                $q->whereRaw("DATE_FORMAT(employee_details.dob, '%m-%d') >= ? OR DATE_FORMAT(employee_details.dob, '%m-%d') <= ?", [$start, $end]);
+            }
+        })
+        ->orderByRaw("
+            CASE 
+                WHEN DATE_FORMAT(employee_details.dob, '%m-%d') >= ? THEN 0 
+                ELSE 1 
+            END ASC, 
+            DATE_FORMAT(employee_details.dob, '%m%d') ASC
+        ", [$start])
+        ->get();
+
+
+        $upcomingWorkAnniversaries = (clone $baseQuery)
+        ->whereDate('employee_details.date_joined', '<', Carbon::today())
+        ->where(function ($q) use ($start, $end) {
+            if ($start <= $end) {
+                $q->whereRaw("DATE_FORMAT(employee_details.date_joined, '%m-%d') BETWEEN ? AND ?", [$start, $end]);
+            } else {
+                $q->whereRaw("DATE_FORMAT(employee_details.date_joined, '%m-%d') >= ? OR DATE_FORMAT(employee_details.date_joined, '%m-%d') <= ?", [$start, $end]);
+            }
+        })
+        ->orderByRaw("
+            CASE 
+                WHEN DATE_FORMAT(employee_details.date_joined, '%m-%d') >= ? THEN 0 
+                ELSE 1 
+            END ASC, 
+            DATE_FORMAT(employee_details.date_joined, '%m%d') ASC
+        ", [$start])
+        ->get();
+
+        $upcomingProbationCompleted = (clone $baseQuery)
+        ->whereNotNull('employee_details.date_joined')
+        ->whereRaw(
+            "DATE_ADD(employee_details.date_joined, INTERVAL ? DAY) BETWEEN ? AND ?",
+            [
+                $probationDays,
+                $today->toDateString(),
+                $endDate->toDateString()
+            ]
+        )
+        ->addSelect(\DB::raw("
+            DATE_ADD(employee_details.date_joined, INTERVAL {$probationDays} DAY)
+            as probation_end_date
+        "))
+        ->get();
+
+        $this->data['upcomingBirthdays']            = $upcomingBirthdays;
+        $this->data['upcomingWorkAnniversaries']    = $upcomingWorkAnniversaries;
+        $this->data['upcomingProbationCompleted']   = $upcomingProbationCompleted;
+
+        // =================== Event Queries End ==================== //
+
+        $myTasks = Task::with('project')
+                -> whereHas('followers', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->orderBy('priority', 'asc')
+                ->get();
+
+        $this->data['myTasks'] = $myTasks;
+
         if(
             ($user->active_role && $user->active_role === UserType::EMPLOYEE->value)
             || (!$user->active_role && $user->type === UserType::EMPLOYEE->value)
@@ -64,6 +146,7 @@ class DashboardController extends BaseController
         {
             return view('pages.employees.dashboard',$this->data);
         }
+
         $projects = null;
         $recentProjects = null;
         if(!empty(module('Project')) && module('Project')->isEnabled()){
@@ -212,74 +295,7 @@ class DashboardController extends BaseController
             $this->data['prevMonthTotalEmployees'] = User::where('type', UserType::EMPLOYEE->value)->whereMonth('created_at', Carbon::now()->subMonth(1))->count() ?? 0;
         }
 
-        // =================== Event Queries Start ==================== //
-
-        $start = Carbon::today()->format('m-d');
-        $end   = Carbon::today()->addDays(7)->format('m-d');
-
-        $today      = Carbon::today();
-        $endDate    = Carbon::today()->addDays(7);
-        $probationDays = (int)$this->companySettings->probation_period;
-
-        // 1. Define the base query
-        $baseQuery = User::where('users.is_active', true)->join('employee_details', 'users.id', '=', 'employee_details.user_id')
-            ->select('users.id', 'users.firstname', 'users.middlename', 'users.lastname', 'users.avatar', 'employee_details.user_id', 'employee_details.dob', 'employee_details.date_joined', 'users.is_active')
-            ->with('employeeDetail');
-
-
-        $upcomingBirthdays = (clone $baseQuery)
-        ->where(function ($q) use ($start, $end) {
-            if ($start <= $end) {
-                $q->whereRaw("DATE_FORMAT(employee_details.dob, '%m-%d') BETWEEN ? AND ?", [$start, $end]);
-            } else {
-                $q->whereRaw("DATE_FORMAT(employee_details.dob, '%m-%d') >= ? OR DATE_FORMAT(employee_details.dob, '%m-%d') <= ?", [$start, $end]);
-            }
-        })
-        ->orderByRaw("
-            CASE 
-                WHEN DATE_FORMAT(employee_details.dob, '%m-%d') >= ? THEN 0 
-                ELSE 1 
-            END ASC, 
-            DATE_FORMAT(employee_details.dob, '%m%d') ASC
-        ", [$start])
-        ->get();
-
-
-        $upcomingWorkAnniversaries = (clone $baseQuery)
-        ->whereDate('employee_details.date_joined', '<', Carbon::today())
-        ->where(function ($q) use ($start, $end) {
-            if ($start <= $end) {
-                $q->whereRaw("DATE_FORMAT(employee_details.date_joined, '%m-%d') BETWEEN ? AND ?", [$start, $end]);
-            } else {
-                $q->whereRaw("DATE_FORMAT(employee_details.date_joined, '%m-%d') >= ? OR DATE_FORMAT(employee_details.date_joined, '%m-%d') <= ?", [$start, $end]);
-            }
-        })
-        ->orderByRaw("
-            CASE 
-                WHEN DATE_FORMAT(employee_details.date_joined, '%m-%d') >= ? THEN 0 
-                ELSE 1 
-            END ASC, 
-            DATE_FORMAT(employee_details.date_joined, '%m%d') ASC
-        ", [$start])
-        ->get();
-
-        $upcomingProbationCompleted = (clone $baseQuery)
-        ->whereNotNull('employee_details.date_joined')
-        ->whereRaw(
-            "DATE_ADD(employee_details.date_joined, INTERVAL ? DAY) BETWEEN ? AND ?",
-            [
-                $probationDays,
-                $today->toDateString(),
-                $endDate->toDateString()
-            ]
-        )
-        ->addSelect(\DB::raw("
-            DATE_ADD(employee_details.date_joined, INTERVAL {$probationDays} DAY)
-            as probation_end_date
-        "))
-        ->get();
-
-        // =================== Event Queries End ==================== //
+        
 
         $tasks = Task::with(['createdBy', 'followers', 'project'])
                 ->latest()
@@ -294,9 +310,6 @@ class DashboardController extends BaseController
         $this->data['projects']                     = $projects;
         $this->data['recentProjects']               = $recentProjects;
         $this->data['ReportingManagerList']         = User::reportingManagerList();
-        $this->data['upcomingBirthdays']            = $upcomingBirthdays;
-        $this->data['upcomingWorkAnniversaries']    = $upcomingWorkAnniversaries;
-        $this->data['upcomingProbationCompleted']   = $upcomingProbationCompleted;
 
         // =================== Super Admin Queries ==================== //
         $tenants        = Tenant::all();

@@ -17,14 +17,12 @@
                 </span>
 
                 <h2 class="section-title mb-3 mt-4">
-                    <span class="text-gradient fw-bold">ONE PLATFORM.</span>
-                    COMPLETE<br>BUSINESS CONTROL.
+                    <span class="text-uppercase">All-in-One </span>
+                    CRM <br> for Complete Business Management
                 </h2>
 
                 <p class="section-desc mb-4">
-                    Renown System brings together CRM, HR, Sales, and Operations
-                    into a single, powerful platform. No more juggling between
-                    multiple tools or losing data in transitions.
+                    An all-powerful CRM solution, Renown System brings together Sales, Operations, and Customer Management into a unified platform for seamless connection and faster access to data across departments.
                 </p>
 
                 <div class="feature-list mb-4 mt-3">
@@ -34,8 +32,7 @@
                         </div>
                         <div>
                             <strong>Unified Data Hub</strong>
-                            <p>All your business data in one centralized location,
-                                accessible anywhere, anytime.</p>
+                            <p>A centralised data repository, with anywhere and anytime accessibility, allows efficient tracking of conversions, better management of clients, and more transparent relationships with stakeholders. </p>
                         </div>
                     </div>
 
@@ -46,8 +43,7 @@
 
                         <div>
                             <strong>Seamless Integration</strong>
-                            <p>CRM and HR work together perfectly, giving complete
-                                visibility across departments.</p>
+                            <p>Renown System connects departments in one collaborative workflow. It supports both external and internal ecosystems, from employee management to supporting client project support, giving complete visibility across teams.</p>
                         </div>
                     </div>
 
@@ -58,8 +54,7 @@
 
                         <div>
                             <strong>Real-Time Sync</strong>
-                            <p>Updates happen instantly across all modules,
-                                keeping everyone aligned.</p>
+                            <p>This project management CRM supports operational efficiency. Every update and change across modules is monitored, tracked, and communicated instantly to keep teams aligned in real-time.</p>
                         </div>
                     </div>
                 </div>

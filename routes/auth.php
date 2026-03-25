@@ -17,7 +17,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::controller(OrganizationController::class)->group(function () {
-    Route::get('organization-signup/{plan}', 'signup')->name('organization.signup');
+    // Route::get('organization-signup/{plan}', 'signup')->name('organization.signup');
     Route::post('organization-store', 'store')->name('organization.store');
     Route::get('organization-login', 'login')->name('tenant.login');
 });

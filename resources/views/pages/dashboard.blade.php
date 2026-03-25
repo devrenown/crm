@@ -11,7 +11,7 @@
         <!-- Welcome Header -->
         <div class="welcome-card px-4 mb-4 d-flex align-items-center justify-content-between">
             <h4 class="fw-bold mb-0">Welcome Back, {{ !empty(auth()->user()->fullname) ? auth()->user()->fullname . ' !' : '' }}</h4>
-            <img src="{{ asset('images/welcome-icon.png') }}" alt="">
+            <img src="{{ asset('images/welcome-icon.png') }}" alt="Welcome" style="max-height: 4rem;">
         </div>
 
         @activeRole('Super Admin')

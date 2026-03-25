@@ -17,7 +17,7 @@
                     <img src="{{ asset('images/front/logo-white.png') }}" alt="RenownCRM Logo" style="height:50px;"
                         class="mb-3">
                     <p class="lh-base">
-                        RenownCRM delivers powerful tools to grow your business with smarter lead, customer, and sales management.
+                        RenownCRM integrates powerful tools that are a game-changer for small businesses seeking a unified dashboard to track conversions, streamline workflows, and manage clients.
                     </p>
                 </div>
 

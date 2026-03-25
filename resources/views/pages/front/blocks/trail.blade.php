@@ -7,8 +7,7 @@
                 </p>
 
                 <p class="mb-5 fs-6 text-light line-height-1-6">
-                    Experience the power of an all-in-one CRM & HR platform — designed to simplify workflows, boost
-                    productivity, and accelerate business growth.
+                    Discover Renown System, one of the best CRM tools for small businesses, designed to track leads and sales, manage projects, and monitor team performance with advanced features and analytics - all from one powerful platform.
                 </p>
 
                 <a href="#" class="btn btn-lg btn-outline-light px-lg-4 px-md-3 px-2 mt-3 shadow mb-3">

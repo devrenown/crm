@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('leaves.update', $leave->id) }}" method="POST">
+                    <form action="{{ route('leaves.update', $leave->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -75,7 +75,29 @@
                         <div class="row mb-4">
                             <div class="col-md-12">
                                 <label class="form-label fw-semibold">Reason</label>
-                                <textarea class="form-control" rows="3" name="reason">{{ $leave->reason }}</textarea>
+                                <textarea class="form-control" rows="8" name="reason">{{ $leave->reason }}</textarea>
+                            </div>
+                        </div>
+
+                        {{-- DOCUMENT UPLOAD --}}
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Upload New Document (optional)</label>
+                                <input type="file" name="document" class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                @if($leave->document_path)
+                                    @php
+                                        $url = URL::temporarySignedRoute(
+                                            'leaves.document.view',
+                                            now()->addMinutes(2),
+                                            ['leave' => $leave->id]
+                                        );
+                                    @endphp
+                                        <button type="button" class="btn mt-2 btn-outline-primary btn-sm"
+                                                onclick="openSecureDocument('{{ $url }}')">
+                                            <i class="bi bi-file-earmark-text"></i> View
+                                        </button>
+                                        <small class="text-muted">Uploading a new will replace the existing one.</small>  
+                                @endif
                             </div>
                         </div>
 
@@ -90,6 +112,7 @@
         </div>
     </div>
 </div>
+
 
 @push('page-scripts')
 <script>

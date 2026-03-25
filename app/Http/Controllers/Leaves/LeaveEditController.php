@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Leaves;
 
+use App\Traits\SecureFileUpload;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class LeaveEditController extends Controller
 {
+    use SecureFileUpload;
     public function edit(LeaveRequest $leave)
     {
         try {
@@ -57,6 +59,7 @@ class LeaveEditController extends Controller
                 'end_date' => 'nullable|date|after_or_equal:start_date',
                 'term_details' => 'required|array',
                 'reason' => 'required|string',
+                'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             ]);
 
             //Log::info('Validated Data', $validated);
@@ -93,12 +96,26 @@ class LeaveEditController extends Controller
                 'start_date' => $validated['start_date'],
                 'end_date' => $validated['end_date'],
                 'term' => $term,
-                'term_details' => $validated['term_details'], // Laravel auto JSON encode
+                'term_details' => $validated['term_details'], 
                 'reason' => $validated['reason'],
-                'short_leave_hours' => $shortLeaveHours, // important!
+                'short_leave_hours' => $shortLeaveHours, 
                 'days' => $days,                         // save total days
                 'is_half_day' => $isHalfDay, 
             ]);
+
+            if ($request->hasFile('document')) {
+                $upload = $this->uploadEncrypted(
+                    $request->file('document'),
+                    auth()->id() . '/leaves/' . $leave->id
+                );
+
+                if ($upload) {
+                    $leave->update([
+                        'document_path' => $upload['path'],
+                        'document_mime' => $upload['mime'],
+                    ]);
+                }
+            }
 
             //Log::info('Leave updated successfully', ['leave_id' => $leave->id]);
 

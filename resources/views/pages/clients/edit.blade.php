@@ -23,12 +23,12 @@
                             <x-form.input type="text" name="lastname" value="{{ $client->lastname }}" required />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="input-block mb-3">
                             <x-form.label>{{ __('UserName') }}</x-form.label>
                             <x-form.input type="text" name="username" value="{{ $client->username }}" autofill="off" />
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-md-6">
                         <div class="input-block mb-3">
                             <x-form.label>{{ __('Email') }}<span class="text-danger">*</span></x-form.label>

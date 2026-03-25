@@ -5,11 +5,10 @@
         <div class="text-center mb-5">
             <span class="section-title-badge">Why Choose Us</span>
             <h2 class="section-title mt-4">
-                WHY CHOOSE <span class="text-gradient fw-bold">RENOWN SYSTEM</span>
+               <span class="text-uppercase"> Trusted By Thousands </span> of Companies for Accelerated Growth
             </h2>
             <p class="text-secondary fs-5 mt-3 lh-base">
-                Join thousands of companies that trust Renown System to <br>
-                streamline their operations and accelerate growth.
+                Empower your small business with a project management CRM that streamlines operations, tracks performance in real time, and improves productivity - just like thousands of companies already using Renown System.
             </p>
         </div>
 

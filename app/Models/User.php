@@ -17,6 +17,7 @@ use App\Traits\BelongsToTenant;
 use App\Models\Tenant;
 use App\Models\EmployeeShift;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -110,6 +111,46 @@ class User extends Authenticatable
             ->whereDate('endDate', today())
             ->whereNotNull('endDate')
             ->latestOfMany('created_at');
+    }
+
+    public function presentInCurrentMonthCount()
+    {
+        return Attendance::where('user_id', $this->id)
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->selectRaw('COUNT(DISTINCT DATE(created_at)) as total')
+            ->value('total');
+    }
+
+    public function lateDaysCountInCurrentMonth()
+    {
+        $shift = $this->shift?->shift;
+        if (!$shift || !$shift->start_time) {
+            return 0;
+        }
+
+        $tz = app('tenant_timezone') ?? 'Asia/Kolkata';
+        $graceMinutes = $shift->grace_minutes ?? 0;
+
+        return Attendance::where('user_id', $this->id)
+            ->whereMonth('created_at', now($tz)->month)
+            ->whereYear('created_at', now($tz)->year)
+            ->get()
+           
+            ->groupBy(function ($item) use ($tz) {
+                return Carbon::parse($item->created_at)->timezone($tz)->toDateString();
+            })
+            
+            ->filter(function ($records) use ($shift, $graceMinutes, $tz) {
+                
+                $firstPunchRecord = $records->sortBy('created_at')->first();
+                $punchIn = Carbon::parse($firstPunchRecord->startDate)->timezone($tz);
+                $shiftStart = Carbon::parse($punchIn->toDateString() . ' ' . $shift->start_time, $tz);
+                $graceEnd = $shiftStart->copy()->addMinutes((int)$graceMinutes);
+
+                return $punchIn->greaterThan($graceEnd);
+            })
+            ->count();
     }
 
     public function clientDetail(){
@@ -233,6 +274,29 @@ class User extends Authenticatable
                 return $start->diffInDays($end) + 1; // Leave days count
             });
     }
+
+    public function usedLeaveDaysInCurrentMonth()
+    {
+        $tz = app('tenant_timezone') ?? 'Asia/Kolkata';
+
+        return $this->leaveRequests()
+            ->where('status', 'approved')
+            ->whereMonth('start_date', now($tz)->month)
+            ->get()
+            ->sum(function ($req) {
+    
+                if (!is_null($req->approved_days)) {
+                    return (float) $req->approved_days;
+                }
+
+                if (!is_null($req->days)) {
+                    return (float) $req->days;
+                }
+
+    
+                return 0;
+            });
+    }
     
     public function totalAllowedLeaveDays()
     {
@@ -270,5 +334,15 @@ class User extends Authenticatable
     public function employeeShifts()
     {
         return $this->hasMany(EmployeeShift::class);
+    }
+
+    public function getDesignationAttribute()
+    {
+        return $this->employeeDetail?->designation;
+    }
+
+    public function getDepartmentAttribute()
+    {
+        return $this->employeeDetail?->department;
     }
 }
