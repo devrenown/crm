@@ -52,13 +52,8 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                         $clockInAt = Carbon::parse($timestamp->startTime, $timezone);
 
                         // Get latest shift at clock-in time
-                        $shiftAssignment = $user->employeeShifts()
-                            ->where('created_at', '<=', $clockInAt)
-                            ->latest('created_at')
-                            ->with('shift')
-                            ->first();
-
-                        $shift = $shiftAssignment?->shift;
+                        $shift = $user->shift?->shift;
+                        
                         if (!$shift || !$shift->end_time) {
                             logger()->warning('AUTO CLOCKOUT SKIPPED - NO VALID SHIFT', [
                                 'tenant_id' => $tenant->id,

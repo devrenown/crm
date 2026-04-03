@@ -14,6 +14,8 @@
                     {{ __('Tickets') }}
                 </li>
             </ul>
+
+            @if (request()->path() == 'my-tickets')
             <x-slot name="right">
                 <div class="col-auto float-end ms-auto">
                     @activeCan('create-ticket')
@@ -26,6 +28,7 @@
                     @endactiveCan
                 </div>
             </x-slot>
+            @endif
         </x-breadcrumb>
         <!-- /Page Header -->
         

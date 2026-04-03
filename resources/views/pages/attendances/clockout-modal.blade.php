@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <div class="input-block mb-3">
                     <x-form.label>{{ __('Title') }}</x-form.label>
-                    <x-form.input type="text" name="title" />
+                    <x-form.input type="text" name="title" :required="true" />
                     @error('title') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -58,8 +58,25 @@
         </div>
 
         <div class="submit-section my-2">
-            <x-form.button class="btn btn-primary submit-btn" type="submit">{{ __('Submit') }}</x-form.button>
+            <button type="submit" class="btn btn-primary submit-btn">
+                <span class="btn-text">Submit</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
         </div>
     </form>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(e) {
+    let form = this;
+
+    if (!form.checkValidity()) return;
+
+    let btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+
+    btn.querySelector('.btn-text').innerText = "Submitting...";
+    btn.querySelector('.spinner-border').classList.remove('d-none');
+});
+</script>
 

@@ -59,6 +59,8 @@ Route::get('privacy-policy', [FrontController::class, 'privacyPolicyView'])->nam
 Route::get('terms_&_conditions', [FrontController::class, 'termsConditionsView'])->name('terms-conditions');
 Route::post('contact', [FrontController::class, 'saveContact'])->name('save.contact');
 
+Route::get('feature/{slug}', [FrontController::class, 'featureDetail'])->name('feature.detail');
+
 
 
 // Cache routes

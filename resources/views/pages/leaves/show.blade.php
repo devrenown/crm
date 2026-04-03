@@ -274,7 +274,7 @@
 
             {{-- ================= APPROVAL FLOW ================= --}}
             <hr>
-            <h5 class="mb-3">Approval Flow</h5>
+            <h5 class="mb-3">Approval/Rejection Flow</h5>
 
             {{-- LEVEL 1 --}}
             @if($leave->levelStatus('L1'))
@@ -299,8 +299,19 @@
                             </div>
                         @endif
 
-                        @if($leave->rejection_reason_l1)
-                            <div class="text-danger mt-1">{{ $leave->rejection_reason_l1 }}</div>
+                       @if($leave->rejection_reason_l1 && $leave->rejected_at_level === 'L1')
+
+                            <div class="small text-muted">
+                                Rejected by {{ optional($leave->rejectedBy)->full_name }}
+                                @if($leave->rejected_on)
+                                    on {{ tz($leave->rejected_on, 'd M Y H:i') }}
+                                @endif
+                            </div>
+                        
+                            <div class="text-danger mt-1">
+                                <strong>Remark:</strong> {{ $leave->rejection_reason_l1 }}
+                            </div>
+                        
                         @endif
 
                     </div>
@@ -330,8 +341,19 @@
                             </div>
                         @endif
 
-                        @if($leave->rejection_reason_l2)
-                            <div class="text-danger mt-1">{{ $leave->rejection_reason_l2 }}</div>
+                        @if($leave->rejection_reason_l2 && $leave->rejected_at_level === 'L2')
+
+                            <div class="small text-muted">
+                                Rejected by {{ optional($leave->rejectedBy)->full_name }}
+                                @if($leave->rejected_on)
+                                    on {{ tz($leave->rejected_on, 'd M Y H:i') }}
+                                @endif
+                            </div>
+                        
+                            <div class="text-danger mt-1">
+                                <strong>Remark:</strong> {{ $leave->rejection_reason_l2 }}
+                            </div>
+                        
                         @endif
 
                     </div>

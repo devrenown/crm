@@ -91,6 +91,7 @@
                                     <th class="text-center">{{ __('Read') }}</th>
                                     <th class="text-center">{{ __('Edit') }}</th>
                                     <th class="text-center">{{ __('Delete') }}</th>
+                                    <th class="text-center">{{ __('Approve') }}</th>
                                     <th class="text-center">{{ __('Import') }}</th>
 									<th class="text-center">{{ __('Export') }}</th>
                                 </tr>
@@ -98,7 +99,7 @@
                             <tbody>
                                 @foreach ($permissions as $category => $modulePermissions)
                         <tr class="text-center">
-                            <td colspan="7" class="fw-bold bg-light">{{ ucwords($category) }}</td>
+                            <td colspan="8" class="fw-bold bg-light">{{ ucwords($category) }}</td>
                         </tr>
                         @foreach ($modulePermissions->groupBy('module') as $module => $permission)
                         <tr>
@@ -139,6 +140,18 @@
                             <td class="text-center">
                                 @foreach ($permission as $item)
                                     @if (str_starts_with($item->name, 'delete-'))
+                                    <label class="custom_check">
+                                        <input type="checkbox" name="permissions[]" value="{{ $item->name }}"
+                                        @if(!empty($selected_role) && $selected_role->hasPermissionTo($item->name)) checked @endif>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    @endif
+                                @endforeach
+                            </td>
+
+                            <td class="text-center">
+                                @foreach ($permission as $item)
+                                    @if (str_starts_with($item->name, 'approve-'))
                                     <label class="custom_check">
                                         <input type="checkbox" name="permissions[]" value="{{ $item->name }}"
                                         @if(!empty($selected_role) && $selected_role->hasPermissionTo($item->name)) checked @endif>

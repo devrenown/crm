@@ -108,7 +108,7 @@
                             <label class="form-label fw-semibold">Reason</label>
                             <textarea name="reason"
                                       class="form-control"
-                                      rows="3"
+                                      rows="5"
                                       required>{{ old('reason') }}</textarea>
                         </div>
 

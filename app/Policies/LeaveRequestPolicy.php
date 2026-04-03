@@ -11,7 +11,6 @@ class LeaveRequestPolicy
      * VIEW
      * ========================= */
 
-
   public function view(User $user, LeaveRequest $leave): bool
 {
     // Super Admin handled by Gate::before
@@ -73,84 +72,66 @@ class LeaveRequestPolicy
             is_null($leave->approved_level_1_id);
     }
 
-    /* =========================
-     * APPROVAL (L1 / L2)
-     * ========================= */
-    // public function approve(User $user, LeaveRequest $leave): bool
-    // {
-    //     if (!$this->view($user, $leave)) return false;
-    //     if ($leave->approval_stage === 'FINAL') return false;
 
-    //     // L1
-    //     if ($leave->approval_stage === 'L1') {
-    //         if ((int) $leave->leaveType->requires_l2_approval === 0) {
-    //             return true;
-    //         }
-
-    //         return $leave->user->reporting_manager === $user->id;
-    //     }
-
-    //     // L2
-    //     if ($leave->approval_stage === 'L2') {
-    //         return $user->roles()
-    //             ->whereIn('roles.id', $leave->leaveType->l2_roles ?? [])
-    //             ->where('roles.tenant_id', $leave->tenant_id)
-    //             ->exists();
-    //     }
-
-    //     return false;
-    // }
-
-  public function approve(User $user, LeaveRequest $leave): bool
-{
-    // ❌ No self approval
-    if ($user->id === $leave->user_id) {
-        return false;
-    }
-
-    // ❌ No approval after final
-    if ($leave->approval_stage === 'FINAL') {
-        return false;
-    }
-
-    $requiresL2 = (int) ($leave->leaveType->requires_l2_approval ?? 0);
-
-    /* =========================
-     * L1 APPROVAL
-     * ========================= */
-    if ($leave->approval_stage === 'L1') {
-
-        // 🔹 If L2 NOT required → anyone who can VIEW can approve (FINAL)
-        if ($requiresL2 === 0) {
-            return $this->view($user, $leave);
-        }
-
-        // 🔹 If L2 required → ONLY reporting manager
-        return (int) $leave->user->reporting_manager === (int) $user->id;
-    }
-
-    /* =========================
-     * L2 APPROVAL
-     * ========================= */
-    if ($leave->approval_stage === 'L2') {
-
-        $l2Roles = $leave->leaveType->l2_roles ?? [];
-
-        if (empty($l2Roles)) {
+    public function approve(User $user, LeaveRequest $leave): bool
+    {
+        // No self approval
+        if ($user->id === $leave->user_id) {
             return false;
         }
 
-        return $user->roles()
-            ->whereIn('roles.id', $l2Roles)
-            ->where('roles.tenant_id', $leave->tenant_id)
-            ->exists();
+        // Already final
+        if ($leave->approval_stage === 'FINAL') {
+            return false;
+        }
+
+        $requiresL2 = (int) ($leave->leaveType->requires_l2_approval ?? 0);
+
+        /* =========================
+        * ADMIN (FULL CONTROL)
+        * ========================= */
+        if (activeRoleCan('approve-all-leave')) {
+            return true;
+        }
+
+        /* =========================
+        * L1 STAGE
+        * ========================= */
+        if ($leave->approval_stage === 'L1') {
+
+            // L2 NOT REQUIRED
+            if ($requiresL2 === 0) {
+                return
+                    activeRoleCan('approve-leave') // HR, Manager
+                    || (
+                        activeRoleCan('approve-team-leave') &&
+                        (int) $leave->user->reporting_manager === (int) $user->id
+                    );
+            }
+
+            // L2 REQUIRED → ONLY TL
+            return
+                activeRoleCan('approve-team-leave') &&
+                (int) $leave->user->reporting_manager === (int) $user->id;
+        }
+
+        /* =========================
+        * L2 STAGE
+        * ========================= */
+        if ($leave->approval_stage === 'L2') {
+
+            if ($requiresL2 === 0) return false;
+
+            $l2Roles = $leave->leaveType->l2_roles ?? [];
+
+            return $user->roles()
+                ->whereIn('roles.id', $l2Roles)
+                ->where('roles.tenant_id', $leave->tenant_id)
+                ->exists();
+        }
+
+        return false;
     }
-
-    return false;
-}
-
-
-
 
     /* =========================
      * DELETE

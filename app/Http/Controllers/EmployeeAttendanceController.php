@@ -24,7 +24,7 @@ class EmployeeAttendanceController extends Controller
     {
         try {
             $request->validate([
-                'title' => 'nullable|string|max:255',
+                'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
             ]);
 

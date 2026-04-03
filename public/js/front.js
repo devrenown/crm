@@ -1,5 +1,3 @@
-// $(function () {
-
 AOS.init({
     duration: 800,
     once: false
@@ -26,6 +24,51 @@ $(window).on('scroll', function () {
             });
         }
     });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const scroller = document.querySelector(".scroller");
+    const sections = document.querySelectorAll(".scroller .section");
+    const image = document.getElementById("howItWorksImage");
+
+    const images = {
+        1: "./images/how-works-step-1.png",
+        2: "./images/how-works-step-2.png",
+        3: "./images/how-works-step-3.png",
+        4: "./images/how-works-step-4.png"
+    };
+
+    function activateStep() {
+        let containerTop = scroller.getBoundingClientRect().top;
+        let containerHeight = scroller.clientHeight;
+        let triggerPoint = containerTop + containerHeight / 2;
+
+        sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+
+            if (rect.top <= triggerPoint && rect.bottom >= triggerPoint) {
+
+                sections.forEach(s => {
+                    s.classList.remove("active");
+                    s.classList.add("opacity-half");
+                });
+
+                section.classList.add("active");
+                section.classList.remove("opacity-half");
+
+                const step = section.getAttribute("data-step");
+
+                if (images[step]) {
+                    image.src = images[step];
+                }
+            }
+        });
+    }
+
+    scroller.addEventListener("scroll", activateStep);
+
+    activateStep();
 });
 
 // Scroll to top button
@@ -91,7 +134,7 @@ $('#demo-form').on('submit', function(e) {
             if (res.success) {
 
                 form.trigger('reset');
-                grecaptcha.reset();
+                grecaptcha.reset(captchaDemo);
 
                 let html = `
                     <div class="card text-center p-4 border-0 shadow-sm">
@@ -128,14 +171,13 @@ $('#demo-form').on('submit', function(e) {
 $('#contact-form').on('submit', function(e) {
     e.preventDefault();
     
-    var form    = $(this);
-    let name    = form.find('#name').val()      ?? null;
-    let email   = form.find('#email').val()     ?? null;
-    let phone   = form.find('#phone').val()     ?? null;
-    let message = form.find('#message').val()   ?? null;
+    var form = $(this);
+
+    let name    = form.find('#name').val() ?? null;
+    let email   = form.find('#email').val() ?? null;
+    let phone   = form.find('#phone').val() ?? null;
 
     var response = grecaptcha.getResponse(captchaContact);
-    var form = $(this);
 
     if (response.length === 0) {
         $('#error-message').text('Please verify the captcha');
@@ -157,13 +199,13 @@ $('#contact-form').on('submit', function(e) {
         url: form.attr('action'),
         type: "POST",
         dataType: "JSON",
-        data: form.serialize(),
+        data: form.serialize() + '&g-recaptcha-response=' + response,
         success: function(res) {
 
             if (res.success) {
 
                 form.trigger('reset');
-                // grecaptcha.reset();
+                grecaptcha.reset(captchaContact);
 
                 let html = `
                     <div class="text-center p-4 border-0">

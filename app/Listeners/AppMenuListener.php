@@ -28,7 +28,7 @@ class AppMenuListener
         $menu = $event->menu;
 
         /* ================= MAIN ================= */
-        $menu->html('<span>Main</span>', ['class' => 'menu-title']);
+        $menu->html('<span>Main</span>', ['class' => 'menu-title fw-bold']);
 
         $menu->add(
             Link::toRoute('dashboard', '<i class="la la-dashboard"></i> <span>' . __('Dashboard') . '</span>')
@@ -83,7 +83,7 @@ class AppMenuListener
 
         /* ================= ORGANIZATIONS ================= */
         $menu->canAnyForActiveRole(['view-organizations'], function ($menu) {
-            $menu->html('<span>Organizations</span>', ['class' => 'menu-title']);
+            $menu->html('<span>Organizations</span>', ['class' => 'menu-title fw-bold']);
 
             $menu->canForActiveRole(
                 'view-organizations',
@@ -104,7 +104,7 @@ class AppMenuListener
                 'view-work-tasks',
             ], function ($menu) {
 
-                $menu->html('<span>Employees</span>', ['class' => 'menu-title']);
+                $menu->html('<span>Employees</span>', ['class' => 'menu-title fw-bold']);
 
                 $activeClass = route_is([
                     'employees.*',
@@ -213,7 +213,7 @@ class AppMenuListener
                 // 'view-my-tickets',
             ], function ($menu) {
 
-                $menu->html('<span>Support</span>', ['class' => 'menu-title']);
+                $menu->html('<span>Support</span>', ['class' => 'menu-title fw-bold']);
 
                 $activeClass = route_is([
                     'tickets.*',

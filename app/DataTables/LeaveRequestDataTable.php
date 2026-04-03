@@ -238,7 +238,7 @@ class LeaveRequestDataTable extends DataTable
                 });
             }
 
-            return $query;
+            return $query->orderByDesc('id');
         }
 
 
@@ -253,7 +253,6 @@ class LeaveRequestDataTable extends DataTable
             ->minifiedAjax()
             ->dom('Brtip')
             ->searching(false)
-            ->orderBy(1)
             ->buttons([
                 Button::make('excel'),
                 Button::make('csv'),

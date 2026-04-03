@@ -21,7 +21,7 @@
                         Here is your daily work summary.
                     </p>
                 </div>
-                <div class="col-md-3 text-end">
+                <div class="col-md-3 text-end d-none d-md-block">
                     <img src="{{ $user->gender == 1 ?  asset('images/welcome-icon.png') : asset('images/emp-welcome.png') }}" style="max-height: 5rem;">
                 </div>
             </div>

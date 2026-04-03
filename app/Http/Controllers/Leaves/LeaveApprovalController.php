@@ -65,6 +65,9 @@ class LeaveApprovalController extends Controller
     $validator = Validator::make($request->all(), [
         'status' => ['required', Rule::in(['Approved', 'Rejected'])],
         'manual_adjustment' => ['nullable', 'numeric', 'min:0'],
+        
+        'approved_level_1_remark' => ['nullable', 'string', 'max:1000'],
+        'approved_level_2_remark' => ['nullable', 'string', 'max:1000'],
     ]);
 
     if ($validator->fails()) {
@@ -77,7 +80,9 @@ class LeaveApprovalController extends Controller
     $stage = $leave->approval_stage;
     $type = $leave->leaveType;
     $requiresL2 = (int) $type->requires_l2_approval === 1;
-    $isFinal = ($stage === 'L2') || ($stage === 'L1' && !$requiresL2);
+    //$isFinal = ($stage === 'L2') || ($stage === 'L1' && !$requiresL2);
+    $isAdmin = activeRoleCan('approve-all-leave');
+    $isFinal = $isAdmin || ($stage === 'L2') || ($stage === 'L1' && !$requiresL2);
 
     /* ---------------- BALANCE CHECK ---------------- */
     if ($request->status === 'Approved' && $isFinal && !$leave->is_balance_applied) {
@@ -96,48 +101,139 @@ class LeaveApprovalController extends Controller
     }
 
     /* ---------------- PROCESS ---------------- */
-    DB::transaction(function () use ($request, $leave, $user, $requiresL2, $stage) {
+    DB::transaction(function () use ($request, $leave, $user, $requiresL2, $stage, $isAdmin) {
+        
         if ($request->status === 'Rejected') {
-            $leave->update([
+
+            $updateData = [
                 'status' => 'Rejected',
                 'approval_stage' => 'FINAL',
-            ]);
+                'rejected_by' => $user->id,
+                'rejected_on' => now(),
+                'approved_days' => 0,
+            ];
+        
+            if ($stage === 'L1') {
+                $updateData['rejected_at_level'] = 'L1';
+                $updateData['rejection_reason_l1'] = $request->approved_level_1_remark;
+            }
+        
+            if ($stage === 'L2') {
+                $updateData['rejected_at_level'] = 'L2';
+                $updateData['rejection_reason_l2'] = $request->approved_level_2_remark;
+            }
+        
+            $leave->update($updateData);
+        
             return;
         }
-
-        if ($stage === 'L1') {
-            $leave->update([
-                'approved_level_1_id' => $user->id,
-                'approved_level_1_on' => now(),
-                'approved_days' => $leave->days,
-                'approval_stage' => $requiresL2 ? 'L2' : 'FINAL',
-                'status' => $requiresL2 ? 'Pending' : 'Approved',
-            ]);
-            if ($requiresL2) return;
-        }
-
-        if ($stage === 'L2') {
-            $leave->update([
-                'approved_level_2_id' => $user->id,
-                'approved_level_2_on' => now(),
+    
+        $isFinalNow = false;
+    
+        /* =========================
+         * ADMIN FINAL APPROVAL
+         * ========================= */
+        if ($isAdmin) {
+    
+            $updateData = [
                 'approved_days' => $leave->days,
                 'approval_stage' => 'FINAL',
                 'status' => 'Approved',
-            ]);
+            ];
+    
+            if (!$leave->approved_level_1_id) {
+                $updateData['approved_level_1_id'] = $user->id;
+                $updateData['approved_level_1_on'] = now();
+                $updateData['approved_level_1_remark'] = $request->approved_level_1_remark;
+            }
+    
+            if (!$leave->approved_level_2_id) {
+                $updateData['approved_level_2_id'] = $user->id;
+                $updateData['approved_level_2_on'] = now();
+                $updateData['approved_level_2_remark'] =
+                $request->approved_level_2_remark
+                ?? $request->approved_level_1_remark;
+            }
+    
+            $leave->update($updateData);
+            $isFinalNow = true;
         }
-
-        if ($request->filled('manual_adjustment')) {
-            $balance = $this->getBalance($leave);
-            $balance->increment('manual_adjustment', $request->manual_adjustment);
+    
+        /* =========================
+         * NORMAL FLOW
+         * ========================= */
+        else {
+    
+            // L1
+            if ($stage === 'L1') {
+                $leave->update([
+                    'approved_level_1_id' => $user->id,
+                    'approved_level_1_on' => now(),
+                     'approved_level_1_remark' => $request->approved_level_1_remark,
+                    'approved_days' => $leave->days,
+                    'approval_stage' => $requiresL2 ? 'L2' : 'FINAL',
+                    'status' => $requiresL2 ? 'Pending' : 'Approved',
+                ]);
+    
+                if (!$requiresL2) {
+                    $isFinalNow = true;
+                }
+            }
+    
+            // L2
+            elseif ($stage === 'L2') {
+                $leave->update([
+                    'approved_level_2_id' => $user->id,
+                    'approved_level_2_on' => now(),
+                    'approved_level_2_remark' => $request->approved_level_2_remark,
+                    'approved_days' => $leave->days,
+                    'approval_stage' => 'FINAL',
+                    'status' => 'Approved',
+                ]);
+    
+                $isFinalNow = true;
+            }
         }
-
-        if (!$leave->is_balance_applied) {
-            $this->deductBalance($leave);
-            $leave->update(['is_balance_applied' => 1]);
+    
+        /* =========================
+         * BALANCE LOGIC (ONLY FINAL)
+         * ========================= */
+        if ($isFinalNow) {
+    
+            if ($request->filled('manual_adjustment')) {
+                $balance = $this->getBalance($leave);
+                $balance->increment('manual_adjustment', $request->manual_adjustment);
+            }
+    
+            if (!$leave->is_balance_applied) {
+                $this->deductBalance($leave);
+                $leave->update(['is_balance_applied' => 1]);
+            }
         }
     });
+    
 
     // ---------------- Redirect safely ----------------
+    $leave->refresh();
+
+    // If moved to L2 → DON'T go back to approve page
+    if ($leave->approval_stage === 'L2') {
+        return redirect()->route('leaves.index')
+            ->with([
+                'message' => 'L1 approved successfully. Waiting for L2 approval.',
+                'alert-type' => 'success',
+            ]);
+    }
+    
+     if ($leave->status === 'Rejected') {
+        return redirect()->route('leaves.show', $leave->id)
+            ->with([
+                'message' => 'Leave rejected successfully.',
+                'alert-type' => 'warning',
+            ]);
+    }
+
+    // If still not final (rare case)
     if ($leave->approval_stage !== 'FINAL') {
         return redirect()->route('leaves.approve.edit', $leave->id)
             ->with([
@@ -145,7 +241,9 @@ class LeaveApprovalController extends Controller
                 'alert-type' => 'success',
             ]);
     }
+    
 
+    // FINAL
     return redirect()->route('leaves.show', $leave->id)
         ->with([
             'message' => 'Leave fully approved successfully.',
@@ -154,7 +252,7 @@ class LeaveApprovalController extends Controller
 }
 
 
-    /* ---------------- HELPERS ---------------- */
+    /* ------------- HELPERS ------------- */
 
     private function getBalance(LeaveRequest $leave): LeaveBalance
     {

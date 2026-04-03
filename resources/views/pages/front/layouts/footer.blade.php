@@ -34,7 +34,7 @@
                 <!-- Support -->
                 <div class="col-md-3 col-6 col-lg-2 col-xl-2 mx-auto mt-3">
                     <h6 class="text-uppercase fw-bold mb-4">Support</h6>
-                    <p class="mb-2"><a href="mailto:support@renownsystems.com" class="text-white text-decoration-none">Help Center</a></p>
+                    <p class="mb-2"><a href="mailto:support@renownsystem.com" class="text-white text-decoration-none">Help Center</a></p>
                     <p class="mb-2"><a href="{{ route('privacy-policy') }}" class="text-white text-decoration-none">Privacy Policy</a></p>
                     <p class="mb-2"><a href="{{ route('terms-conditions') }}" class="text-white text-decoration-none">Terms & Conditions</a></p>
                     <p class="mb-2"><a href="{{ url('/#faq') }}" class="text-white text-decoration-none">FAQ</a></p>
@@ -43,8 +43,13 @@
                 <!-- Contact -->
                 <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
                     <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                    <p class="mb-3"><i class="bi bi-geo-alt-fill me-2"></i> E-20 1st Floor, Block E <br> Sector-3, Noida-UP 201301 </p>
-                    <p class="mb-3"><i class="bi bi-envelope-fill me-2"></i> support@renownsystems.com</p>
+
+                    <div class="d-flex gap-2 align-items-center mb-2">
+                        <div><i class="bi bi-geo-alt-fill"></i></div>
+                        <p> E-20 1st Floor, Block E <br> Sector-3, Noida-UP 201301 </p>
+                    </div>
+                    
+                    <p class="mb-3"><i class="bi bi-envelope-fill me-2"></i>support@renownsystem.com</p>
                     <!-- <p><i class="bi bi-telephone-fill me-2"></i> +91 9876543210</p> -->
                 </div>
             </div>

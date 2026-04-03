@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DemoRequest;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class FrontController extends Controller
 {
    public $view = 'pages.front.blocks.';
+   public $featureView = 'pages.front.features.';
 
    // public function demoRequest ()
    // {
@@ -65,13 +68,21 @@ class FrontController extends Controller
         'email'                 => 'required|email|string',
         'phone'                 => 'required|numeric',
         'message'               => 'nullable|string|max:500',
-        // 'g-recaptcha-response'  => 'required',
+        'g-recaptcha-response'  => 'required',
     ]);
 
-    if (!$validate) {
+    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => '6LdkPu0rAAAAALtp1F1GL324r-dz2ry-v54JDlRm',
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip(),
+    ]);
+
+    $result = $response->json();
+
+    if (!isset($result['success']) || $result['success'] !== true) {
         return response()->json([
             'success' => false,
-            'msg'     => 'Please Fill Required Fields !',
+            'msg'     => 'reCAPTCHA verification failed. Please try again.',
         ]);
     }
 
@@ -88,6 +99,18 @@ class FrontController extends Controller
             'msg'     => 'Something Went Wrong !',
         ]);
     }
+
+    Mail::send([], [], function ($message) use ($request) {
+        $message->to('support@renownsystem.com')
+                ->subject('New Contact Form Submission')
+                ->html("
+                    <h2>New Contact Message</h2>
+                    <p><strong>Name:</strong> {$request->name}</p>
+                    <p><strong>Email:</strong> {$request->email}</p>
+                    <p><strong>Phone:</strong> {$request->phone}</p>
+                    <p><strong>Message:</strong> " . ($request->message ?? 'N/A') . "</p>
+                ");
+    });
 
     return response()->json([
         'success' => true,
@@ -109,6 +132,21 @@ class FrontController extends Controller
    public function switchCurrency (Request $request)
    {
     $currency = $request->currency;
+   }
+   
+   public function featureDetail (Request $request, $slug)
+   {
+     if (!$slug) {
+        abort(404);
+     }
+
+     $view = $this->featureView . $slug;
+
+     if (view()->exists($view)) {
+        return view($view);
+     }
+
+     abort(404);
    }
 
 }

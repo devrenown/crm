@@ -60,6 +60,8 @@ class LeaveRequest extends Model
         'cancellation_reason_l2',
 
         // Rejection
+        'rejected_by',
+        'rejected_on',
         'rejected_at_level',
         'rejection_reason_l1',
         'rejection_reason_l2',
@@ -79,6 +81,7 @@ class LeaveRequest extends Model
         'approved_level_1_on' => 'datetime',
         'approved_level_2_on' => 'datetime',
         'cancelled_on'        => 'datetime',
+        'rejected_on'         => 'datetime',
 
         'is_half_day'        => 'boolean',
         'is_balance_applied' => 'boolean',
@@ -268,11 +271,7 @@ class LeaveRequest extends Model
 
     public function rejectedBy()
     {
-        return match ($this->rejected_at_level) {
-            'L1' => $this->level1Approver(),
-            'L2' => $this->level2Approver(),
-            default => null,
-        };
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 
     public function scopeVisibleTo($query, User $user)

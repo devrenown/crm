@@ -12,7 +12,7 @@
             One platform. One source of truth. Delivering 360° customer management through seamless team collaboration.
         </p>
 
-        <div class="row g-4 mt-4">
+        <div class="row gx-3 gy-4 mt-4">
 
             <!-- Feature Card -->
             <div class="col-md-6 col-lg-3">
@@ -25,6 +25,10 @@
                         Manage your team with ease—track roles,
                         performance, and employee details.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'employee-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -38,6 +42,10 @@
                         Organize, assign, and track tasks
                         effortlessly to boost productivity.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'task-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -51,6 +59,10 @@
                         Plan, track, and manage projects
                         efficiently with collaboration.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'project-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -64,6 +76,10 @@
                         Simplify leave requests, approvals,
                         and tracking with ease.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'leave-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -77,6 +93,10 @@
                         Manage your team with ease—track roles,
                         performance, and employee details.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'onboarding-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -90,6 +110,10 @@
                         Organize, assign, and track tasks
                         effortlessly to boost productivity.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'payroll-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -103,6 +127,10 @@
                         Plan, track, and manage projects
                         efficiently with collaboration.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'client-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 
@@ -116,6 +144,10 @@
                         Simplify leave requests, approvals,
                         and tracking with ease.
                     </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'invoice-management') }}">Read More →</a>
+                    </div>
                 </div>
             </div>
 

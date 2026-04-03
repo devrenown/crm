@@ -38,7 +38,6 @@
                             </div>
 
                             <div class="mb-3">
-                              <!-- <div class="g-recaptcha" id="rcaptcha"  data-sitekey="6LdkPu0rAAAAAH1n75G8L_XC09TkFJheYCNg84bu"></div> -->
                               <div id="captcha-contact"></div>
                             </div>
 

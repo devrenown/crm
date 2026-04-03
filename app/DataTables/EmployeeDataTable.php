@@ -60,8 +60,16 @@ class EmployeeDataTable extends DataTable
         if (activeRole() === UserType::TL->value) {
             $query->where('reporting_manager', auth()->id());
         }
+
+        $status = request()->get('status', 'active');
+
+        if ($status === 'active') {
+            $query->where('is_active', 1); 
+        } elseif ($status === 'inactive') {
+            $query->where('is_active', 0); 
+        }
         
-        return $query->newQuery();
+        return $query;
     }
 
     /**

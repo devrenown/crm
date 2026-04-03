@@ -31,10 +31,12 @@
                             </a>
                         @endactiveCan
 
-                        {{-- <select class="form-control" name="status" id="status" style="width: 130px;">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select> --}}
+                        <form action="{{ route('employees.list') }}" method="GET" class="mb-0">
+                            <select class="form-control" name="status" id="status" style="max-width: 100px;" onchange="this.form.submit()">
+                                <option value="active" {{ request('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </form>
 
                         <div class="view-icons d-flex align-items-center">
                             <a href="{{ route('employees.index') }}"

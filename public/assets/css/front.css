@@ -243,7 +243,7 @@ nav {
 }
 
 .how-it-works-section .main .left {
-    background: url('/images/how-works.png');
+    /*background: url('/images/how-works.png');*/
     background-position: center;
     background-size: cover;
 }
@@ -253,6 +253,7 @@ nav {
 } */
 
 .section {
+    /*scroll-snap-align: start;*/
     transition: opacity 0.3s ease, transform 0.3s ease;
     padding-bottom: 40px;
 }
@@ -261,6 +262,8 @@ nav {
     position: relative;
     max-height: 420px;
     overflow: auto;
+    padding: 100px 0px;
+    scroll-snap-type: y mandatory;
 }
 
 .opacity-half {

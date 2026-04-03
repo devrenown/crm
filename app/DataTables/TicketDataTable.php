@@ -96,6 +96,8 @@ class TicketDataTable extends DataTable
             return Ticket::where('created_by', auth()->user()->id)
                 ->where('user_id', '!=', auth()->user()->id)
                 ->newQuery();
+        }else if (activeRole() === UserType::ADMIN->value) {
+            return Ticket::query();
         }
 
         return Ticket::where('user_id', auth()->user()->id)->newQuery();

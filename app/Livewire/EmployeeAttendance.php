@@ -16,7 +16,6 @@ class EmployeeAttendance extends Component
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap';
-    public $page = 1;
 
     public $onBreak = false;
 
@@ -333,6 +332,16 @@ class EmployeeAttendance extends Component
 
     public function getClockInData()
     {
+        $tz = $this->tz();
+
+        $startOfDayUtc = now($tz)->startOfDay()->utc();
+        $endOfDayUtc   = now($tz)->endOfDay()->utc();
+
+        $first = AttendanceTimestamp::where('user_id', auth()->id())
+        ->whereBetween('startTime', [$startOfDayUtc, $endOfDayUtc])
+        ->orderBy('startTime', 'asc')
+        ->first();
+
         $latest = AttendanceTimestamp::where('user_id', auth()->id())
             ->latest()
             ->first();
@@ -342,17 +351,16 @@ class EmployeeAttendance extends Component
             $this->clockedIn = true;
             $this->onBreak = false;
             $this->timeId = Crypt::encrypt($latest->id);
-            $this->timeStarted = $latest->startTime;
+            $this->timeStarted = $first?->startTime;
 
         } elseif ($latest && !is_null($latest->endTime)) {
-            // last session closed → user is on break
             $attendanceOpen = Attendance::where('user_id', auth()->id())
                 ->whereNull('endDate')
                 ->exists();
 
             $this->clockedIn = $attendanceOpen;
             $this->onBreak = $attendanceOpen;
-            $this->timeStarted = null;
+            $this->timeStarted = $first?->startTime;
         } else {
             $this->clockedIn = false;
             $this->onBreak = false;
@@ -450,7 +458,6 @@ class EmployeeAttendance extends Component
             ->orderByDesc('startTime')
             ->paginate(10, ['*'], 'page', null, 30);
 
-        // Group only the current page
         $records = $paginator->getCollection()
         ->groupBy(function ($r) use ($tz) {
             return $r->startTime
@@ -467,5 +474,55 @@ class EmployeeAttendance extends Component
 
         ]);
     }
+    
+
+    // public function render()
+    // {
+    //     $tz = $this->tz();
+
+    //     // ✅ Last 30 days records
+    //     $allRecords = AttendanceTimestamp::where('user_id', auth()->id())
+    //         ->where('startTime', '>=', now()->subDays(30))
+    //         ->orderByDesc('startTime')
+    //         ->get();
+
+    //     // ✅ Group by date (keep date keys)
+    //     $grouped = $allRecords->groupBy(function ($r) use ($tz) {
+    //         return $r->startTime
+    //             ->copy()
+    //             ->timezone($tz)
+    //             ->format('Y-m-d');
+    //     })->sortKeysDesc();
+
+    //     // ✅ Pagination setup
+    //     $perPage = 10;
+    //     LengthAwarePaginator::currentPageResolver(function () {
+    //         return request()->get('page');
+    //     });
+    //     $currentPage = request()->get('page', 1); // ✅ FIXED
+
+    //     // ✅ Slice while preserving keys
+    //     $pagedData = $grouped->slice(
+    //         ($currentPage - 1) * $perPage,
+    //         $perPage,
+    //         true // 🔥 KEEP KEYS (IMPORTANT)
+    //     );
+
+    //     $paginator = new LengthAwarePaginator(
+    //         $pagedData,
+    //         $grouped->count(), // total days
+    //         $perPage,
+    //         $currentPage,
+    //         [
+    //             'path' => request()->url(),
+    //             'pageName' => 'page',
+    //         ]
+    //     );
+
+    //     return view('livewire.employee-attendance', [
+    //         'attendances' => $pagedData,
+    //         'attendancePaginator' => $paginator,
+    //     ]);
+    // }
 
 }

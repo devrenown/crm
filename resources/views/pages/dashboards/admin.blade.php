@@ -406,7 +406,7 @@
                             class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
                             <div class="d-flex align-items-center">
                                 <div class="avatar me-3">
-                                    <img src="{{ $user->avatar ? asset('storage/', $user->avatar) : asset('images/user.jpg') }}">
+                                    <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/user.jpg') }}">
                                 </div>
                                 <div>
                                     <small class="text-muted fw-semibold">BIRTHDAY</small>
@@ -438,7 +438,7 @@
                             class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
                             <div class="d-flex align-items-center">
                                 <div class="avatar me-3">
-                                    <img src="{{ $anni->avatar ? asset('storage/', $anni->avatar) : asset('images/user.jpg') }}">
+                                    <img src="{{ $anni->avatar ? asset('storage/' . $anni->avatar) : asset('images/user.jpg') }}">
                                 </div>
                                 <div>
                                     <small class="text-muted fw-semibold">WORK ANNIVERSARY</small>
@@ -468,7 +468,7 @@
                             class="d-flex justify-content-between align-items-center shadow-sm rounded-4 p-3 mb-3">
                             <div class="d-flex align-items-center">
                                 <div class="avatar me-3">
-                                    <img src="{{ $prob->avatar ? asset('storage/', $prob->avatar) : asset('images/user.jpg') }}">
+                                    <img src="{{ $prob->avatar ? asset('storage/' . $prob->avatar) : asset('images/user.jpg') }}">
                                 </div>
                                 <div>
                                     <small class="text-muted fw-semibold">PROBATION PERIOD</small>
