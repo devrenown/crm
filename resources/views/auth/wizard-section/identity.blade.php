@@ -1,4 +1,15 @@
-<h3>Identification</h3>
+@php
+    $identityRejectedCount = collect($employeeIdList)->where('status', 2)->count();
+@endphp
+
+
+<h3 class="position-relative">
+    Identification
+    @if ($identityRejectedCount > 0)
+    <span class="position-absolute end-0 top-0 bg-danger text-white rounded-circle reject-count">{{ $identityRejectedCount }}</span>
+    @endif
+</h3>
+
 <section style="overflow-y:scroll; overflow-x: hidden;">
     <div>
         <h5 class="mb-2 fs-5">Current Address</h5>
@@ -101,11 +112,15 @@
                                 );
                             @endphp
 
-                            <i class="fa-solid fa-check-circle text-success me-1"></i>
+                            
+                            {!! \App\Helpers\DocumentStatus::statusBadge($pan->status) !!}
                             <a href="javascript:void(0);" onclick="openSecureDocument('{{ $signedUrl }}')">
                                 View PAN
                             </a>
 
+                            @if ($pan->status == 2)
+                                {!! \App\Helpers\DocumentStatus::remarks($pan->remarks) !!}
+                            @endif 
                         @endif
 
                         <small class="text-muted d-block"><span class="text-danger">*</span>Allowed jpg,jpeg,png,webp,pdf (max 2MB)</small>
@@ -123,9 +138,9 @@
                             <label>ID Type *</label>
                             <select name="id_type[]" class="form-select form-control id_type required necessary">
                                 <option value="" selected disabled>--Select ID--</option>
-                                <option value="1" {{ $list->id_type == '1' ? 'selected' : '' }}>Adhar Card</option>
-                                <option value="3" {{ $list->id_type == '3' ? 'selected' : '' }}>Voter ID Card</option>
-                                <option value="4" {{ $list->id_type == '4' ? 'selected' : '' }}>Driving Licence</option>
+                                <option value="1" {{ $list->id_type == '1' ? 'selected' : '' }}>Adhar Card (Front & Back)</option>
+                                <option value="3" {{ $list->id_type == '3' ? 'selected' : '' }}>Voter ID Card (Front & Back)</option>
+                                <option value="4" {{ $list->id_type == '4' ? 'selected' : '' }}>Driving Licence (Front & Back)</option>
                                 <option value="5" {{ $list->id_type == '5' ? 'selected' : '' }}>Passport</option>
                             </select>
                         </div>
@@ -162,11 +177,15 @@
                                             now()->addMinutes(5)
                                         );
                                     @endphp
-                                    <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                    {!! \App\Helpers\DocumentStatus::statusBadge($list->status) !!}
                                     <a href="javascript:void(0);"
                                     onclick="openSecureDocument('{{ $signedUrl }}')">
                                     View Document
                                     </a>
+
+                                    @if ($list->status == 2)
+                                        {!! \App\Helpers\DocumentStatus::remarks($list->remarks) !!}
+                                    @endif
                                 @endif
                                  <small class="text-muted d-block">
                                     <span class="text-danger">*</span>

@@ -110,7 +110,7 @@
                             
                             @if(!empty($docFields))
                                 @foreach($docFields as $field => $label)
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3 document-block">
                                         <label>{{ $label }}</label>
                                         <input type="file" name="{{ $field }}s[]" class="form-control" accept="image/*,application/pdf">
                                         <input type="hidden" name="old_{{ $field }}s[]" value="{{ $exp->$field }}">
@@ -127,15 +127,40 @@
                                                     ],
                                                     now()->addMinutes(5)
                                                 );
+
+                                                $firstWordOfDocument = strtolower(strtok($label, ' '));
+                                                $statusField         = $firstWordOfDocument . '_status';
+                                                $remarkField         = $firstWordOfDocument . '_remarks';
+
+                                                $statusValue = $exp->$statusField ?? 0;
+                                                $remarkValue = $exp->$remarkField ?? '';
                                             @endphp
 
-                                            
-                                            <a href="javascript:void(0);"
-                                            onclick="openSecureDocument('{{ $signedUrl }}')"
-                                            class="d-block mt-1">
-                                            <i class="fa-solid fa-check-circle text-success me-1"></i>
-                                                View {{ $label }}
-                                            </a>
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+                                                    <a href="javascript:void(0);"
+                                                        onclick="openSecureDocument('{{ $signedUrl }}')"
+                                                        class="d-block mt-1">
+                                                        {!! \App\Helpers\DocumentStatus::statusBadge($statusValue) !!}
+                                                        View {{ $label }}
+                                                    </a>
+
+                                                </div>
+
+                                                <div class="col-md-6 mt-1">
+                                                    <select class="form-control form-select status-dropdown" name="{{ $statusField }}[]">
+                                                        <option value="0" {{ $statusValue == 0 ? 'selected' : '' }}>Pending</option>
+                                                        <option value="1" {{ $statusValue == 1 ? 'selected' : '' }}>Verified</option>
+                                                        <option value="2" {{ $statusValue == 2 ? 'selected' : '' }}>Rejected</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 remarks-container" style="{{ $statusValue == 2 ? '' : 'display:none;' }}">
+                                                    <span>Remarks</span> 
+                                                    <input type="text" value="{{ $remarkValue }}" name="{{ $remarkField }}[]" class="form-control">
+                                                </div>
+                                            </div>
 
                                         @endif
                                     </div>
@@ -155,7 +180,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5>Employment</h5>
 
-                            <span class="delete-icon remove-employment" type="button" href="javascript:void(0)" style="cursor: pointer;">
+                            <span class="delete-icon remove-employment" style="cursor: pointer;">
                                 <i class="fa-regular fa-trash-can"></i>
                             </span>
                         </div>
@@ -173,75 +198,47 @@
                         </div>
 
                         <div class="row">
-
                             <div class="col-md-6">
                                 <x-form.input-block class="mb-2">
-                                    <x-form.label class="mb-0">
-                                        {{ __('Reporting Manager / HR Name') }}</x-form.label>
-                                    <x-form.input class="floating person_name" type="text"
-                                        name="person_name[]" value="{{ old('person_name') }}" />
+                                    <x-form.label>Reporting Manager / HR Name</x-form.label>
+                                    <x-form.input type="text" name="person_names[]" />
                                 </x-form.input-block>
                             </div>
 
                             <div class="col-md-6">
                                 <x-form.input-block class="mb-2">
-                                    <x-form.label class="mb-0">
-                                        {{ __('Reporting Manager / HR Contact Number') }}</x-form.label>
-                                    <x-form.input class="floating person_contact number" type="number"
-                                        name="person_contact[]" value="{{ old('person_contact') }}" maxlength="10" />
+                                    <x-form.label>Reporting Manager / HR Contact Number</x-form.label>
+                                    <input type="number" name="person_contacts[]" class="form-control" maxlength="10">
                                 </x-form.input-block>
                             </div>
-
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <x-form.input-block class="mb-2">
-                                    <x-form.label class="mb-0"> {{ __('Employee ID (if assigned)') }}</x-form.label>
-                                    <x-form.input class="floating emp_ids text-uppercase" type="text" name="emp_ids[]"
-                                        value="{{ old('emp_ids') }}" />
-                                </x-form.input-block>
+                                <label>Employee ID</label>
+                                <input type="text" name="emp_ids[]" class="form-control text-uppercase">
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label>Location</label>
                                 <input type="text" name="locations[]" class="form-control">
                             </div>
-
                         </div>
 
                         <div class="row">
-                            
                             <div class="col-md-6 mb-3">
-                                <label>Start Date </label>
-                                <div class="cal-icon">
-                                    <input name="exp_start_dates[]" value="{{ old('exp_start_dates') }}" type="text"
-                                        class="form-control datepicker">
-                                </div>
+                                <label>Start Date</label>
+                                <input name="exp_start_dates[]" type="date" class="form-control">
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label>End Date</label>
-                                <div class="cal-icon">
-                                    <input name="exp_end_dates[]" value="{{ old('exp_end_dates') }}" type="text"
-                                        class="form-control datepicker">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label>Contact Person</label>
-                                <input type="text" name="person_contacts[]" class="form-control">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label>Employee ID</label>
-                                <input type="text" name="emp_ids[]" class="form-control text-uppercase">
+                                <input name="exp_end_dates[]" type="date" class="form-control">
                             </div>
                         </div>
 
                         <h6 class="mt-3">Documents</h6>
                         <div class="row">
-                                                     
                             @foreach($docFields as $field => $label)
                                 <div class="col-md-6 mb-3">
                                     <label>{{ $label }}</label>

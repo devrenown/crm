@@ -94,6 +94,25 @@
     $(document).on('hidden.bs.modal', '#globalDocumentModal', function () {
         $('#globalDocumentFrame').attr('src', '');
     });
+
+    $(document).on('change', '.status-dropdown', function () {
+        let selectedVal = $(this).val();
+
+        let parentRow = $(this).closest('.document-block');
+
+        if (selectedVal == '2') { 
+            parentRow.find('.remarks-container').slideDown();
+            parentRow.find('input[name="remarks"]').attr('required', true);
+        } else {
+            parentRow.find('.remarks-container').slideUp();
+            parentRow.find('input[name="remarks[]"]').val('');
+            parentRow.find('input[name="remarks[]"]').attr('required', false);
+        }
+    });
+
+    window.routes = {
+        onboardDeleteIdentityId: "{{ route('onboard.deleteIdentityId') }}",
+    }
 </script>
 @endpush
 

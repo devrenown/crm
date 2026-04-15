@@ -43,7 +43,7 @@
         <div class="card p-4 welcome-card">
 
             {{-- Profile Image --}}
-            <img src="{{ $user->avatar ? asset('storage/users/' . $user->avatar) : asset('images/user.jpg') }}" 
+            <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/user.jpg') }}" 
                 alt="User Avatar" 
                 class="logo rounded-circle mx-auto mb-3 shadow-sm" 
                 style="height: 5rem; width: 5rem; object-fit: cover;">

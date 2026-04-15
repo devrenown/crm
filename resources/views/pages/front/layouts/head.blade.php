@@ -1,21 +1,21 @@
 <head>
-  <!-- Google tag (gtag.js) -->
   <meta name="google-site-verification" content="fvLeWsEu-Xx-LSl_Qic0fMZ5bg_-YmUsGT4YY1OfZG4" />
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D98PC7RR62"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-D98PC7RR62');
+    <!-- Google tag (gtag.js) --> 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BMVM7JMDMB"></script> 
+    <script> 
+      window.dataLayer = window.dataLayer || []; 
+      function gtag(){dataLayer.push(arguments);} 
+      gtag('js', new Date()); 
+
+      gtag('config', 'G-BMVM7JMDMB'); 
     </script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM for Small Business, Employee Management CRM | Renown System</title>
+    <title>{{ @$title ?? 'CRM for Small Business, Employee Management CRM | Renown System' }}</title>
 
-    <meta name="description" content="Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure CRM platform.">
+    <meta name="description" content="{{ @$description ?? 'Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure CRM platform.' }} ">
 
     <meta name="keywords" content="Best CRM tools for small businesses, Business management CRM, CRM system for tracking leads and sales, CRM solution for sales performance tracking, CRM for small business, Task and project management CRM, CRM with reporting and analytics, CRM for employee and task management, client management system for small business, Project management CRM tools, Customer relationship management system, CRM dashboard software, Client management system, Employee management CRM, CRM for client management. CRM software tools, sales and lead management tools, Best CRM for project management, Employee management system">
 

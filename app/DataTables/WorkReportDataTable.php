@@ -32,25 +32,18 @@ class WorkReportDataTable extends DataTable
             ->addIndexColumn()
 
             ->addColumn('title', function($row){
-
                 return $row->title;
-
             })
 
             ->addColumn('description', function($row){
-
                 return $row->description ?? '';
-
             })
 
             ->addColumn('project', function ($row) {
 
                 if (isset($row->project)) {
-
                     return $row->project->name;
-
                 }
-
             })
 
             ->addColumn('status', function($row){
@@ -58,47 +51,29 @@ class WorkReportDataTable extends DataTable
                 if (isset($row->status)) {
 
                     return sprintf(
-
                         '<span class="badge bg-inverse-%s">%s</span>',
-
                         $row->status->badgeClass(),
-
                         e($row->status->label())
-
                     );
-
                 }
-                
             })
 
             ->addColumn('created_at', function($row){
 
                 if(!empty($row->created_at)){
-
-                    return format_date($row->created_at);
-
+                    return $row->created_at->format('d M Y, h:i A');
                 }
-
             })
 
             ->addColumn('action', function($row){
-
                     $id = $row->id;
-
                     return view('pages.work-report.action',compact('id'));
-
             })
-
             ->rawColumns(['description','action', 'status']);
-
     }
 
-
-
     /**
-
      * Get the query source of dataTable.
-
      */
 
     public function query()
@@ -113,29 +88,18 @@ class WorkReportDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-
         ->setTableId('tasks-table')
-
         ->columns($this->getColumns())
-
         ->minifiedAjax()
-
         ->orderBy(1)
-
         ->buttons([
 
             Button::make('excel'),
-
             Button::make('csv'),
-
             Button::make('pdf'),
-
             Button::make('print'),
-
             Button::make('reset'),
-
             Button::make('reload')
-
         ]);
     }
 
@@ -146,40 +110,23 @@ class WorkReportDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-
             Column::make('DT_RowIndex')
-
             ->title('#')
-
             ->searchable(false)
-
             ->orderable(false),
 
-
-
             Column::make('title')->searchable(true),
-
             Column::make('description')->width(200),
-
             Column::make('project')->width(200),
-
             Column::make('status'),
-
             Column::make('created_at'),
-
             Column::computed('action')
-
               ->exportable(false)
-
               ->printable(false)
-
               ->width(60)
-
               ->visible(auth()->user()->canAny(['edit-work-task','delete-work-task']))
-
               ->addClass('text-end'),            
         ];
-
     }
 
 

@@ -246,7 +246,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-task-emp-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-task-emp-ui.png') }}" class="img-fluid rounded-4">
                 </div>
 
             </div>

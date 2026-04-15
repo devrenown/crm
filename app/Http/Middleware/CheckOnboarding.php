@@ -18,30 +18,36 @@ class CheckOnboarding
     {
         $user = Auth::user();
 
-        if ($user && $user->is_onboarding_complete == 0) {
+        if ($user) {
             // return redirect()->route('onboard.start', ['user_id' => encrypt($user->id)]);
 
-            if (session()->has('onboarding_redirect')) {
-                return redirect(session('onboarding_redirect'));
+            if ($user->is_active == 0) {
+                Auth::logout();
             }
 
-            Auth::logout();
+            if ($user->is_onboarding_complete == 0) {
+                if (session()->has('onboarding_redirect')) {
+                    return redirect(session('onboarding_redirect'));
+                }
 
-            return response()->make('
-                <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
-                    <h2 style="color: #f39c12;">⚠️ Onboarding Incomplete</h2>
-                    <p style="color: #555; font-size: 16px;">
-                        Your onboarding process is not completed yet. <br>
-                        Please complete your onboarding process using the invitation link sent to your registered email by Renown System
-                    </p>
-                    <a href="'.url('/').'" 
-                       style="display: inline-block; margin-top: 20px; 
-                              padding: 10px 20px; background-color: #3490dc; 
-                              color: #fff; text-decoration: none; border-radius: 5px;">
-                        Go to Home
-                    </a>
-                </div>
-            ');
+                Auth::logout();
+
+                return response()->make('
+                    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+                        <h2 style="color: #f39c12;">⚠️ Onboarding Incomplete</h2>
+                        <p style="color: #555; font-size: 16px;">
+                            Your onboarding process is not completed yet. <br>
+                            Please complete your onboarding process using the invitation link sent to your registered email by Renown System
+                        </p>
+                        <a href="'.url('/').'" 
+                           style="display: inline-block; margin-top: 20px; 
+                                  padding: 10px 20px; background-color: #3490dc; 
+                                  color: #fff; text-decoration: none; border-radius: 5px;">
+                            Go to Home
+                        </a>
+                    </div>
+                ');
+            }
             
         }
         

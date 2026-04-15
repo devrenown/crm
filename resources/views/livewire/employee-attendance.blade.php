@@ -3,11 +3,12 @@
 
   $user = auth()->user();
   $isClockedIn = !empty($clockedIn) && !empty($timeId);
+  $punchInRaw = $user?->firstAttendanceToday?->created_at;
 
   $lateMinutes = 0;
   $expectedTime = '--:--';
 
-  if ($isClockedIn) {
+  if ($isClockedIn && $punchInRaw) {
       $punchIn = tz($user?->firstAttendanceToday?->created_at);
       
       //dd($user);
@@ -24,7 +25,6 @@
       $expectedTime = $expectedPunchOut->format('h:i A');
   }
 
-  //dd($user->leaveBalance());
 @endphp
 
 @push('page-styles')
@@ -1247,79 +1247,108 @@
 
                 <div class="row g-0">
 
-                    <!-- Manager -->
+                    {{-- Reporting Manager --}}
                     <div class="col-md-6 p-4 border-end">
                         <p class="text-primary small fw-semibold">Reporting Manager</p>
 
-                        <div class="d-flex align-items-center mb-3">
-                            <img class="avatar" src="{{ asset('storage/'. $user->reportingManager?->avatar) }}">
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-semibold">{{ $user->reportingManager?->fullname }}</h6>
-                                <small class="text-muted">{{ $user->reportingManager?->designation?->name }}</small>
-                            </div>
-                        </div>
+                        @php
+                            $manager = $user->reportingManager;
+                            $managerAvatar = $manager && $manager->avatar
+                                ? asset('storage/' . $manager->avatar)
+                                : asset('images/default-avatar.png');
+                        @endphp
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-envelope bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Email</small>
-                                <div>{{ $user->reportingManager?->email }}</div>
-                            </div>
-                        </div>
+                        @if($manager)
+                            <div class="d-flex align-items-center mb-3">
+                                <img class="avatar rounded-circle"
+                                     src="{{ $managerAvatar }}"
+                                     style="width:50px;height:50px;object-fit:cover;">
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-telephone bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Phone</small>
-                                <div>{{ $user->reportingManager?->phone }}</div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-semibold">{{ $manager->fullname }}</h6>
+                                    <small class="text-muted">{{ $manager->designation->name ?? 'N/A' }}</small>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-building bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Department</small>
-                                <div>{{ $user->reportingManager?->department?->name }}</div>
+                            <div class="info-item d-flex gap-3 mb-2 align-items-start">
+                                <i class="bi bi-envelope bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div style="word-break: break-word;">
+                                    <small>Email</small>
+                                    <div>{{ $manager->email ?? 'N/A' }}</div>
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="info-item d-flex gap-3 mb-2 align-items-center">
+                                <i class="bi bi-telephone bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div>
+                                    <small>Phone</small>
+                                    <div>{{ $manager->phone ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+
+                            <div class="info-item d-flex gap-3 align-items-center">
+                                <i class="bi bi-building bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div>
+                                    <small>Department</small>
+                                    <div>{{ $manager->department->name ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-muted">No Reporting Manager Assigned</p>
+                        @endif
                     </div>
 
-                    <!-- Sub Manager -->
+                    {{-- Sub Reporting Manager --}}
                     <div class="col-md-6 p-4">
                         <p class="text-primary small fw-semibold">Sub Reporting Manager</p>
 
-                        <div class="d-flex align-items-center mb-3">
-                            <img class="avatar" src="{{ asset('storage/'. $user->subReportingManager?->avatar) }}">
-                            <div class="ms-3">
-                                <h6 class="mb-0 fw-semibold">{{ $user->subReportingManager?->fullname }}</h6>
-                                <small class="text-muted">{{ $user->subReportingManager?->designation?->name }}</small>
-                            </div>
-                        </div>
+                        @php
+                            $subManager = $user->subReportingManager;
+                            $subAvatar = $subManager && $subManager->avatar
+                                ? asset('storage/' . $subManager->avatar)
+                                : asset('images/default-avatar.png');
+                        @endphp
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-envelope bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Email</small>
-                                <div>{{ $user->subReportingManager?->email }}</div>
-                            </div>
-                        </div>
+                        @if($subManager)
+                            <div class="d-flex align-items-center mb-3">
+                                <img class="avatar rounded-circle"
+                                     src="{{ $subAvatar }}"
+                                     style="width:50px;height:50px;object-fit:cover;">
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-telephone bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Phone</small>
-                                <div>{{ $user->subReportingManager?->phone }}</div>
+                                <div class="ms-3">
+                                    <h6 class="mb-0 fw-semibold">{{ $subManager->fullname }}</h6>
+                                    <small class="text-muted">{{ $subManager->designation->name ?? 'N/A' }}</small>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="info-item d-flex gap-3 mb-2 align-items-center">
-                            <i class="bi bi-building bg-inverse-warning px-2 rounded-2 pt-1"></i>
-                            <div>
-                                <small>Department</small>
-                                <div>{{ $user->subReportingManager?->department?->name }}</div>
+                            <div class="info-item d-flex gap-3 mb-2 align-items-center">
+                                <i class="bi bi-envelope bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div style="word-break: break-word;">
+                                    <small>Email</small>
+                                    <div>{{ $subManager->email ?? 'N/A' }}</div>
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="info-item d-flex gap-3 mb-2 align-items-center">
+                                <i class="bi bi-telephone bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div>
+                                    <small>Phone</small>
+                                    <div>{{ $subManager->phone ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+
+                            <div class="info-item d-flex gap-3 align-items-center">
+                                <i class="bi bi-building bg-inverse-warning px-2 rounded-2 pt-1"></i>
+                                <div>
+                                    <small>Department</small>
+                                    <div>{{ $subManager->department->name ?? 'N/A' }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <p class="text-muted">No Sub Reporting Manager Assigned</p>
+                        @endif
                     </div>
+
                 </div>
             </div>
 

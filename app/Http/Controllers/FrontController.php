@@ -140,10 +140,78 @@ class FrontController extends Controller
         abort(404);
      }
 
+     $metaData = [
+        'employee-management' => [
+            'title'       => 'Employee Management System for Businesses | Renown System',
+            'description' => 'Manage employee data, performance, and records efficiently with Renown System’s 
+                              employee management software. Simplify HR tasks and improve productivity with smart 
+                              automation.'
+        ],
+
+        'leave-management' => [
+            'title'       => 'Leave Management System for Employees | Renown System',
+            'description' => 'Streamline employee leave requests, approvals, and tracking with Renown System. Improve 
+                              HR efficiency with an easy-to-use leave management solution.'
+        ],
+
+        'client-management' => [
+            'title'       => 'Client Management Software for Businesses | Renown System',
+            'description' => 'Organize customer data, track interactions, and improve relationships with Renown System 
+                              client management software. Boost productivity and customer satisfaction.'
+        ],
+
+        'task-management' => [
+            'title'       => 'Task Management Software for Teams | Renown System',
+            'description' => 'Track tasks, assign work, and manage team productivity with Renown System task 
+                              management software. Improve workflow and collaboration easily. '
+        ],
+
+        'onboarding-management' => [
+            'title'       => 'Employee Onboarding Management System | Renown System',
+            'description' => 'Simplify employee onboarding with Renown System. Automate documentation, training, and 
+                              processes to enhance new hire experience and efficiency.'
+        ],
+
+        'invoice-management' => [
+            'title'       => 'Invoice Management Software for Businesses | Renown System ',
+            'description' => 'Create, track, and manage invoices efficiently with Renown System. Automate billing 
+                              processes and improve financial management with ease.'
+        ],
+
+        'project-management' => [
+            'title'       => 'Project Management Software for Teams | Renown System',
+            'description' => 'Plan, track, and manage projects effectively with Renown System. Improve team 
+                              collaboration and deliver projects on time with smart tools.'
+        ],
+
+        'payroll-management' => [
+            'title'       => 'Payroll Management System for Businesses | Renown System',
+            'description' => 'Automate salary processing, tax calculations, and payroll management with Renown 
+                              System. Ensure accuracy and compliance with ease.'
+        ],
+
+        'ticket-management' => [
+            'title'       => 'Ticket Management System for Support Teams | Renown System',
+            'description' => 'Manage support tickets, track issues, and improve customer service with Renown System. 
+                              Streamline workflows and resolve queries faster.'
+        ],
+     ];
+
+     $title         = $metaData[$slug]['title']         ?? null;
+     $description   = $metaData[$slug]['description']   ?? null;
+
+     if ($slug == 'employee-management') {
+        $title = 'Employee Management System for Businesses | Renown System';
+        $description = 'Manage employee data, performance, and records efficiently with Renown System’s 
+        employee management software. Simplify HR tasks and improve productivity with smart 
+        automation.'; 
+     }
+     
+
      $view = $this->featureView . $slug;
 
      if (view()->exists($view)) {
-        return view($view);
+        return view($view, compact('title', 'description'));
      }
 
      abort(404);

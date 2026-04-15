@@ -8,6 +8,7 @@ $.ajaxSetup({
 
 const fileValidationRules = {
     photo: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+    bank_document: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf'],
     'id_image[]': ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf'],
     'education_files[]': ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf'],
     'offer_letters[]': ['application/pdf'],
@@ -208,6 +209,12 @@ async function savePersonalInfoData() {
         formData.append('photo', $('#photo')[0].files[0]);
     } else {
         formData.append('old_image', $('#old_image').val());
+    }
+
+    if ($('#bank_document')[0].files.length > 0) {
+        formData.append('bank_document', $('#bank_document')[0].files[0]);
+    } else {
+        formData.append('old_bank_document', $('#old_bank_document').val());
     }
 
     if (major_illness) {
@@ -429,8 +436,11 @@ async function saveIdentityData() {
 }
 */
 function deleteIdentityId(id) {
+
     let isConfirm = confirm('Are you sure? You want to delete it?');
     if (!isConfirm) return;
+
+    console.log(id)
 
     $.ajax({
         url: window.routes.onboardDeleteIdentityId,
@@ -523,10 +533,10 @@ function saveExperienceData(empDetailId) {
         let exp_start_date      = $(this).find('.exp_start_dates').val()    || null;
         let exp_end_date        = $(this).find('.exp_end_dates').val()      || null;
         let offer_letter        = $(this).find('.offer_letters')[0];
-        let appointment_letter  = $(this).find('.appointment_letters')[0];
-        let experience_letter   = $(this).find('.experience_letters')[0];
-        let relieving_letter    = $(this).find('.relieving_letters')[0];
-        let increment_letter    = $(this).find('.increment_letters')[0];
+        let appointment_letter  = $(this).find('.appointment_letters')[0]   || null;
+        let experience_letter   = $(this).find('.experience_letters')[0]    || null;
+        let relieving_letter    = $(this).find('.relieving_letters')[0]     || null;
+        let increment_letter    = $(this).find('.increment_letters')[0]     || null;
         let salary_slip         = $(this).find('.salary_slips')[0];
         let bank_statement      = $(this).find('.bank_statements')[0];
 

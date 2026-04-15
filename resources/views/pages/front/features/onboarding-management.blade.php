@@ -232,7 +232,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-leave-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-onboard-admin-ui.png') }}" class="img-fluid rounded-4">
                 </div>
 
                 <!-- Arrow -->

@@ -77,6 +77,8 @@ class LeaveApprovalController extends Controller
         ]);
     }
 
+    
+
     $stage = $leave->approval_stage;
     $type = $leave->leaveType;
     $requiresL2 = (int) $type->requires_l2_approval === 1;
@@ -85,7 +87,7 @@ class LeaveApprovalController extends Controller
     $isFinal = $isAdmin || ($stage === 'L2') || ($stage === 'L1' && !$requiresL2);
 
     /* ---------------- BALANCE CHECK ---------------- */
-    if ($request->status === 'Approved' && $isFinal && !$leave->is_balance_applied) {
+    if ($request->status === 'Approved' && $isFinal && !$leave->is_balance_applied && (int) $type->is_paid === 1 ) {
         $balance = $this->getBalance($leave);
         $available = $balance->remaining_leaves + $balance->manual_adjustment;
         $shortfall = max(0, $leave->days - $available);
@@ -198,7 +200,7 @@ class LeaveApprovalController extends Controller
         /* =========================
          * BALANCE LOGIC (ONLY FINAL)
          * ========================= */
-        if ($isFinalNow) {
+        if ($isFinalNow && (int) $leave->leaveType->is_paid === 1) {
     
             if ($request->filled('manual_adjustment')) {
                 $balance = $this->getBalance($leave);

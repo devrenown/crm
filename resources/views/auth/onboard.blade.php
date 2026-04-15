@@ -28,10 +28,13 @@
 
         .wizard>.steps>ul>li {
             width: 20% !important;
+            position: relative;
         }
 
         .wizard > .content > .body {
             padding: 0.5% !important;
+            width: 97%;
+            height: 85%;
         }
 
         .wizard>.steps a,
@@ -64,6 +67,12 @@
         .form-control {
             height: 35px !important;
             padding: 0 .75rem !important;
+        }
+
+        .reject-count {
+            height: 20px;
+            width: 20px;
+            text-align: center;
         }
 
         /*.form-select {*/
@@ -159,6 +168,12 @@
                     // Validate visible inputs
                     form.validate().settings.ignore = ":disabled,:hidden";
                     if (!form.valid()) return false;
+
+                    if (currentIndex === 3) {
+                        if (!validateEducationHierarchy()) {
+                            return false;
+                        }
+                    }
                     
                     if (!steps[currentIndex]) {
                         console.info(`No changes in step ${currentIndex}, skipping save.`);
@@ -190,7 +205,7 @@
                 
                             if (result) {
                                 steps[currentIndex] = true;
-                                progressBar();
+                                // progressBar();
                                 dfd.resolve(true); 
                             } else {
                                 Toastify({
@@ -236,7 +251,7 @@
                             .done(function (res) {
                                 steps[currentIndex] = false;
 
-                                progressBar();
+                                // progressBar();
 
                                 Toastify({
                                     text: 'Submitted!',
@@ -320,8 +335,46 @@
                 getProgress();
             }
 
+            // progressBar();
 
-            progressBar();
+            function validateEducationHierarchy() {
+                let courses = [];
+
+                $('.courses').each(function () {
+                    let val = $(this).val();
+                    if (val) {
+                        courses.push(val.toLowerCase());
+                    }
+                });
+
+                // Normalize values
+                courses = courses.map(c => c.trim());
+
+                if (courses.includes('12th')) {
+                    if (!courses.includes('10th')) {
+                        Toastify({
+                            text: "⚠️ 12th requires 10th details.",
+                            className: "error"
+                        }).showToast();
+                        return false;
+                    }
+                }
+
+                if (courses.includes('graduation')) {
+                    if (
+                        !courses.includes('10th') ||
+                        (!courses.includes('12th') && !courses.includes('diploma'))
+                    ) {
+                        Toastify({
+                            text: "⚠️ Graduation requires 10th and either 12th or Diploma.",
+                            className: "error"
+                        }).showToast();
+                        return false;
+                    }
+                }
+
+                return true;
+            }
 
         })
     </script>

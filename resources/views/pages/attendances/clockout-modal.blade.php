@@ -1,6 +1,6 @@
 <div class="modal-body">
     {{-- <form wire:submit.prevent="clockout" method="post"> --}}
-    <form action="{{ route('clockout') }}" method="post">
+    <form action="{{ route('clockout') }}" method="post" id="clockoutForm">
       @csrf
       <input type="hidden" name="timestampId" value="{{ request('timeId')}}">
       {{-- <input type="hidden" wire:model.defer="timestampId" name="timestampId" value="{{ request('timeId')}}"> --}}
@@ -67,16 +67,18 @@
 </div>
 
 <script>
-document.querySelector("form").addEventListener("submit", function(e) {
+$(document).on('submit', '#clockoutForm', function(e) {
+
     let form = this;
 
     if (!form.checkValidity()) return;
 
-    let btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true;
+    let btn = $(form).find('button[type="submit"]');
 
-    btn.querySelector('.btn-text').innerText = "Submitting...";
-    btn.querySelector('.spinner-border').classList.remove('d-none');
+    btn.prop('disabled', true);
+
+    btn.find('.btn-text').text('Submitting...');
+    btn.find('.spinner-border').removeClass('d-none');
 });
 </script>
 

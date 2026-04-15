@@ -18,6 +18,10 @@ class Attendance extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function activeUser(){
+        return $this->belongsTo(User::class, 'user_id')->where('is_active', true);
+    }
+
     public function timestamps(){
         return $this->hasMany(AttendanceTimestamp::class);
     }

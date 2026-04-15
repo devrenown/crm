@@ -258,6 +258,8 @@ class EmployeeDetailsController extends BaseController
                 'end_date'              => $education['end_date'] ?? '',
                 'file'                  => $filePath,
                 'document_mime'         => $fileMime,
+                'status'                => $education['status'] ?? '',
+                'remarks'               => $education['remarks'] ?? '',
             ]);
         }
         $notification = notify(__("Employee education has been added"));

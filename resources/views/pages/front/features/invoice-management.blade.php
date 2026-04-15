@@ -218,7 +218,7 @@
     <section class="py-5 bg-light">
         <div class="container text-center">
 
-            <div class="d-flex" id="compare-banner">
+            <div id="compare-banner">
 
                 <!-- Admin UI -->
                 <div class="mb-4 mb-lg-0">

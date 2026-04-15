@@ -404,7 +404,7 @@
                                     <a href="javascript:void(0);"
                                       onclick="openSecureDocument('{{ $signedUrl }}')"
                                       class="d-block mt-1">
-                                        <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                        {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
                                         {{ __('View File') }}
                                     </a>
 

@@ -40,20 +40,19 @@
           <h5 class="mt-3 fs-6">ID Proof</h5>
           
           @if (count($employeeIdList) > 0 ?? [])
-
+            <div id="id-container">
                 @foreach ($employeeIdList as $index => $list)
-                <div id="id-container">
-                    <div class="row id-item deletable-item">
+                
+                    <div class="row id-item document-block deletable-item">
                         <input type="hidden" name="identy_ids[]" value="{{ $list->id }}">
 
-                        <div class="col-lg-4 mb-2">
+                        <div class="col-lg-3 mb-2">
                             <label>ID Type *</label>
                             <select name="id_type[]" class="form-select form-control id_type required">
                                 <option value="1" {{ $list->id_type == '1' ? 'selected' : '' }}>Adhar Card</option>
                                 <option value="2" {{ $list->id_type == '2' ? 'selected' : '' }}>PAN Card</option>
                                 <option value="3" {{ $list->id_type == '3' ? 'selected' : '' }}>Voter ID Card</option>
                                 <option value="4" {{ $list->id_type == '4' ? 'selected' : '' }}>Driving Licence</option>
-                                <option value="5" {{ $list->id_type == '5' ? 'selected' : '' }}>Vaccination Certificate</option>
                             </select>
                         </div>
 
@@ -63,7 +62,7 @@
                                 class="form-control id_number required text-uppercase">
                         </div>
 
-                        <div class="col-lg-4 mb-2">
+                        <div class="col-lg-5 mb-2">
                             <label for="id_image">ID Image or PDF* </label>
                             <div class="d-flex justify-content-center align-items-center gap-2">
                                 <input name="id_image[]" type="file" class="form-control id_image"
@@ -71,7 +70,7 @@
 
                                 <input type="hidden" name="old_ids[]" class="old_ids" value="{{ $list->image ?? '' }}">
 
-                               {{-- <a onclick="deleteIdentityId('{{ $list->id }}')" class="delete-icon"><i class="fa-regular fa-trash-can"></i></a> --}}
+                               <a onclick="deleteIdentityId('{{ $list->id }}')" class="delete-icon"><i class="fa-regular fa-trash-can"></i></a>
                             </div>
 
                             <div class="">
@@ -89,12 +88,30 @@
                                         );
                                     @endphp
 
-                                    <a href="javascript:void(0);"
-                                    onclick="openSecureDocument('{{ $signedUrl }}')"
-                                    class="d-block mt-1">
-                                        <i class="fa-solid fa-check-circle text-success me-1"></i>
-                                        View {{ $list->id_name }}
-                                    </a>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <a href="javascript:void(0);"
+                                                onclick="openSecureDocument('{{ $signedUrl }}')"
+                                                class="d-block mt-1">
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($list->status) !!}
+                                                View {{ $list->id_name }}
+                                            </a>
+                                        </div>
+
+                                        <div class="col-md-4 mt-1">
+                                            <select class="form-control form-select status-dropdown" name="status[]">
+                                                <option value="0" {{ $list->status == 0 ? 'selected' : '' }}>Pending</option>
+                                                <option value="1" {{ $list->status == 1 ? 'selected' : '' }}>Verified</option>
+                                                <option value="2" {{ $list->status == 2 ? 'selected' : '' }}>Rejected</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12 remarks-container" style="{{ $list->status == 2 ? '' : 'display:none;' }}">
+                                            <span>Remarks</span> 
+                                            <input type="text" value="{{ @$list->remarks ?? '' }}" name="remarks[]" class="form-control">
+                                        </div>
+                                    </div>
+
                                 @endif
                                 <small class="text-muted d-block" style="font-size: 11px !important;"><span class="text-danger">*</span>Allowed
                                     jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
@@ -102,22 +119,21 @@
                         </div>
 
                     </div>
-                </div>
+                
                 @endforeach
-
+            </div>
             @else
             <div id="id-container">
                 <div class="row id-item">
                     <!-- <input type="hidden" name="identy_ids[]" value=""> -->
 
-                    <div class="col-lg-4 mb-2">
+                    <div class="col-lg-3 mb-2">
                         <label>ID Type *</label>
                         <select name="id_type[]" class="form-select form-control id_type required">
                             <option value="1">Adhar Card</option>
                             <option value="2">PAN Card</option>
                             <option value="3">Voter ID Card</option>
                             <option value="4">Driving Licence</option>
-                            <option value="5">Vaccination Certificate</option>
                         </select>
                     </div>
 
@@ -127,7 +143,7 @@
                             class="form-control id_number required text-uppercase">
                     </div>
 
-                    <div class="col-lg-4 mb-2">
+                    <div class="col-lg-5 mb-2">
                         <label>ID Image or PDF *</label>
                         <input name="id_image[]" type="file"
                             class="form-control id_image"
@@ -179,12 +195,13 @@
 
                 alert(res.message);
 
-                form.closest('.modal').modal('hide');
-                toastr.success(res.message);
+                if (res.status === 200) {
+                    form.closest('.modal').modal('hide');
+                }
             },
             error: function (xhr) {
-                console.log(xhr.responseText)
-                toastr.error('Something went wrong, please try again.');
+                alert(xhr.responseText);
+                submitBtn.prop('disabled', false).text('Update');
             },
             complete: function () {
                 submitBtn.prop('disabled', false).text('Update');
@@ -195,11 +212,12 @@
     function repeatIdRow() {
         let row = `
             <div class="row id-item deletable-item align-items-center">
-            <div class="col-lg-4 mb-2">
+            <div class="col-lg-3 mb-2">
                 <label>ID Type *</label>
                 <select name="id_type[]" class="form-select form-control id_type required necessary">
                     <option value="" selected disabled>--Select ID--</option>
                     <option value="1">Adhar Card</option>
+                    <option value="2">PAN Card</option>
                     <option value="3">Voter ID Card</option>
                     <option value="4">Driving Licence</option>
                     <option value="5">Passport</option>
@@ -211,7 +229,7 @@
                 <input name="id_number[]" type="text" class="form-control id_number required necessary text-uppercase">
             </div>
 
-            <div class="col-lg-4 mb-2">
+            <div class="col-lg-5 mb-2">
                 <label for="id_image">ID Image or PDF* </label>
                 <div class="d-flex justify-content-center align-items-center gap-2">
                     <input name="id_image[]" type="file" class="form-control id_image required necessary"

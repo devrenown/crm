@@ -1,4 +1,13 @@
-<h3>Personal Details</h3>
+@php
+    $personalInfoRejectedCount = $userDetails?->bank_document_status == 2 ? 1 : null;
+@endphp
+
+<h3>
+    Personal Details
+    @if ($personalInfoRejectedCount)
+    <span class="position-absolute end-0 top-0 bg-danger text-white rounded-circle reject-count">{{ $personalInfoRejectedCount }}</span>
+    @endif
+</h3>
 <section style="overflow-y:scroll; overflow-x: hidden;">
     <div class="row">
         {{-- {{ dd($user) }} --}}
@@ -114,9 +123,9 @@
         </div>
 
         <div class="col-lg-4 mb-2">
-            <label for="blood_group">Blood Group *</label>
-            <select name="blood_group" id="blood_group" class="form-select form-control required necessary">
-                <option selected disabled>--Select Blood Group--</option>
+            <label for="blood_group">Blood Group</label>
+            <select name="blood_group" id="blood_group" class="form-select form-control">
+                <option value="" selected disabled>--Select Blood Group--</option>
                 <option value="A+" {{ @$userDetails->blood_group == 'A+' ? 'selected' : '' }}>A+</option>
                 <option value="A-" {{ @$userDetails->blood_group == 'A-' ? 'selected' : '' }}>A-</option>
                 <option value="B+" {{ @$userDetails->blood_group == 'B+' ? 'selected' : '' }}>B+</option>
@@ -228,6 +237,44 @@
             <label for="ifsc_code">IFSC Code *</label>
             <input id="ifsc_code" name="ifsc_code" type="text" value="{{ $userDetails->ifsc ?? '' }}"
                 class="form-control text-uppercase required necessary">
+        </div>
+
+        <div class="col-lg-4 mb-2">
+            <label for="bank_document">Bank Document (Passbook or Cancelled Cheque) *</label>
+            <input id="bank_document" name="bank_document" type="file" accept="image/*,application/pdf"
+                class="form-control {{ empty($userDetails->bank_document) ? 'required' : '' }} necessary">
+
+            <input type="hidden" name="old_bank_document" id="old_bank_document" value="{{ $userDetails->bank_document ?? '' }}">
+
+            <div class="">
+                @if(!empty($userDetails->bank_document))
+                    @php
+                        $signedUrl = URL::signedRoute(
+                            'secure.document.view',
+                            [
+                                'path'     => encrypt($userDetails->bank_document),
+                                'mime'     => $userDetails->bank_document_mime,
+                                'filename' => basename($userDetails->bank_document),
+                                'mode'     => 'clean'
+                            ],
+                            now()->addMinutes(5)
+                        );
+                    @endphp
+                    {!! \App\Helpers\DocumentStatus::statusBadge($userDetails->bank_document_status) !!}
+                    <a href="javascript:void(0);"
+                    onclick="openSecureDocument('{{ $signedUrl }}')">
+                    View Document
+                    </a>
+
+                    @if ($userDetails->bank_document_status == 2)
+                        {!! \App\Helpers\DocumentStatus::remarks($userDetails->bank_document_remarks) !!}
+                    @endif
+                @endif
+                 <small class="text-muted d-block">
+                    <span class="text-danger">*</span>
+                    Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB
+                </small>
+            </div>
         </div>
     </div>
 

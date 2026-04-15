@@ -1,4 +1,4 @@
-<section class="features-section" id="features">
+<section class="features-section mt-md-5 mt-0 mt-lg-0" id="features">
     <div class="container-fluid px-lg-5 text-center">
 
         <span class="section-title-badge">Key Features</span>

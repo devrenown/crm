@@ -67,7 +67,7 @@ class DashboardController extends BaseController
         $probationDays = (int)$this->companySettings->probation_period;
 
         // 1. Define the base query
-        $baseQuery = User::where('users.is_active', true)->join('employee_details', 'users.id', '=', 'employee_details.user_id')
+        $baseQuery = User::where(['users.is_active' => true, 'users.is_onboarding_complete' => 1])->join('employee_details', 'users.id', '=', 'employee_details.user_id')
             ->select('users.id', 'users.firstname', 'users.middlename', 'users.lastname', 'users.avatar', 'employee_details.user_id', 'employee_details.dob', 'employee_details.date_joined', 'users.is_active')
             ->with('employeeDetail');
 

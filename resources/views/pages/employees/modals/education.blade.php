@@ -67,7 +67,7 @@
                                     </div>
                                 </x-form.input-block>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 document-block">
                                 <x-form.input-block>
                                     <x-form.label> {{ __('File') }}</x-form.label>
                                     <x-form.input type="file" name="file" />
@@ -87,12 +87,30 @@
                                             );
                                         @endphp
 
-                                        <a href="javascript:void(0);"
-                                        onclick="openSecureDocument('{{ $signedUrl }}')"
-                                        class="d-block mt-1 view-edu-file">
-                                            <i class="fa-solid fa-check-circle text-success me-1"></i>
-                                            View File
-                                        </a>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <a href="javascript:void(0);"
+                                                    onclick="openSecureDocument('{{ $signedUrl }}')"
+                                                    class="d-block mt-1 view-edu-file">
+                                                    {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
+                                                    View File
+                                                </a>
+                                            </div>
+
+                                            <div class="col-md-6 mt-1">
+                                                <select class="form-control form-select status-dropdown" name="status">
+                                                    <option value="0" {{ $education->status == 0 ? 'selected' : '' }}>Pending</option>
+                                                    <option value="1" {{ $education->status == 1 ? 'selected' : '' }}>Verified</option>
+                                                    <option value="2" {{ $education->status == 2 ? 'selected' : '' }}>Rejected</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-12 remarks-container" style="{{ $education->status == 2 ? '' : 'display:none;' }}">
+                                                <span>Remarks</span> 
+                                                <input type="text" value="{{ @$education->remarks ?? '' }}" name="remarks" class="form-control">
+                                            </div>
+                                        </div>
+
                                     @endif
                                 </x-form.input-block>
                             </div>
@@ -109,55 +127,62 @@
                           ><i class="fa-regular fa-trash-can"></i></a>
                       </h3>
                       <div class="row">
+                          
                           <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label> {{ __('Institution') }}</x-form.label>
-                                  <x-form.input type="text" name="institution" value="{{ old('institution') }}" />
-                              </x-form.input-block>
-                          </div>
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label> {{ __('Subject') }}</x-form.label>
-                                  <x-form.input type="text" name="subject" value="{{ old('subject') }}" />
-                              </x-form.input-block>
-                          </div>
+                                <x-form.label class="mb-0"> {{ __('Course/Certification') }}</x-form.label>
+                                <select class="form-select form-control courses required necessary mb-0" name="course">
+                                    <option value="10th">10th</option>
+                                    <option value="12th">12th</option>
+                                    <option value="diploma">Diploma</option>
+                                    <option value="graduation">Graduation</option>
+                                    <option value="post graduation">Post Graduation</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
 
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label> {{ __('Course') }}</x-form.label>
-                                  <x-form.input type="text" name="course" value="{{ old('course') }}" />
-                              </x-form.input-block>
-                          </div>
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label> {{ __('Grade') }}</x-form.label>
-                                  <x-form.input type="text" name="grade" value="{{ old('grade') }}" />
-                              </x-form.input-block>
-                          </div>
-
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label calss="focus-label"> {{ __('Starting Date') }}</x-form.label>
-                                  <div class="cal-icon">
-                                      <x-form.input type="text" class="datepicker" name="start_date" value="{{ old('start_date') }}" />
-                                  </div>
-                              </x-form.input-block>
-                          </div>
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label calss="focus-label"> {{ __('Date Completed') }}</x-form.label>
-                                  <div class="cal-icon">
-                                      <x-form.input type="text" class="datepicker" name="end_date" value="{{ old('end_date') }}" />
-                                  </div>
-                              </x-form.input-block>
-                          </div>
-                          <div class="col-md-6">
-                              <x-form.input-block>
-                                  <x-form.label calss="focus-label"> {{ __('File') }}</x-form.label>
-                                  <x-form.input type="file" name="file" />
-                              </x-form.input-block>
-                          </div>
-                      </div>
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label> {{ __('University/Institution/Board') }}</x-form.label>
+                                    <x-form.input type="text" name="institution" value="{{ old('institution') }}" />
+                                </x-form.input-block>
+                            </div>
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label> {{ __('Subject/Branch/Specialization') }}</x-form.label>
+                                    <x-form.input type="text" name="subject" value="{{ old('subject') }}" />
+                                </x-form.input-block>
+                            </div>
+  
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label> {{ __('Grade/Percentage') }}</x-form.label>
+                                    <x-form.input type="text" name="grade" value="{{ old('grade') }}" />
+                                </x-form.input-block>
+                            </div>
+  
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label calss="focus-label"> {{ __('Starting Date') }}</x-form.label>
+                                    <div class="cal-icon">
+                                        <x-form.input type="text" class="datepicker" name="start_date" value="{{ old('start_date') }}" />
+                                    </div>
+                                </x-form.input-block>
+                            </div>
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label calss="focus-label"> {{ __('Date Completed') }}</x-form.label>
+                                    <div class="cal-icon">
+                                        <x-form.input type="text" class="datepicker" name="end_date" value="{{ old('end_date') }}" />
+                                    </div>
+                                </x-form.input-block>
+                            </div>
+                            <div class="col-md-6">
+                                <x-form.input-block>
+                                    <x-form.label> {{ __('File') }}</x-form.label>
+                                    <x-form.input type="file" name="file" />
+                                </x-form.input-block>
+                            </div>
+                        </div>
                   </div>
               </div>
               @endif
@@ -197,7 +222,7 @@
 
             $(this).slideDown();
 
-            $('.datepicker').datetimepicker('destroy');
+            // $('.datepicker').datetimepicker('destroy');
 
             $('.datepicker').datetimepicker({
                 format: 'YYYY-MM-DD',

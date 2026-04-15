@@ -148,6 +148,7 @@ class OnboardController extends Controller
             'designation'           => 'required',
             'joining_date'          => 'required',
             'photo'                 => 'nullable|mimes:jpg,jpeg,png,webp|max:2048',
+            'bank_document'         => 'nullable|mimes:jpg,jpeg,png,webp,pdf|max:2048',
         ]);
 
         if (!$validate) {
@@ -164,6 +165,18 @@ class OnboardController extends Controller
             $validate['photo'] = $request->old_image ?? null;
         }
 
+        if ($request->hasFile('bank_document')) {
+            $oldBankDocument = $authUser->employeeDetail?->bank_document ?? null;
+            $path = $this->tenant->id . '/'. $authUser->id . '/';
+            $upload = self::uploadEncrypted($request->file('bank_document'), $path, $oldBankDocument);
+
+            $bankDocumentPath = $upload['path'] ?? $oldBankDocument;
+            $bankDocumentMime = $upload['mime'] ?? null;
+        } else {
+            $bankDocumentPath = $authUser->employeeDetail?->bank_document ?? null;
+            $bankDocumentMime = $authUser->employeeDetail?->bank_document_mime ?? null; 
+        }
+
         $personalUserData = [
             'firstname'         => $validate['first_name']  ?? null,
             'middlename'        => $validate['middle_name'] ?? '',
@@ -173,6 +186,7 @@ class OnboardController extends Controller
             'dob'               => $request->dob            ?? null,
             'phone'             => $validate['contact']     ?? null,
             'company'           => $validate['company']     ?? null,
+            'avatar'            => $validate['photo']       ?? null,
             'avatar'            => $validate['photo']       ?? null,
         ];
 
@@ -190,10 +204,12 @@ class OnboardController extends Controller
             'ref_emp_id'            => $request->ref_emp_id                 ?? null,
             'bank'                  => $request->bank_name                  ?? null,
             'branch'                => $request->branch_address             ?? null,
-            'account' => $request->account_number 
-                ? encrypt($request->account_number) 
-                : null,
+            'account'               => $request->account_number ? encrypt($request->account_number) : null,
             'ifsc'                  => $request->ifsc_code                  ?? null,
+            'bank_document'         => $bankDocumentPath,
+            'bank_document_mime'    => $bankDocumentMime,
+            'bank_document_status'  => $request->bank_document_status       ?? null,
+            'bank_document_remarks' => $request->bank_document_remarks      ?? null,        
         ];
 
         $user       = User::updateOrCreate(['id' => $authUser->id], $personalUserData);
@@ -255,6 +271,8 @@ class OnboardController extends Controller
         $idImages   = $request->file('id_image',    []);
         $oldIds     = $request->input('old_ids',    []);
         $identy_ids = $request->input('identy_ids', []);
+        $statuses   = $request->input('status',     []);
+        $remarks    = $request->input('remarks',    []);
 
         if (count($idTypes) > 0) {
             foreach ($idTypes as $index => $idType) {
@@ -262,6 +280,8 @@ class OnboardController extends Controller
                 $type       = $idTypes[$index]              ?? null;
                 $file       = $idImages[$index]             ?? null;
                 $oldFile    = $oldIds[$index]               ?? null;
+                $status     = $statuses[$index]             ?? null;
+                $remark     = $remarks[$index]              ?? null;
 
                 $fileName   = null;
                 $idName     = null;
@@ -303,7 +323,16 @@ class OnboardController extends Controller
                     [
                         'id'   => $identy_ids[$index] ?? null,
                     ],
-                    ['user_id' => $userId, 'id_type' => $type, 'id_name' => $idName, 'id_number' => $number, 'image' => $filePath,  'document_mime' => $fileMime,]
+                    [
+                        'user_id'       => $userId, 
+                        'id_type'       => $type, 
+                        'id_name'       => $idName, 
+                        'id_number'     => $number, 
+                        'image'         => $filePath,  
+                        'document_mime' => $fileMime,
+                        'status'        => $status,
+                        'remarks'       => $remark
+                    ]
                 );
             }
         }
@@ -334,9 +363,7 @@ class OnboardController extends Controller
             ]);
         }
 
-        $identityId = EmployeeIdentityProof::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->first();
+        $identityId = EmployeeIdentityProof::find($id);
 
         if (!$identityId) {
             return response()->json([
@@ -456,7 +483,6 @@ class OnboardController extends Controller
         }
 
         $education = EmployeeEducation::where('id', $id)
-            ->where('user_id', auth()->id())
             ->first();
 
         if (!$education) {
@@ -497,6 +523,8 @@ class OnboardController extends Controller
 
         ]);
 
+        // dd($request->all());
+
         if (!$validate) {
             return response()->json([
                 'status'    => 400,
@@ -536,6 +564,21 @@ class OnboardController extends Controller
         $old_increment_letters      = $request->input('old_increment_letters',      []);
         $old_salary_slips           = $request->input('old_salary_slips',           []);
         $old_bank_statements        = $request->input('old_bank_statements',        []);
+
+        $offer_statuses             = $request->input('offer_status',               []);
+        $offer_remarks              = $request->input('offer_remarks',              []);
+        $appointment_statuses       = $request->input('appointment_status',         []);
+        $appointment_remarks        = $request->input('appointment_remarks',        []);
+        $experience_statuses        = $request->input('experience_status',          []);
+        $experience_remarks         = $request->input('experience_remarks',         []);
+        $relieving_statuses         = $request->input('relieving_status',           []);
+        $relieving_remarks          = $request->input('relieving_remarks',          []);
+        $increment_statuses         = $request->input('increment_status',           []);
+        $increment_remarks          = $request->input('increment_remarks',          []);
+        $salary_statuses            = $request->input('salary_status',              []);
+        $salary_remarks             = $request->input('salary_remarks',             []);
+        $bank_statuses              = $request->input('bank_status',                []);
+        $bank_remarks               = $request->input('bank_remarks',               []);
 
         $uploadPath = $this->tenant->id . '/'. $userId . '/work-experience/';
 
@@ -700,29 +743,43 @@ class OnboardController extends Controller
 
                     'offer_letter'          => $offerLatterName,
                     'offer_letter_mime'     => $offerLetterMime ?? null,
+                    'offer_status'          => $offer_statuses[$index] ?? 0,
+                    'offer_remarks'         => $offer_remarks[$index] ?? null,
 
-                    'appointment_letter'    => $appointmentLatterName,
-                    'appointment_letter_mime' => $appointmentLetterMime ?? null,
+                    'appointment_letter'       => $appointmentLatterName,
+                    'appointment_letter_mime'  => $appointmentLetterMime ?? null,
+                    'appointment_status'       => $appointment_statuses[$index] ?? 0,
+                    'appointment_remarks'      => $appointment_remarks[$index] ?? null,
 
-                    'experience_letter'     => $experienceLatterName,
-                    'experience_letter_mime'  => $experienceLetterMime ?? null,
+                    'experience_letter'        => $experienceLatterName,
+                    'experience_letter_mime'   => $experienceLetterMime ?? null,
+                    'experience_status'        => $experience_statuses[$index] ?? 0,
+                    'experience_remarks'       => $experience_remarks[$index] ?? null,
 
                     'relieving_letter'      => $relieving_letterName,
-                    'relieving_letter_mime'   => $relievingLetterMime ?? null,
+                    'relieving_letter_mime' => $relievingLetterMime ?? null,
+                    'relieving_status'      => $relieving_statuses[$index] ?? 0,
+                    'relieving_remarks'     => $relieving_remarks[$index] ?? null,
 
                     'increment_letter'      => $incrementLatterName,
-                    'increment_letter_mime'   => $incrementLetterMime ?? null,
+                    'increment_letter_mime' => $incrementLetterMime ?? null,
+                    'increment_status'      => $increment_statuses[$index] ?? 0,
+                    'increment_remarks'     => $increment_remarks[$index] ?? null,
 
                     'salary_slip'           => $salarySlipName,
-                    'salary_slip_mime'     => $salarySlipMime ?? null,
+                    'salary_slip_mime'      => $salarySlipMime ?? null,
+                    'salary_status'         => $salary_statuses[$index] ?? 0,
+                    'salary_remarks'        => $salary_remarks[$index] ?? null,
 
                     'bank_statement'        => $bankStatementName,
-                    'bank_statement_mime'     => $bankStatementMime ?? null,
+                    'bank_statement_mime'   => $bankStatementMime ?? null,
+                    'bank_status'           => $bank_statuses[$index] ?? 0,
+                    'bank_remarks'          => $bank_remarks[$index] ?? null,
                 ];
 
                 EmployeeWorkExperience::updateOrCreate(
                     [
-                        'id' => $exp_ids[$index] ?? null,   // look up by id if available
+                        'id' => $exp_ids[$index] ?? null, 
                     ],
                     $data
                 );
@@ -745,11 +802,7 @@ class OnboardController extends Controller
             ]);
         }
 
-        $userId = $request->user_id ?: auth()->id();
-
-        $employment = EmployeeWorkExperience::where('id', $id)
-            ->where('employee_detail_id', Auth::user()->employeeDetail->id)
-            ->first();
+        $employment = EmployeeWorkExperience::find($id);
 
         if (!$employment) {
             return response()->json([

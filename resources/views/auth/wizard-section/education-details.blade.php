@@ -1,4 +1,12 @@
-<h3>Education Details</h3>
+@php
+    $educationRejectedCount = collect($employeeEducationList->education)->where('status', 2)->count();
+@endphp
+
+<h3>Education Details
+    @if ($educationRejectedCount > 0)
+    <span class="position-absolute end-0 top-0 bg-danger text-white rounded-circle reject-count">{{ $educationRejectedCount }}</span>
+    @endif
+</h3>
 <section style="overflow-y: scroll; overflow-x: hidden;">
     <form action="#" method="post" enctype="multipart/form-data" id="repeater-education">
         @csrf
@@ -16,7 +24,7 @@
                             <div class="card-body">
                                 <h3 class="card-title">
                                     Education Information
-                                    <span onclick="deleteEducation('{{ $education->id }}')" class="delete-icon" style="cursor:pointer;">
+                                    <span data-id="{{ $education->id ?? '' }}" class="delete-icon" style="cursor:pointer;">
                                         <i class="fa-regular fa-trash-can"></i>
                                     </span>
                                 </h3>
@@ -83,8 +91,12 @@
                                                 );
                                                 
                                             @endphp
-                                            <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                            {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
                                             <a href="javascript:void(0);" onclick="openSecureDocument('{{ $signedUrl }}')">View File</a>
+
+                                            @if ($education->status == 2)
+                                                {!! \App\Helpers\DocumentStatus::remarks($education->remarks) !!}
+                                            @endif
                                         @endif
 
                                         <small class="text-muted d-block"><span class="text-danger">*</span>Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
@@ -173,22 +185,36 @@
         // Reset all inputs
         newCard.find('input[type="text"], input[type="hidden"], select').val('').addClass('required necessary');
         newCard.find('input[type="file"]').val('').removeAttr('data-file').removeClass('is-valid').addClass('required necessary');
-        newCard.find('i.fa-check-circle, a[href*="storage/employees"]').remove();
+
+        newCard.find('i.status-mark, a[href*="storage/employees"]').remove();
+        newCard.find('.remarks-message').remove();
+        newCard.find('img, a').remove();
+        newCard.find('.delete-icon').removeAttr('data-id');
 
         // Reset validation states
         newCard.find('.invalid-feedback').remove();
         newCard.find('.is-invalid').removeClass('is-invalid');
-
-        // Set up delete icon
-        newCard.find('.delete-icon').off('click').on('click', function() {
-            $(this).closest('.education-item').slideUp(300, function() { $(this).remove(); });
-        });
 
         $('#education-container').append(newCard.hide().slideDown(400));
 
         // Initialize datepicker for new inputs
         initDatepicker(newCard);
     }
+
+    $(document).on('click', '.education-item .delete-icon', function () {
+        let card = $(this).closest('.education-item');
+
+        let eduId = card.find('input[name="edu_ids[]"]').val();
+
+        if (eduId) {
+            if (!confirm('Are you sure you want to delete this record?')) return;
+
+            deleteEducation(eduId);
+            card.slideUp(300, function () { $(this).remove(); });
+        } else {
+            card.slideUp(300, function () { $(this).remove(); });
+        }
+    });
 
     function openSecureDocument(url) {
         $('#secureDocumentFrame').attr('src', url);

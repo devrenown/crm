@@ -1,4 +1,30 @@
-<h3>Employment</h3>
+@php
+    $employmentRejectedCount = 0;
+
+    foreach (($employeeEmployementList->workExperience ?? []) as $exp) {
+        $statuses = [
+            $exp->offer_status,
+            $exp->appointment_status,
+            $exp->experience_status,
+            $exp->relieving_status,
+            $exp->increment_status,
+            $exp->salary_status,
+            $exp->bank_status,
+        ];
+
+        foreach ($statuses as $status) {
+            if ($status == 2) {
+                $employmentRejectedCount++;
+            }
+        }
+    }
+@endphp
+
+<h3>Employment
+    @if ($employmentRejectedCount > 0)
+    <span class="position-absolute end-0 top-0 bg-danger text-white rounded-circle reject-count">{{ $employmentRejectedCount }}</span>
+    @endif
+</h3>
 <section style="overflow-y: scroll; overflow-x: hidden;">
     <form action="#" method="post" enctype="multipart/form-data" id="experience-form">
         @csrf
@@ -135,11 +161,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->offer_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Offer Letter
                                                 </a>
+
+                                                @if ($employement->offer_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->offer_remarks) !!}
+                                                @endif
 
                                             @endif
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -172,12 +202,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->appointment_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Appointment Letter
                                                 </a>
 
+                                                @if ($employement->appointment_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->appointment_remarks) !!}
+                                                @endif
                                             @endif
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
                                             &nbsp; max: 2MB</small>
@@ -187,8 +220,8 @@
                                     <div class="col-md-6">
                                         <x-form.input-block class="mb-2">
                                             <x-form.label class="mb-0" calss="focus-label">
-                                                {{ __('Experience Letter*') }}</x-form.label>
-                                            <x-form.input type="file" class="floating experience_letters {{ empty($employement->experience_letter) ? 'required' : '' }} necessary" data-file="{{ $employement->experience_letter ?? '' }}"
+                                                {{ __('Experience Letter') }}</x-form.label>
+                                            <x-form.input type="file" class="floating experience_letters" data-file="{{ $employement->experience_letter ?? '' }}"
                                                 name="experience_letters[]" accept="application/pdf" />
                                             <x-form.input type="hidden" class="old_experience_letters" value="{{ $employement->experience_letter ?? '' }}"
                                                 name="old_experience_letters[]" />
@@ -209,12 +242,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->experience_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Experience Letter
                                                 </a>
 
+                                                @if ($employement->experience_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->experience_remarks) !!}
+                                                @endif
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -225,8 +261,8 @@
                                     <div class="col-md-6">
                                         <x-form.input-block class="mb-2">
                                             <x-form.label class="mb-0" calss="focus-label">
-                                                {{ __('Relieving Letter*') }}</x-form.label>
-                                            <x-form.input type="file" class="floating relieving_letters {{ empty($employement->relieving_letter) ? 'required' : '' }} necessary" data-file="{{ $employement->relieving_letter ?? '' }}"
+                                                {{ __('Relieving Letter') }}</x-form.label>
+                                            <x-form.input type="file" class="floating relieving_letters" data-file="{{ $employement->relieving_letter ?? '' }}"
                                                 name="relieving_letters[]" accept="application/pdf" />
                                             <x-form.input type="hidden" class="old_relieving_letters" value="{{ $employement->relieving_letter ?? '' }}"
                                                 name="old_relieving_letters[]" />
@@ -246,12 +282,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->relieving_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Relieving Letter
                                                 </a>
 
+                                                @if ($employement->relieving_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->relieving_remarks) !!}
+                                                @endif
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -284,12 +323,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->increment_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Increment Letter
                                                 </a>
 
+                                                @if ($employement->increment_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->increment_remarks) !!}
+                                                @endif
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -321,12 +363,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->salary_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Salary Slip
                                                 </a>
 
+                                                @if ($employement->salary_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->salary_remarks) !!}
+                                                @endif
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -358,12 +403,15 @@
                                                     );
                                                 @endphp
 
-                                                <i class="fa-solid fa-check-circle text-success me-1"></i>
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->bank_status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Bank Statement
                                                 </a>
 
+                                                @if ($employement->bank_status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->bank_remarks) !!}
+                                                @endif
                                             @endif
 
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed
@@ -496,8 +544,8 @@
                                 <div class="col-md-6">
                                     <x-form.input-block class="mb-2">
                                         <x-form.label class="mb-0" calss="focus-label">
-                                            {{ __('Experience Letter*') }}</x-form.label>
-                                        <x-form.input type="file" class="floating experience_letters required necessary"
+                                            {{ __('Experience Letter') }}</x-form.label>
+                                        <x-form.input type="file" class="floating experience_letters"
                                             name="experience_letters[]" accept="application/pdf" />
                                         <x-form.input type="hidden" class="old_experience_letters" value=""
                                             name="old_experience_letters[]" />
@@ -510,8 +558,8 @@
                                 <div class="col-md-6">
                                     <x-form.input-block class="mb-2">
                                         <x-form.label class="mb-0" calss="focus-label">
-                                            {{ __('Relieving Letter*') }}</x-form.label>
-                                        <x-form.input type="file" class="floating relieving_letters required necessary"
+                                            {{ __('Relieving Letter') }}</x-form.label>
+                                        <x-form.input type="file" class="floating relieving_letters"
                                             name="relieving_letters[]" accept="application/pdf"  />
                                         <x-form.input type="hidden" class="old_relieving_letters" value=""
                                             name="old_relieving_letters[]" />
@@ -590,14 +638,15 @@
             // Reset all inputs
             $clone.find('input[type="text"], input[type="hidden"]').val('');
 
-            $clone.find('input[type="file"]').not('.increment_letters, .appointment_letters').each(function () {
+            $clone.find('input[type="file"]').not('.increment_letters, .appointment_letters, .relieving_letters, .experience_letters').each(function () {
                 $(this).val('');
                 $(this).removeAttr('data-file');
                 $(this).removeClass('is-valid'); // remove success visual
                 $(this).addClass('required necessary'); // enforce validation again
             });
 
-            $clone.find('i.fa-check-circle, a[href*="storage/employees"]').remove();
+            $clone.find('i.status-mark, a[href*="storage/employees"]').remove();
+            $clone.find('.remarks-message').remove();
 
             $clone.find('img, a').remove();
 
@@ -607,8 +656,8 @@
 
             // Fix delete icon → remove onclick/id and make it just remove card
             $clone.find('.delete-icon')
-                .removeAttr('onclick')   // remove deleteEducation(id)
-                .off('click')            // clear old click
+                .removeAttr('onclick')   
+                .off('click')           
                 .on('click', function () {
                     $clone.slideUp(300, function () { $(this).remove(); });
                 });

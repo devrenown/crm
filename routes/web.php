@@ -56,12 +56,10 @@ Route::get('onboarding/verify/{user_id}/{code}', [OnboardController::class, 'ver
 Route::get('organization-signup/{plan}', [OrganizationController::class, 'signup'])->name('organization.signup');
 Route::post('save-demo-request', [FrontController::class, 'saveRequest'])->name('save.demo-request');
 Route::get('privacy-policy', [FrontController::class, 'privacyPolicyView'])->name('privacy-policy');
-Route::get('terms_&_conditions', [FrontController::class, 'termsConditionsView'])->name('terms-conditions');
+Route::get('terms-conditions', [FrontController::class, 'termsConditionsView'])->name('terms-conditions');
 Route::post('contact', [FrontController::class, 'saveContact'])->name('save.contact');
 
 Route::get('feature/{slug}', [FrontController::class, 'featureDetail'])->name('feature.detail');
-
-
 
 // Cache routes
 

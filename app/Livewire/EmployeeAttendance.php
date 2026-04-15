@@ -449,80 +449,80 @@ class EmployeeAttendance extends Component
         RENDER
     ===================================================== */
 
-    public function render()
-    {
-        $tz = $this->tz();
-
-        $paginator = AttendanceTimestamp::where('user_id', auth()->id())
-            ->whereNotNull('startTime')
-            ->orderByDesc('startTime')
-            ->paginate(10, ['*'], 'page', null, 30);
-
-        $records = $paginator->getCollection()
-        ->groupBy(function ($r) use ($tz) {
-            return $r->startTime
-                ->copy()
-                ->timezone($tz)
-                ->format('Y-m-d');
-        });
-
-        $paginator->setCollection($records);
-
-        return view('livewire.employee-attendance', [
-            'attendances' => $records,
-            'attendancePaginator' => $paginator,
-
-        ]);
-    }
-    
-
     // public function render()
     // {
     //     $tz = $this->tz();
 
-    //     // ✅ Last 30 days records
-    //     $allRecords = AttendanceTimestamp::where('user_id', auth()->id())
-    //         ->where('startTime', '>=', now()->subDays(30))
+    //     $paginator = AttendanceTimestamp::where('user_id', auth()->id())
+    //         ->whereNotNull('startTime')
     //         ->orderByDesc('startTime')
-    //         ->get();
+    //         ->paginate(10, ['*'], 'page', null, 30);
 
-    //     // ✅ Group by date (keep date keys)
-    //     $grouped = $allRecords->groupBy(function ($r) use ($tz) {
+    //     $records = $paginator->getCollection()
+    //     ->groupBy(function ($r) use ($tz) {
     //         return $r->startTime
     //             ->copy()
     //             ->timezone($tz)
     //             ->format('Y-m-d');
-    //     })->sortKeysDesc();
-
-    //     // ✅ Pagination setup
-    //     $perPage = 10;
-    //     LengthAwarePaginator::currentPageResolver(function () {
-    //         return request()->get('page');
     //     });
-    //     $currentPage = request()->get('page', 1); // ✅ FIXED
 
-    //     // ✅ Slice while preserving keys
-    //     $pagedData = $grouped->slice(
-    //         ($currentPage - 1) * $perPage,
-    //         $perPage,
-    //         true // 🔥 KEEP KEYS (IMPORTANT)
-    //     );
-
-    //     $paginator = new LengthAwarePaginator(
-    //         $pagedData,
-    //         $grouped->count(), // total days
-    //         $perPage,
-    //         $currentPage,
-    //         [
-    //             'path' => request()->url(),
-    //             'pageName' => 'page',
-    //         ]
-    //     );
+    //     $paginator->setCollection($records);
 
     //     return view('livewire.employee-attendance', [
-    //         'attendances' => $pagedData,
+    //         'attendances' => $records,
     //         'attendancePaginator' => $paginator,
+
     //     ]);
     // }
+    
+
+    public function render()
+    {
+        $tz = $this->tz();
+
+        // Last 30 days records
+        $allRecords = AttendanceTimestamp::where('user_id', auth()->id())
+            ->where('startTime', '>=', now()->subDays(30))
+            ->orderByDesc('startTime')
+            ->get();
+
+        // Group by date (keep date keys)
+        $grouped = $allRecords->groupBy(function ($r) use ($tz) {
+            return $r->startTime
+                ->copy()
+                ->timezone($tz)
+                ->format('Y-m-d');
+        })->sortKeysDesc();
+
+        // Pagination setup
+        $perPage = 10;
+        LengthAwarePaginator::currentPageResolver(function () {
+            return request()->get('page');
+        });
+        $currentPage = request()->get('page', 1); 
+
+        // Slice while preserving keys
+        $pagedData = $grouped->slice(
+            ($currentPage - 1) * $perPage,
+            $perPage,
+            true // KEEP KEYS (IMPORTANT)
+        );
+
+        $paginator = new LengthAwarePaginator(
+            $pagedData,
+            $grouped->count(), // total days
+            $perPage,
+            $currentPage,
+            [
+                'path' => request()->url(),
+                'pageName' => 'page',
+            ]
+        );
+
+        return view('livewire.employee-attendance', [
+            'attendances' => $pagedData,
+            'attendancePaginator' => $paginator,
+        ]);
+    }
 
 }

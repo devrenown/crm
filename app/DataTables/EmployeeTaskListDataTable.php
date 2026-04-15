@@ -50,7 +50,7 @@ class EmployeeTaskListDataTable extends DataTable
             })
             ->addColumn('created_at', function($row){
                 if(!empty($row->created_at)){
-                    return format_date($row->created_at);
+                    return $row->created_at->format('d M Y, h:i A');
                 }
             })
             // ->addColumn('action', function($row){
