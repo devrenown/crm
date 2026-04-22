@@ -57,7 +57,10 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->where('type', '!=', UserType::EMPLOYEE)->where('type', '!=', UserType::ADMIN)->newQuery();
+        return $model->with('roles')
+        ->whereDoesntHave('roles', function ($q) {
+            $q->whereIn('name', ['Employee', 'Admin', 'Client']);
+        });
     }
 
     /**

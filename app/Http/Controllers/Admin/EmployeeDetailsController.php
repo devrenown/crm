@@ -14,6 +14,7 @@ use App\Models\EmployeeWorkExperience;
 use App\Http\Controllers\BaseController;
 use App\Traits\SecureFileUpload;
 use App\Traits\uploadFile;
+use App\Services\SaveDocumentAction;
 
 class EmployeeDetailsController extends BaseController
 {
@@ -245,7 +246,7 @@ class EmployeeDetailsController extends BaseController
                     $fileMime = $upload['mime'] ?? $fileMime;
                 }
 
-            EmployeeEducation::updateOrCreate([
+            $empEdu = EmployeeEducation::updateOrCreate([
                 'employee_detail_id' => $employeeDetail->id,
                 'id' => $education['id'] ?? null,
             ], [
@@ -258,9 +259,17 @@ class EmployeeDetailsController extends BaseController
                 'end_date'              => $education['end_date'] ?? '',
                 'file'                  => $filePath,
                 'document_mime'         => $fileMime,
-                'status'                => $education['status'] ?? '',
-                'remarks'               => $education['remarks'] ?? '',
             ]);
+
+            if (!empty($education['status'])) {
+                SaveDocumentAction::save(
+                    $empEdu,
+                    $education['course'],
+                    $education['status'],
+                    $education['remarks'],
+                    $userId
+                );
+            }
         }
         $notification = notify(__("Employee education has been added"));
         return back()->with($notification);

@@ -14,7 +14,7 @@
             <p class="text-muted">Choose the plan that best fits your business needs.</p>
         </div>
 
-        <div class="row g-4 justify-content-center">
+        <div class="row g-4">
             @foreach($plans as $plan)
             @php 
                 $features = json_decode($plan->features, true) ?? [];

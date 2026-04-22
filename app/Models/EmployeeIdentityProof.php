@@ -13,5 +13,15 @@ class EmployeeIdentityProof extends Model
     protected $tableName = 'employee_identity_proofs';
     protected $primaryKey = 'id';
     protected $foreignKey = 'user_id';
-    protected $fillable = ['user_id', 'tenant_id', 'id_name', 'id_type', 'id_number', 'image', 'document_mime', 'remarks', 'status',];
+    protected $fillable = ['user_id', 'tenant_id', 'id_name', 'id_type', 'id_number', 'image', 'document_mime'];
+
+    public function documentAction()
+    {
+        return $this->morphOne(DocumentAction::class, 'documentable');
+    }
+
+    public function getActionByAttribute()
+    {
+        return $this->documentAction?->actionBy;
+    }
 }

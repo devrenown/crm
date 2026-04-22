@@ -7,6 +7,7 @@
         background: url("{{ asset('images/features/employee-management-breadcrump.webp') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
+        padding: 80px 0;
     }
 
     .breadcrump-heading {
@@ -33,14 +34,14 @@
         <div class="container text-white">
 
             <div class="row mt-5">
-                <div class="col-12 col-md-8 col-lg-6">
+                <div class="col-12 col-md-10 col-lg-8">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        EMPLOYEE <br class="d-none d-md-block"> MANAGEMENT
+                        Employee Management  <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Manage your team with ease—track roles, performance, and employee details from one dashboard.
+                        A secure employee management CRM to handle daily HR work, from adding and maintaining employee records to tracking performance, and more - all from a single dashboard.
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -67,32 +68,32 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS EMPLOYEE</span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM?</span>
+                        <span class="text-primary">Automation That Ends </span><br>
+                        <span class="text-dark">Operational Bottlenecks</span>
                     </h2>
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        An Employee Management System is a powerful solution that helps businesses manage the complete
-                        employee lifecycle—from onboarding and role assignment to attendance, performance tracking, and
-                        payroll—all in one centralized dashboard. It simplifies HR operations, reduces manual work, and
-                        ensures better team coordination.
+                        Operational bottlenecks directly impact visibility, performance, and resource alignment. Disconnected systems, manual logging, and raw employee data cause job delays, inconsistencies in work hours/deliverables, and resource allocation blind spots. Additionally, your existing system becomes insufficient when it comes to supporting large, distributed global teams. Employee management software is a powerful automation tool for small businesses. It manages the complete employee lifecycle with minimal human intervention. It simplifies HR operations and scales as your small team expands beyond your geography.
                     </p>
-
+                        <p class="text-muted mb-4">
+                            For better workforce management, this automation software provides:
+                        </p>
+                    
                     <!-- Features -->
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Centralized employee data for easy access and management</p>
+                        <p class="mb-0 text-muted">A centralized employee data repository for easy access</p>
                     </div>
 
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Automated HR processes to save time and improve efficiency</p>
+                        <p class="mb-0 text-muted">HR process automation for time and operational efficiency</p>
                     </div>
 
                     <div class="d-flex align-items-start">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Seamless payroll and performance tracking system</p>
+                        <p class="mb-0 text-muted">A seamless tracking system for payroll and performance</p>
                     </div>
 
                 </div>
@@ -108,13 +109,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL EMPLOYEE</span><br>
-                        MANAGEMENT FEATURES
+                        <span class="text-primary">Organize Your Workforce with </span><br>
+                        Powerful CRM Features
                     </h2>
 
                     <p class="text-muted my-3">
-                        Manage your workforce efficiently with smart tools designed
-                        to simplify operations and improve productivity.
+                        Manage your workforce and elevate their performance with our employee management CRM - designed to simplify operations and improve productivity.
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -131,9 +131,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Attendance</h5>
-                                <p class="text-muted small">Track employee attendance in real-time with an accurate and
-                                    automated system. Monitor check-ins, check-outs, late entries, and working hours
-                                    without manual effort.</p>
+                                <p class="text-muted small">For small business teams, accurate management of employee check-ins is crucial. With Renown employee management software for small business with attendance tracking, you can record employee attendance without any difficulty.</p>
                             </div>
                         </div>
 
@@ -141,9 +139,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Shift</h5>
-                                <p class="text-muted small">Easily assign and manage employee shifts based on roles and
-                                    schedules. Handle multiple shifts, rotations, and timing adjustments with
-                                    flexibility.</p>
+                                <p class="text-muted small">Our employee management system tools automate shift assignments and help HRs simplify workforce scheduling without any bottlenecks.</p>
                             </div>
                         </div>
 
@@ -151,9 +147,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Designation</h5>
-                                <p class="text-muted small">Organize your workforce by defining clear roles and
-                                    designations. Maintain structured hierarchy for better responsibility tracking and
-                                    workflow clarity.</p>
+                                <p class="text-muted small">Automate the allocation of individual roles and responsibilities across your teams with our powerful CRM software. Manage and record employee designations effortlessly from a single platform.</p>
                             </div>
                         </div>
 
@@ -171,8 +165,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Holiday</h5>
-                                <p class="text-muted small">Create and manage company-wide holiday calendars. Ensure
-                                    employees stay informed about upcoming holidays and plan work schedules accordingly.
+                                <p class="text-muted small">Allow your workforce to plan their holidays efficiently by checking their attendance records and leave allocations. This ensures smooth operations for your business.
                                 </p>
                             </div>
                         </div>
@@ -181,8 +174,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Work Report</h5>
-                                <p class="text-muted small">Track daily work reports and employee activity with ease.
-                                    Monitor productivity, task progress, and performance insights in one place.</p>
+                                <p class="text-muted small">Generate detailed work reports with staff management software, empowering smarter performance tracking for employee management system users.</p>
                             </div>
                         </div>
 
@@ -198,9 +190,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">How Renown Employee Management CRM Works</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process
+                Our employment management software simplifies HR operations with intuitive navigation and smart automation. Manage your teams in four simple steps. 
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -209,29 +201,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Add Employees</h5>
-                    <p class="small">Easily add and organize employee details including roles, departments, and
-                        essential information in just a few clicks.</p>
+                    <p class="small">Easy to onboard employees to the employee management system for small teams, creating a single repository for recording their roles, departments, and other essential information.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Assign Roles & Tasks</h5>
-                    <p class="small">Define roles, set permissions, and assign tasks to ensure clear responsibilities
-                        and smooth workflow across teams.</p>
+                    <p class="small">Define specific roles, assign responsibilities, and monitor performance for clarity and smooth workflow across teams.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Track Activity</h5>
-                    <p class="small">Monitor attendance, daily activities, and performance metrics in real-time to stay
-                        updated on your team’s progress.</p>
+                    <p class="small">Monitor attendance,  leaves, performance metrics, and other day-to-day activities of your teams and stay updated on your team's progress.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Generate Reports</h5>
-                    <p class="small">Access detailed reports and insights to analyze performance, track productivity,
-                        and make informed decisions.</p>
+                    <p class="small">Generate and access performance reports using our CRM for employee management. Actionable workforce insights from such reports help with informed decisions for your company.</p>
                 </div>
 
             </div>

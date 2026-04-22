@@ -131,7 +131,8 @@ class TicketDataTable extends DataTable
         return [
             Column::make('tk_id'),
             Column::make('subject'),
-            Column::make('user')->visible(!route_is('my-tickets')),
+            // Column::make('user')->visible(!route_is('my-tickets')),
+            Column::make('user'),
             Column::make('created_at'),
             Column::make('priority'),
             Column::make('status'),

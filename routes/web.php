@@ -172,6 +172,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('my-tickets', [TicketsController::class, 'assignedTickets'])->name('my-tickets');
         Route::get('my-tickets/{ticket}', [TicketsController::class, 'show'])->name('my-tickets.show');
         Route::post('assign-ticket', [TicketsController::class, 'assignUser'])->name('ticket.assign-user');
+        Route::delete('delete-ticket-file/{file}', [TicketsController::class, 'destroyTicketFile'])->name('ticket-file.destroy');
 
         Route::get('app-logs', fn() => redirect()->to('log-viewer'))->name('app.logs');
 

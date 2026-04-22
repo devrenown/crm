@@ -404,8 +404,8 @@
                                     <a href="javascript:void(0);"
                                       onclick="openSecureDocument('{{ $signedUrl }}')"
                                       class="d-block mt-1">
-                                        {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
-                                        {{ __('View File') }}
+                                        {!! \App\Helpers\DocumentStatus::statusBadge($education->documentAction?->status) !!}
+                                        {{ __('View File') }} @if($education->actionBy) <smallm class="text-muted text-sm">{{ '(By ' . $education->actionBy?->fullname . ')' }}</small> @endif
                                     </a>
 
                                 @endif

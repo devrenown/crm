@@ -60,7 +60,7 @@ class TenantService
                 'plan_id' 		=> $plan->id ?? 1,
                 'start_date' 	=> now(),
                 'end_date' 		=> now()->addDays((int)$plan->duration),
-                'status' 		=> 1, // Active
+                'status' 		=> 1,
             ]);
 
             app()->forgetInstance('creating_tenant');

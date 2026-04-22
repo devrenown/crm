@@ -19,7 +19,7 @@
                         </h3>
                         <div class="row">
                           
-                          <div class="col-md-6">
+                            <div class="col-md-6">
                                 <x-form.label class="mb-0"> {{ __('Course/Certification') }}</x-form.label>
                                 <select class="form-select form-control courses required necessary mb-0" name="course">
                                     <option value="10th" {{ $education->course == '10th' ? 'selected' : '' }}>10th</option>
@@ -67,52 +67,64 @@
                                     </div>
                                 </x-form.input-block>
                             </div>
-                            <div class="col-md-6 document-block">
-                                <x-form.input-block>
-                                    <x-form.label> {{ __('File') }}</x-form.label>
-                                    <x-form.input type="file" name="file" />
-                                    <input type="hidden" name="old_file" value="{{ $education->file ?? '' }}">
 
-                                    @if(!empty($education->file))
-                                        @php
-                                            $signedUrl = URL::signedRoute(
-                                                'secure.document.view',
-                                                [
-                                                    'path'     => encrypt($education->file),
-                                                    'mime'     => $education->document_mime ?? 'application/pdf',
-                                                    'filename' => basename($education->file),
-                                                    'mode'     => 'watermark'
-                                                ],
-                                                now()->addMinutes(5)
-                                            );
-                                        @endphp
+                            <div class="row pe-0 document-block">
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <a href="javascript:void(0);"
-                                                    onclick="openSecureDocument('{{ $signedUrl }}')"
-                                                    class="d-block mt-1 view-edu-file">
-                                                    {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
-                                                    View File
-                                                </a>
+                                <div class="col-md-6">
+                                    <x-form.input-block>
+                                        <x-form.label> {{ __('File') }}</x-form.label>
+                                        <x-form.input type="file" name="file" />
+                                        <input type="hidden" name="old_file" value="{{ $education->file ?? '' }}">
+
+                                        @if(!empty($education->file))
+                                            @php
+                                                $signedUrl = URL::signedRoute(
+                                                    'secure.document.view',
+                                                    [
+                                                        'path'     => encrypt($education->file),
+                                                        'mime'     => $education->document_mime ?? 'application/pdf',
+                                                        'filename' => basename($education->file),
+                                                        'mode'     => 'watermark'
+                                                    ],
+                                                    now()->addMinutes(5)
+                                                );
+                                            @endphp
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <a href="javascript:void(0);"
+                                                        onclick="openSecureDocument('{{ $signedUrl }}')"
+                                                        class="d-block mt-1 view-edu-file">
+                                                        {!! \App\Helpers\DocumentStatus::statusBadge($education->documentAction?->status) !!}
+                                                        View File
+                                                    </a>
+                                                </div>
+
                                             </div>
 
-                                            <div class="col-md-6 mt-1">
-                                                <select class="form-control form-select status-dropdown" name="status">
-                                                    <option value="0" {{ $education->status == 0 ? 'selected' : '' }}>Pending</option>
-                                                    <option value="1" {{ $education->status == 1 ? 'selected' : '' }}>Verified</option>
-                                                    <option value="2" {{ $education->status == 2 ? 'selected' : '' }}>Rejected</option>
-                                                </select>
-                                            </div>
+                                        @endif
+                                    </x-form.input-block>
+                                </div>
 
-                                            <div class="col-12 remarks-container" style="{{ $education->status == 2 ? '' : 'display:none;' }}">
-                                                <span>Remarks</span> 
-                                                <input type="text" value="{{ @$education->remarks ?? '' }}" name="remarks" class="form-control">
-                                            </div>
-                                        </div>
+                                <div class="col-md-6 document-action">
+                                    <x-form.label> {{ __('Document Status') }}</x-form.label>
+                                    <div>
+                                        <select class="form-control form-select status-dropdown" name="status">
+                                            <option value="0" {{ $education->documentAction?->status == 0 ? 'selected' : '' }}>Pending</option>
+                                            <option value="1" {{ $education->documentAction?->status == 1 ? 'selected' : '' }}>Verified</option>
+                                            <option value="2" {{ $education->documentAction?->status == 2 ? 'selected' : '' }}>Rejected</option>
+                                        </select>
+                                    </div>
 
+                                    <div class="remarks-container" style="{{ $education->documentAction?->status == 2 ? '' : 'display:none;' }}">
+                                        <span>Remarks</span> 
+                                        <input type="text" value="{{ @$education->documentAction?->remark ?? '' }}" name="remarks" class="form-control">
+                                    </div>
+
+                                    @if ($education->actionBy)
+                                    <small class="text-muted">By {{ $education->actionBy?->fullname .' ('. tz($education->documentAction?->action_at, 'd M Y' ) . ')'}}</small>
                                     @endif
-                                </x-form.input-block>
+                                </div>
                             </div>
                         </div>
                     </div>  
@@ -192,13 +204,28 @@
           <a href="javascript:void(0);" data-repeater-create type="button"><i class="fa fa-plus-circle"></i> {{ __('Add More') }}</a>
       </div>
       <div class="submit-section my-3">
-          <button class="btn btn-primary submit-btn">{{ __('Submit') }}</button>
+          <button type="submit" id="eduSaveBtn" class="btn btn-primary submit-btn">
+            <span class="btn-text">Submit</span>
+            <span class="btn-loader" style="display:none;">
+                <i class="fa fa-spinner fa-spin"></i> Saving...
+            </span>
+        </button>
       </div>
   </form>
 </div>
 
 <script type="module" defer>
   $(document).ready(function(){
+
+    $('.repeater').on('submit', function () {
+
+        let btn = $('#eduSaveBtn');
+
+        btn.prop('disabled', true);
+        btn.find('.btn-text').hide();
+        btn.find('.btn-loader').show();
+
+    });
 
     $('.repeater').repeater({
 
@@ -207,6 +234,7 @@
             // Remove DB delete button from cloned row
             $(this).find('.deleteBtn').remove();
             $(this).find('.view-edu-file').remove();
+            $(this).find('.document-action').remove();
 
             // Add repeater delete button if not exists
             if ($(this).find('.repeater-delete').length === 0) {

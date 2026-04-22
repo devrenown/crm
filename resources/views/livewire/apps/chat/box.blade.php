@@ -46,15 +46,15 @@
                     <div class="chat-wrap-inner" x-data id="chatContent">
                         <div class="chat-box">
                             <div class="chats">
-                                @if (!empty($messages) > 0)
+                                @if ($messages && $messages->count() > 0)
                                 @foreach ($messages as $message)
-                                    @if (auth()->user()->id === $message->user_id)
+                                    @if (auth()->user()->id == $message->user_id)
                                     <div class="chat chat-right">
                                         <div class="chat-body">
                                             <div class="chat-bubble">
                                                 <div class="chat-content">
                                                     <p>{{ $message->body }}</p>
-                                                    <span class="chat-time">{{ format_date($message->created_at, 'H:i a') }}</span>
+                                                    <span class="chat-time">{{ tz($message->created_at, 'H:i a') }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -71,7 +71,7 @@
                                             <div class="chat-bubble">
                                                 <div class="chat-content">
                                                     {{ $message->body }}
-                                                    <span class="chat-time">{{ format_date($message->created_at,'H:i a') }}</span>
+                                                    <span class="chat-time">{{ tz($message->created_at,'H:i a') }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -113,8 +113,22 @@
                 </div>
             </div>
             @else
-            <div class="d-flex align-items-center justify-content-center my-5">
-                <h4 class="text-info">Select User to Chat</h4>
+            <div class="d-flex align-items-center justify-content-center flex-column text-center h-100" style="min-height: 70vh;">
+    
+                <div class="mb-4">
+                    <img src="{{ asset('images/chat-empty.png') }}" alt="No Chat Selected" style="max-width: 220px; opacity: 0.8;">
+                </div>
+
+                <h3 class="fw-bold mb-2">{{ __('Start a Conversation') }}</h3>
+                
+                <p class="text-muted mb-4" style="max-width: 400px;">
+                    {{ __('Select a user from the list to start chatting and exchange messages in real-time.') }}
+                </p>
+
+                <div>
+                    <i class="fa-regular fa-comments fa-3x text-primary opacity-50"></i>
+                </div>
+
             </div>
             @endif       
         </div>
@@ -144,7 +158,7 @@
                                 <div class="table-content">
                                     <div class="chat-profile-img">
                                         <div class="edit-profile-img">
-                                            <img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
+                                            <img src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}" style="object-fit: cover;">
                                             <span class="change-img">Change Image</span>
                                         </div>
                                         <h3 class="user-name m-t-10 mb-0">{{ $user->fullname }}</h3>
@@ -163,7 +177,7 @@
                                             @if (!empty($user->dob))
                                                 <li>
                                                     <span>{{ __('DOB') }}:</span>
-                                                    <span class="float-end text-muted">{{ format_date($user->employeeDetail->dob) }}                                                    </span>
+                                                    <span class="float-end text-muted">{{ format_date($user->employeeDetail->dob) }}</span>
                                                 </li>
                                             @endif
                                             @if (!empty($user->email))

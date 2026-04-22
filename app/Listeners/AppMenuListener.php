@@ -49,21 +49,9 @@ class AppMenuListener
                        '</span>';
             }
 
-            $menu->submenu(
-                Html::raw(
-                    '<a href="#" class="' . $activeClass . '">
-                        ' . $badge . '
-                        <i class="la la-cube"></i>
-                        <span>' . __('Apps') . '</span>
-                        <span class="menu-arrow"></span>
-                    </a>'
-                ),
-                Menu::new()
-                    ->add(
-                        Link::toRoute('app.chat', __('Chat'))
-                            ->addClass(route_is(['app.chat']) ? 'active' : '')
-                    )
-                    ->addParentClass('submenu')
+            $menu->add(
+                Link::toRoute('app.chat', '<div>' . $badge . '<i class="lab la-rocketchat"></i> <span>'. __('Chat') . '</span></div>')
+                    ->setActive(route_is('app.chat'))
             );
         }
 

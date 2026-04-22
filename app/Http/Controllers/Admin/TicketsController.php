@@ -13,6 +13,7 @@ use App\DataTables\TicketDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class TicketsController extends Controller
 {
@@ -66,11 +67,13 @@ class TicketsController extends Controller
             'endDate' => $request->endDate
         ]);
         $ticketFiles = $request->ticketFiles ?? [];
-        if(!empty($ticketFiles) && $request->hasFile('ticketFiles') && count($ticketFiles) > 0){
-            foreach($ticketFiles as $file){
+
+        if ($request->hasFile('ticketFiles')) {
+            foreach ($request->file('ticketFiles') as $file) {
                 $ticket->addMedia($file)->toMediaCollection('ticket-attachments');
             }
         }
+
         if ($request->user) {
             $user = User::findOrFail($request->user);
            Mail::to($user->email)
@@ -165,8 +168,8 @@ class TicketsController extends Controller
             'endDate' => $request->endDate
         ]);
         $ticketFiles = $request->ticketFiles ?? [];
-        if(!empty($ticketFiles) && $request->hasFile('ticketFiles') && count($ticketFiles) > 0){
-            $ticket->getMedia('ticket-attachments')->delete();
+        if($request->hasFile('ticketFiles')){
+            // $ticket->clearMediaCollection('ticket-attachments');
             foreach($ticketFiles as $file){
                 $ticket->addMedia($file)->toMediaCollection('ticket-attachments');
             }
@@ -182,6 +185,12 @@ class TicketsController extends Controller
     {
         $ticket->delete();
         $notification = notify(__('Ticket has been deleted'));
+        return back()->with($notification);
+    }
+
+    public function destroyTicketFile(Media $file){
+        $file->delete();
+        $notification = notify(__('Ticket file has been deleted'));
         return back()->with($notification);
     }
 }

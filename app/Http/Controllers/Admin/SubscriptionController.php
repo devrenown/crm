@@ -30,7 +30,7 @@ class SubscriptionController extends Controller
 
         $currency = DB::table('currencies')->where('code', $currencyCode)->first();
 
-        $plans = Plan::all()->map(function ($plan) use ($rate) {
+        $plans = Plan::where('status', 1)->get()->map(function ($plan) use ($rate) {
             $plan->display_price = round($plan->price * $rate, 2);
             return $plan;
         });

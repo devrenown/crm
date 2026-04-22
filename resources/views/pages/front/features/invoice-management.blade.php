@@ -7,6 +7,7 @@
         background: url("{{ asset('images/features/feature-invoice-breadc.webp') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
+        padding: 80px 0;
     }
 
     .breadcrump-heading {
@@ -27,14 +28,14 @@
         <div class="container text-white">
 
             <div class="row mt-5">
-                <div class="col-12 col-md-8 col-lg-6">
+                <div class="col-12 col-md-10 col-lg-8">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        INVOICE <br class="d-none d-md-block"> MANAGEMENT
+                        Invoice Management <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Create, send, and track invoices effortlessly while managing payments and financial records—all from one powerful platform.
+                        Keep your entire billing workflow streamlined with Renown's advanced invoice management software. Stay organised, improve cash flow visibility, and manage client billing across projects.
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -61,29 +62,33 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS INVOICE</span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM?</span>
+                        <span class="text-primary">Smart Billing with a </span><br>
+                        <span class="text-dark">CRM Invoice System</span>
                     </h2>
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        An Invoice Management System helps businesses create, manage, and track invoices efficiently. It streamlines the billing process, reduces manual errors, and ensures accurate financial records. With everything in one place, you can stay on top of payments and improve cash flow. An Invoice Management System .
+                        A powerful management software that helps small businesses and startups streamline billing and improve financial visibility. It centralises invoicing workflow, from capturing client data to generating accurate invoices, accelerating approvals and tracking cash flow in real-time. In simple words, Renown CRM scales up how invoices are created, managed, and monitored, adapting to your operations while keeping everything organised, compliant, and accessible from a single dashboard.
                     </p>
 
                     <!-- Features -->
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Easy invoice creation</p>
+                        <p class="mb-0 text-muted">Centralised billing control</p>
                     </div>
 
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Real-time payment tracking</p>
+                        <p class="mb-0 text-muted">Real-time visibility</p>
                     </div>
 
                     <div class="d-flex align-items-start">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Organized billing records</p>
+                        <p class="mb-0 text-muted">Smart workflow automation</p>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
+                        <p class="mb-0 text-muted">Seamless client syncing</p>
                     </div>
 
                 </div>
@@ -99,12 +104,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL INVOICE</span><br>
-                        MANAGEMENT FEATURES
+                        <span class="text-primary">Accelerate Payment Cycles </span><br>
+                        with Automated Invoicing
                     </h2>
 
                     <p class="text-muted my-3">
-                       Manage your workforce efficiently with smart tools designed to simplify operations, improve productivity, and give you full control over your team.
+                       Manual invoicing includes multiple errors that create approval bottlenecks and delays payments. With our online invoice management system, you can accelerate payment cycles and easily handle increased billing volumes. 
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -121,7 +126,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Invoice Creation</h5>
-                                <p class="text-muted small">Create professional invoices quickly with all essential details including client information, products/services, pricing, and taxes.</p>
+                                <p class="text-muted small">Generate accurate and professional invoices faster with our predefined and structured billing templates.</p>
                             </div>
                         </div>
 
@@ -129,7 +134,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Invoice Customization</h5>
-                                <p class="text-muted small">Customize invoice templates with your company logo, branding, and personalized details for a professional look.</p>
+                                <p class="text-muted small">Personalise invoices based on your brand guidelines, with flexible formats tailored to the unique needs of businesses.</p>
                             </div>
                         </div>
 
@@ -137,7 +142,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Payment Tracking</h5>
-                                <p class="text-muted small">Track invoice status in real-time with clear labels such as Paid, Pending, or Overdue to stay updated on payments.</p>
+                                <p class="text-muted small">Monitor invoice status, payments, cash flows, and dues in real-time with our invoice monitoring system tracking feature.</p>
                             </div>
                         </div>
 
@@ -145,7 +150,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-people fs-2 icon-box"></i>
                                 <h5 class="mt-3">Automated Billing</h5>
-                                <p class="text-muted small">Set up recurring invoices and automate billing processes to save time and reduce manual work.
+                                <p class="text-muted small">Automate recurring invoices, set reminders, and accelerate billing workflows to reduce manual errors and approval delays.
                                 </p>
                             </div>
                         </div>
@@ -154,7 +159,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Tax & Discount Management</h5>
-                                <p class="text-muted small">Easily apply taxes, discounts, and adjustments to ensure accurate billing calculations.
+                                <p class="text-muted small">Manage line items, tasks, discounts, and subscription billing efficiently with our smart billing management system.
                                 </p>
                             </div>
                         </div>
@@ -163,7 +168,8 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Client Integration</h5>
-                                <p class="text-muted small">Link invoices with client details to maintain organized records and better manage billing history.</p>
+                                <p class="text-muted small">Sync client data seamlessly to accelerate their invoicing, stay compliant, and improve relationships through management workflows.
+                                </p>
                             </div>
                         </div>
 
@@ -179,9 +185,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">Master Your Invoice Management Process in Four Steps</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process designed for maximum efficiency.
+                For small businesses, our invoice management tool is the best choice. It is simple and navigation-friendly. Creating, sharing, and tracking invoices becomes much faster through automation. Start managing your billing operations like a professional - from day one.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -190,25 +196,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Create Invoice</h5>
-                    <p class="small">Add client details, products or services, pricing, and taxes to generate a professional invoice in minutes.</p>
+                    <p class="small">Easily generate invoices using structured templates that are tailored to your business billing requirements.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Send to Client</h5>
-                    <p class="small">Share invoices instantly with clients via email or directly through the system for quick delivery.</p>
+                    <p class="small">Keep your clients happy by eliminating approval and invoice processing delays. Accelerate payments through integrated channels.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Track Payments</h5>
-                    <p class="small">Monitor payment status in real-time and stay updated on pending, paid, or overdue invoices.</p>
+                    <p class="small">Our invoice monitoring system updates you on client payments with real-time tracking and automated status notifications.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Manage & Analyze</h5>
-                    <p class="small">Maintain records and analyze reports to improve financial planning and decision-making.</p>
+                    <p class="small">Access insights, manage records, and analyse billing performance for better financial decision making.</p>
                 </div>
 
             </div>

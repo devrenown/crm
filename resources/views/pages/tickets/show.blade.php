@@ -81,8 +81,8 @@
                                                                 <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
                                                                 <div class="dropdown-menu dropdown-menu-right">
                                                                     <a class="dropdown-item" href="{{ $file->getFullUrl() }}" download="">{{ __('Download') }}</a>
-                                                                    <a class="dropdown-item deleteBtn" href="javascript:void(0)" data-route="{{ route('project-file.destroy', $file->id) }}" data-title="Delete Project File"
-                                                                        data-question="Are you sure you want to delete project file?">{{ __('Delete') }}</a>
+                                                                    <a class="dropdown-item deleteBtn" href="javascript:void(0)" data-route="{{ route('ticket-file.destroy', $file->id) }}" data-title="Delete Ticket File"
+                                                                        data-question="Are you sure you want to delete ticket file?">{{ __('Delete') }}</a>
                                                                 </div>
                                                             </li>
                                                         </ul>

@@ -36,11 +36,11 @@
                 <div class="col-12 col-md-8 col-lg-6">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        PAYROLL <br class="d-none d-md-block"> MANAGEMENT
+                        Payroll Management <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Automate salary processing, manage deductions, and generate payslips effortlessly—all from one centralized system.
+                        Transform your outdated payroll system and automate the entire workflow from one unified platform.
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -67,29 +67,29 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS PROJECT </span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM ?</span>
+                        <span class="text-primary">Streamline Payroll Operations</span><br>
+                        <span class="text-dark">with Renown CRM</span>
                     </h2>
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A Payroll Management System helps businesses manage employee salaries, deductions, bonuses, and payslips efficiently. It automates complex calculations, ensures accuracy, and reduces manual workload while maintaining compliance. A Payroll Management System helps businesses manage employee salaries, deductions, bonuses, and payslips efficiently.  
+                       Simplify the entire payroll cycle and save valuable HR hours wasted on manual data entry and reconciliations. Renown’s online payroll system is easily scalable. It helps small businesses not only handle salaries, compliance, and employee records from one place, but it can also accommodate new payroll for future hires. It supports growing teams, creates structured processes, accelerates workflows, and provides better visibility across every payroll cycle.  
                     </p>
 
                     <!-- Features -->
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Automated salary processing</p>
+                        <p class="mb-0 text-muted">Centralised employee and payroll data</p>
                     </div>
 
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Accurate calculations</p>
+                        <p class="mb-0 text-muted">Structured salary and payment workflows</p>
                     </div>
 
                     <div class="d-flex align-items-start">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Centralized payroll records</p>
+                        <p class="mb-0 text-muted">Clear visibility into payroll operations</p>
                     </div>
 
                 </div>
@@ -105,12 +105,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL PAYROLL</span><br>
-                        MANAGEMENT FEATURES
+                        <span class="text-primary">Renown Payroll Software -</span><br>
+                        Built for Accuracy
                     </h2>
 
                     <p class="text-muted my-3">
-                      Manage your workforce efficiently with smart tools designed to simplify operations, improve productivity, and give you full control over your team.
+                     Keep your payroll processes consistent, accurate, and compliant with Renown’s payroll management system. Automate workflows and reduce manual errors by upto 30%, delivering a positive payroll experience to your employees. 
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -127,7 +127,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Salary Management</h5>
-                                <p class="text-muted small">Easily define and manage employee salary structures, including basic pay, allowances, and bonuses.</p>
+                                <p class="text-muted small">Manage your employee payroll workflow with our payroll management system. Leverage the platform to clearly define salary structure, allowances and bonuses, and eliminate calculation errors through automation.</p>
                             </div>
                         </div>
 
@@ -135,7 +135,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Automated Payroll Processing</h5>
-                                <p class="text-muted small">Generate payroll automatically based on attendance, leaves, and defined salary rules.</p>
+                                <p class="text-muted small">Manual data entry, compliance checks, and reconciliation are time-intensive HR workflows. On our payroll management software, you can eliminate manual work and reduce salary processing time through automation.</p>
                             </div>
                         </div>
 
@@ -143,7 +143,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Deductions & Compliance</h5>
-                                <p class="text-muted small">Handle taxes, PF, and other deductions accurately while ensuring compliance with regulations.</p>
+                                <p class="text-muted small">The software system automatically updates different laws (tax laws/TDS and labor laws/PF, ESI. This helps your HR team to generate compliance reports, handle deductions and taxes and reduce risks of penalties.</p>
                             </div>
                         </div>
 
@@ -151,7 +151,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-people fs-2 icon-box"></i>
                                 <h5 class="mt-3">Payslip Generation</h5>
-                                <p class="text-muted small">Generate and share detailed payslips with employees in just a few clicks.
+                                <p class="text-muted small">Payslips are essential documents, serving as a digital proof of employment. The HR department can use Renown CRM to automate, generate, and share detailed payslips with their employees and build trust on ther company.
                                 </p>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Attendance Integration</h5>
-                                <p class="text-muted small">Integrate attendance and leave data directly into payroll calculations for accuracy.
+                                <p class="text-muted small">The HR department can quickly sync employee attendance data directly into our payroll CRM. Data centralisation builds collaboration between teams, ensures accurate salary calculations and eliminates any manual adjustments.
                                 </p>
                             </div>
                         </div>
@@ -169,7 +169,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Reports & Analytics</h5>
-                                <p class="text-muted small">Access payroll reports, salary summaries, and insights for better financial planning.</p>
+                                <p class="text-muted small">Respective department heads can easily access attendance and payroll reports and analytics because our payroll system has an integrated employee management feature. This helps managers track expenses, trends, and improve decision-making.</p>
                             </div>
                         </div>
 
@@ -185,9 +185,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">How Renown Payroll CRM Works</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process designed for maximum efficiency.
+                Renown’s simple payroll software connects employee management and teams, helping HR, finance, and payroll collaborate and accelerate the payroll process. Get started quickly in four simple steps.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -196,25 +196,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Set Salary Structure</h5>
-                    <p class="small">Define employee salaries, allowances, and deduction rules to create a clear payroll structure.</p>
+                    <p class="small">Define employee salary components, allowances, and payment rules before processing payroll cycles.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Track Attendance & Data</h5>
-                    <p class="small">Collect attendance, leave, and work data to ensure accurate salary calculations.</p>
+                    <p class="small">Capture attendance and employee data to ensure accurate payroll inputs every month.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Process Payroll</h5>
-                    <p class="small">Automatically calculate salaries, deductions, and bonuses with precision.</p>
+                    <p class="small">Run payroll calculations automatically based on defined structures and real-time employee data.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Generate Payslips</h5>
-                    <p class="small">Create and share payslips while maintaining records for reporting and compliance.</p>
+                    <p class="small">Create and distribute payslips to employees instantly through the payroll management software.</p>
                 </div>
 
             </div>

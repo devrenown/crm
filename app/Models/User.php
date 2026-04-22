@@ -146,7 +146,7 @@ class User extends Authenticatable
                 $firstPunchRecord = $records->sortBy('created_at')->first();
                 $punchIn = Carbon::parse($firstPunchRecord->startDate)->timezone($tz);
                 $shiftStart = Carbon::parse($punchIn->toDateString() . ' ' . $shift->start_time, $tz);
-                $graceEnd = $shiftStart->copy()->addMinutes((int)$graceMinutes);
+                $graceEnd = $shiftStart->copy()->addMinutes((int)$graceMinutes + 1);
 
                 return $punchIn->greaterThan($graceEnd);
             })

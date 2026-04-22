@@ -59,7 +59,7 @@ class Box extends Component
 public function refreshMessages()
 {
     $this->dispatch('scroll-chat');
-    $this->reset(); // forces component refresh
+    $this->reset('messageBody');// forces component refresh
 }
 
    public function fetchMessages()
@@ -99,10 +99,10 @@ public function refreshMessages()
 
         if(!empty($this->userId)){
             $user = $this->getUser();
-            $messages = $this->fetchMessages()
-                        ->get();
-            $lastMessage = $this->fetchMessages()->latest()->first();
+            $query = $this->fetchMessages();
 
+            $messages = $query->get();
+            $lastMessage = (clone $query)->latest()->first();
         }
         return view('livewire.apps.chat.box',compact(
             'user','lastMessage','messages'

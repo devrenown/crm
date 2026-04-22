@@ -7,6 +7,7 @@
         background: url("{{ asset('images/features/feature-client-breadc.webp') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
+        padding: 80px 0;
     }
 
     .breadcrump-heading {
@@ -27,14 +28,14 @@
         <div class="container text-white">
 
             <div class="row mt-5">
-                <div class="col-12 col-md-8 col-lg-6">
+                <div class="col-12 col-md-10 col-lg-8">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        CLIENT <br class="d-none d-md-block"> MANAGEMENT
+                        Client Management <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Organize client data, track interactions, and build strong relationships—all in one powerful platform.
+                        Turn leads into loyal, brand advocates with personalized, data-driven engagement - all from one powerful CRM software.
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -61,29 +62,33 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS CLIENT</span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM?</span>
-                    </h2>
+                        <span class="text-primary">Build Stronger Relationships</span><br>
+                        <span class="text-dark">with Automated Client Tracking</span>
+                    </h2>  
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A Client Management System helps businesses manage client information, track communication, and maintain strong relationships efficiently. It centralizes all client data and interactions, making it easier to stay organized and deliver better service. A Client Management System helps businesses manage client 
+                        Renown’s client management software for small businesses helps improve communication with clients by automating lead tracking, reminders, and follow-ups. This powerful software system streamlines workflows for your teams, frees up time from manual work, eliminates human errors and prevents missed opportunities for your business. Small teams can easily manage multiple clients and leads while maintaining personalized engagement and building stronger relationships with them. This client management system improves efficiency across every stage of the client journey. 
                     </p>
 
                     <!-- Features -->
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Centralized client database</p>
+                        <p class="mb-0 text-muted">Centralized database</p>
                     </div>
 
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Better communication tracking</p>
+                        <p class="mb-0 text-muted">Automated communication tracking</p>
                     </div>
 
-                    <div class="d-flex align-items-start">
+                    <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
-                        <p class="mb-0 text-muted">Improved relationship management</p>
+                        <p class="mb-0 text-muted">Personalized engagement</p>
+                    </div>
+                     <div class="d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i>
+                        <p class="mb-0 text-muted">Streamlined workflows</p>
                     </div>
 
                 </div>
@@ -99,12 +104,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL CLIENT</span><br>
-                        MANAGEMENT FEATURES
-                    </h2>
+                        <span class="text-primary">Boost Conversions with Powerful CRM</span><br>
+                         Software Features
+                    </h2> 
 
                     <p class="text-muted my-3">
-                        Manage your workforce efficiently with smart tools designed to simplify operations, improve productivity, and give you full control over your team.
+                        Renown’s customer management software creates a data repository that allows teams to make informed decisions, improve forecasting, and enhance engagement with clients at every stage of the funnel.  Remove bottlenecks and improve conversions for your business.
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -121,7 +126,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Client Database</h5>
-                                <p class="text-muted small">Store and manage complete client information including contact details, company info, and history.</p>
+                                <p class="text-muted small">Centralized client records help simplify data access and management for small businesses.</p>
                             </div>
                         </div>
 
@@ -129,7 +134,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Contact Management</h5>
-                                <p class="text-muted small">Organize client contacts and keep all communication details in one place.</p>
+                                <p class="text-muted small">Our CRM software keeps your leads and their details organized. This helps to improve communication and engagement.</p>
                             </div>
                         </div>
 
@@ -137,7 +142,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Interaction Tracking</h5>
-                                <p class="text-muted small">Track calls, meetings, emails, and follow-ups to maintain clear communication history.</p>
+                                <p class="text-muted small">Track client interaction history to improve communication and better relationships.</p>
                             </div>
                         </div>
 
@@ -145,7 +150,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-people fs-2 icon-box"></i>
                                 <h5 class="mt-3">Task & Follow-Up Management</h5>
-                                <p class="text-muted small">Set reminders, assign follow-ups, and ensure timely communication with clients.
+                                <p class="text-muted small">Automate manual tasks and follow-ups to help teams with improved conversion efficiency.
                                 </p>
                             </div>
                         </div>
@@ -154,7 +159,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Document Management</h5>
-                                <p class="text-muted small">Store and share client-related documents securely in one place.
+                                <p class="text-muted small">Securely store and access client documents from a single dashboard to help streamline workflows for small teams.
                                 </p>
                             </div>
                         </div>
@@ -163,7 +168,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Notes & Activity Logs</h5>
-                                <p class="text-muted small">Add notes and maintain a record of all client interactions and updates.</p>
+                                <p class="text-muted small">Our client tracking software for small teams helps maintain detailed logs of every client interaction and their status.</p>
                             </div>
                         </div>
 
@@ -179,9 +184,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">How Our Customer Management Software Works</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process designed for maximum efficiency.
+                Our client management system offers intuitive navigation, helping your team to onboard with the platform in four simple steps. 
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -190,25 +195,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Add Client Details</h5>
-                    <p class="small">Enter client information including contact details, company data, and requirements.</p>
+                    <p class="small">Easy to add client data on the software system to create a repository for easy access and data-driven engagement.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Track Interactions</h5>
-                    <p class="small">Log calls, meetings, and communications to maintain a complete history.</p>
+                    <p class="small">Monitor every interaction with respective clients and improve future communications with personalized messaging.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Manage Tasks & Follow-Ups</h5>
-                    <p class="small">Assign tasks, set reminders, and ensure timely follow-ups with clients.</p>
+                    <p class="small">Automate entry of client data and their status with our tracking software. Prevent any missed opportunity for your business.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Analyze & Improve</h5>
-                    <p class="small">Review reports and insights to improve client relationships and business outcomes.</p>
+                    <p class="small">Leverage data and analytics to manage leads and boost conversions with value-driven insights.</p>
                 </div>
 
             </div>

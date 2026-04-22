@@ -53,6 +53,21 @@ class FrontController extends Controller
         ]);
     }
 
+    Mail::send([], [], function ($message) use ($validate) {
+        $message->to('support@renownsystem.com')
+                ->cc('connect2rgteam@gmail.com')
+            ->subject('New Demo Request Form Submission')
+            ->html("
+                <h2>New Demo Request Message (Renown System)</h2>
+                <p><strong>Name:</strong> {$validate['r_name']}</p>
+                <p><strong>Organization Name:</strong> {$validate['r_organization']}</p>
+                <p><strong>Company Size:</strong> {$validate['r_company_size']}</p>
+                <p><strong>Email:</strong> {$validate['r_email']}</p>
+                <p><strong>Contact:</strong> {$validate['r_contact']}</p>
+                <p><strong>Additional Note:</strong> " . ($request->additional ?? 'N/A') . "</p>
+            ");
+    });
+
     return response()->json([
         'success' => true,
         'msg'     => 'Request Sent Successfully',
@@ -102,9 +117,10 @@ class FrontController extends Controller
 
     Mail::send([], [], function ($message) use ($request) {
         $message->to('support@renownsystem.com')
+                ->cc('connect2rgteam@gmail.com')
                 ->subject('New Contact Form Submission')
                 ->html("
-                    <h2>New Contact Message</h2>
+                    <h2>New Contact Message (Renown System)</h2>
                     <p><strong>Name:</strong> {$request->name}</p>
                     <p><strong>Email:</strong> {$request->email}</p>
                     <p><strong>Phone:</strong> {$request->phone}</p>

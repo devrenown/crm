@@ -127,7 +127,6 @@ class EmployeeAttendance extends Component
 
         } catch (\Exception $e) {
             $this->dispatch('Notification', __('Something went wrong'));
-
         }
 
     }
@@ -136,8 +135,6 @@ class EmployeeAttendance extends Component
     /* =====================================================
         TODAY ACTIVITY
     ===================================================== */
-
-
 
     #[On('refreshAttendance')]
 

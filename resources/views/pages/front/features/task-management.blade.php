@@ -7,6 +7,7 @@
         background: url("{{ asset('images/features/feature-task-breadc.webp') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
+        padding: 80px 0;
     }
 
     .breadcrump-heading {
@@ -33,14 +34,14 @@
         <div class="container text-white">
 
             <div class="row mt-5">
-                <div class="col-12 col-md-8 col-lg-6">
+                <div class="col-12 col-md-10 col-lg-8">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        TASK <br class="d-none d-md-block"> MANAGEMENT
+                       Task Management <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Plan, assign, and track tasks effortlessly while keeping your entire team aligned and productive.
+                        Empower teams with Renown’s task management system, designed for small businesses. Now you can streamline workflows, track progress, and keep your team organized for better productivity.
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -67,13 +68,13 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS TASK </span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM?</span>
-                    </h2>
+                        <span class="text-primary">Develop Team Accountability</span><br>
+                        <span class="text-dark">With Task Tracking Software</span>
+                    </h2> 
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A Task Management System helps you organize, assign, and track tasks efficiently across your team. It ensures clear communication, better accountability, and timely completion of work—all from a single platform. With a structured task management system, teams can break down complex projects into manageable tasks, assign responsibilities, and track progress with ease. 
+                       Replace scattered spreadsheets with structured workflows. Our employee task management system helps B2B teams work in a collaborative ecosystem, where the accountability of each member is easily traceable. Efficiency, productivity and performance are greatly improved. With project management tracking, every department stays updated with assigned tasks and deadlines. This software solution empowers teams to achieve consistent results with clarity and confidence. 
                     </p>
 
                     <!-- Features -->
@@ -105,12 +106,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL TASK</span><br>
-                        MANAGEMENT FEATURES
-                    </h2>
+                        <span class="text-primary">Improve Team Collaboration</span><br>
+                        with Powerful Software Features
+                    </h2> 
 
                     <p class="text-muted my-3">
-                       Manage your workforce efficiently with smart tools designed to simplify operations, improve productivity, and give you full control over your team.
+                       Our task management software centralizes projects and promotes team collaboration for better outcomes.
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -127,7 +128,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Manage Task</h5>
-                                <p class="text-muted small">Create tasks easily and assign them to individuals or teams with clear instructions and deadlines.</p>
+                                <p class="text-muted small">Use Renown’s task tracking software to keep assignments organized, based on priority and deadlines.</p>
                             </div>
                         </div>
 
@@ -135,7 +136,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Priority Management</h5>
-                                <p class="text-muted small">Set task priorities (High, Medium, Low) to ensure important work gets done first.</p>
+                                <p class="text-muted small">This platform allows managers to assign tasks and set priorities, ensuring a speedy and seamless delivery of projects.</p>
                             </div>
                         </div>
 
@@ -143,7 +144,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Task Status Tracking</h5>
-                                <p class="text-muted small">Track task progress with statuses like Pending, In Progress, and Completed for better visibility.</p>
+                                <p class="text-muted small">Each department head can easily monitor task progress using our project management tracking software. This feature nurtures accountability in team members.</p>
                             </div>
                         </div>
 
@@ -151,7 +152,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-people fs-2 icon-box"></i>
                                 <h5 class="mt-3">Assign Task</h5>
-                                <p class="text-muted small">Create tasks easily and assign them to individuals or teams with clear instructions and deadlines.
+                                <p class="text-muted small">It is easy to automate task allocation and maintain a digital record of assigned responsibilities. This saves manual work and valuable time.
                                 </p>
                             </div>
                         </div>
@@ -160,7 +161,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Due Dates & Deadlines</h5>
-                                <p class="text-muted small">Assign deadlines to tasks and get reminders to ensure timely completion.
+                                <p class="text-muted small">Every task assigned through the project management software comes with due dates and deadlines. It ensures that teams stay up-to-date with their deliverables. 
                                 </p>
                             </div>
                         </div>
@@ -169,7 +170,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Team Collaboration</h5>
-                                <p class="text-muted small">Add comments, share updates, and collaborate with team members in real-time.</p>
+                                <p class="text-muted small">Through collaboration and participation, you can develop a teamwork culture among your employees and streamline workflows for speedy delivery. </p>
                             </div>
                         </div>
 
@@ -185,9 +186,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">Simplify Workflows with Renown Task Management System</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process designed for maximum efficiency.
+                Our intuitive UI helps onboard teams on the task management software in four simple steps. Start assigning tasks and keep your operations streamlined.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -196,25 +197,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Create Tasks</h5>
-                    <p class="small">Quickly create tasks by adding essential details like descriptions, priorities, and deadlines to keep everything well-organized from the start.</p>
+                    <p class="small">Create tasks easily on the task management system for small business. It doesn't take more than a few minutes.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Assign to Team</h5>
-                    <p class="small">Assign tasks to the right team members or departments, ensuring clear responsibilities and smooth collaboration.</p>
+                    <p class="small">Quickly allocate tasks to respective teams. Help your employees stay organized and productive.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Track Progress</h5>
-                    <p class="small">Monitor task status, updates, and ongoing activities in real-time to stay informed and maintain productivity.</p>
+                    <p class="small">Monitor task progress for consistent performance and on-time delivery.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Complete & Analyze</h5>
-                    <p class="small">Review completed tasks, analyze performance, and generate insights to continuously improve your workflow.</p>
+                    <p class="small">Review outcomes for each task using our tracking software. Guide your teams' progress efficiently.</p>
                 </div>
 
             </div>

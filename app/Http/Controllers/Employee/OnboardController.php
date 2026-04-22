@@ -10,10 +10,12 @@ use App\Models\EmployeeWorkExperience;
 use App\Models\User;
 use App\Models\OnboardingInvitation;
 use App\Models\Company;
+use App\Models\DocumentAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\SecureFileUpload;
 use App\Traits\uploadFile;
+use App\Services\SaveDocumentAction;
 
 class OnboardController extends Controller
 {
@@ -207,15 +209,23 @@ class OnboardController extends Controller
             'account'               => $request->account_number ? encrypt($request->account_number) : null,
             'ifsc'                  => $request->ifsc_code                  ?? null,
             'bank_document'         => $bankDocumentPath,
-            'bank_document_mime'    => $bankDocumentMime,
-            'bank_document_status'  => $request->bank_document_status       ?? null,
-            'bank_document_remarks' => $request->bank_document_remarks      ?? null,        
+            'bank_document_mime'    => $bankDocumentMime,     
         ];
 
         $user       = User::updateOrCreate(['id' => $authUser->id], $personalUserData);
-        $userDetals = EmployeeDetail::updateOrCreate(['user_id' => $authUser->id], $personalUserDetailsData);
+        $userDetails = EmployeeDetail::updateOrCreate(['user_id' => $authUser->id], $personalUserDetailsData);
 
-        if (!$user || !$userDetals) {
+        if ($request->filled('bank_document_status')) {
+            SaveDocumentAction::save(
+                $userDetails,
+                'bank_document',
+                $request->bank_document_status,
+                $request->bank_document_remarks ?? null,
+                $authUser->id
+            );
+        }
+
+        if (!$user || !$userDetails) {
             return response()->json([
                 'status'    => 500,
                 'message'   => 'Something went wrong !'
@@ -330,10 +340,18 @@ class OnboardController extends Controller
                         'id_number'     => $number, 
                         'image'         => $filePath,  
                         'document_mime' => $fileMime,
-                        'status'        => $status,
-                        'remarks'       => $remark
                     ]
                 );
+
+                if (!is_null($status)) {
+                    SaveDocumentAction::save(
+                        $empId,
+                        $idName,
+                        $status,
+                        $remark,
+                        $userId
+                    );
+                }
             }
         }
 
@@ -743,46 +761,48 @@ class OnboardController extends Controller
 
                     'offer_letter'          => $offerLatterName,
                     'offer_letter_mime'     => $offerLetterMime ?? null,
-                    'offer_status'          => $offer_statuses[$index] ?? 0,
-                    'offer_remarks'         => $offer_remarks[$index] ?? null,
 
                     'appointment_letter'       => $appointmentLatterName,
                     'appointment_letter_mime'  => $appointmentLetterMime ?? null,
-                    'appointment_status'       => $appointment_statuses[$index] ?? 0,
-                    'appointment_remarks'      => $appointment_remarks[$index] ?? null,
 
                     'experience_letter'        => $experienceLatterName,
                     'experience_letter_mime'   => $experienceLetterMime ?? null,
-                    'experience_status'        => $experience_statuses[$index] ?? 0,
-                    'experience_remarks'       => $experience_remarks[$index] ?? null,
 
                     'relieving_letter'      => $relieving_letterName,
                     'relieving_letter_mime' => $relievingLetterMime ?? null,
-                    'relieving_status'      => $relieving_statuses[$index] ?? 0,
-                    'relieving_remarks'     => $relieving_remarks[$index] ?? null,
 
                     'increment_letter'      => $incrementLatterName,
                     'increment_letter_mime' => $incrementLetterMime ?? null,
-                    'increment_status'      => $increment_statuses[$index] ?? 0,
-                    'increment_remarks'     => $increment_remarks[$index] ?? null,
 
                     'salary_slip'           => $salarySlipName,
                     'salary_slip_mime'      => $salarySlipMime ?? null,
-                    'salary_status'         => $salary_statuses[$index] ?? 0,
-                    'salary_remarks'        => $salary_remarks[$index] ?? null,
 
                     'bank_statement'        => $bankStatementName,
                     'bank_statement_mime'   => $bankStatementMime ?? null,
-                    'bank_status'           => $bank_statuses[$index] ?? 0,
-                    'bank_remarks'          => $bank_remarks[$index] ?? null,
                 ];
 
-                EmployeeWorkExperience::updateOrCreate(
+                $exp = EmployeeWorkExperience::updateOrCreate(
                     [
                         'id' => $exp_ids[$index] ?? null, 
                     ],
                     $data
                 );
+
+                $documents = [
+                    'offer_letter' => [$offer_statuses[$index] ?? null, $offer_remarks[$index] ?? null],
+                    'appointment_letter' => [$appointment_statuses[$index] ?? null, $appointment_remarks[$index] ?? null],
+                    'experience_letter' => [$experience_statuses[$index] ?? null, $experience_remarks[$index] ?? null],
+                    'relieving_letter' => [$relieving_statuses[$index] ?? null, $relieving_remarks[$index] ?? null],
+                    'increment_letter' => [$increment_statuses[$index] ?? null, $increment_remarks[$index] ?? null],
+                    'salary_slip' => [$salary_statuses[$index] ?? null, $salary_remarks[$index] ?? null],
+                    'bank_statement' => [$bank_statuses[$index] ?? null, $bank_remarks[$index] ?? null],
+                ];
+
+                foreach ($documents as $type => [$status, $remark]) {
+                    if (!is_null($status)) {
+                        SaveDocumentAction::save($exp, $type, $status, $remark, $userId);
+                    }
+                }
 
             }
 

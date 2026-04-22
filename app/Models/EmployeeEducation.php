@@ -12,11 +12,21 @@ class EmployeeEducation extends Model
 
     protected $fillable = [
         'employee_detail_id', 'tenant_id', 'institution', 'subject', 'course', 'grade', 'file', 'document_mime', 'start_date',
-        'end_date', 'remarks', 'status',
+        'end_date'
     ];
 
     public function employee()
     {
-        return $this->belongsTo(EmployeeDetail::class,);
+        return $this->belongsTo(EmployeeDetail::class);
+    }
+
+    public function documentAction()
+    {
+        return $this->morphOne(DocumentAction::class, 'documentable');
+    }
+
+    public function getActionByAttribute()
+    {
+        return $this->documentAction?->actionBy;
     }
 }

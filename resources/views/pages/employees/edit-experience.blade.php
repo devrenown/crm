@@ -1,10 +1,12 @@
 @extends('layouts.app')
 
 @section('page-content')
-    <div class="content container-fluid">
 
+    <div class="content container-fluid">
         @php
+
             $docFields = [
+
                 'offer_letter' => 'Offer Letter',
                 'appointment_letter' => 'Appointment Letter',
                 'experience_letter' => 'Experience Letter',
@@ -14,6 +16,8 @@
                 'bank_statement' => 'Bank Statement',
             ];
         @endphp
+
+
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Employment Details</h4>
@@ -26,22 +30,25 @@
             <input type="hidden" name="user_id" value="{{ $employeeDetail->user_id }}">
 
             <div id="employment-wrapper">
+
                 @forelse($experiences as $index => $exp)
+
                     <div class="employment-item border rounded p-3 mb-3">
 
                         <input type="hidden" name="exp_ids[]" value="{{ $exp->id }}">
 
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5>Employment</h5>
 
+                            <h5>Employment</h5>
                             <span class="delete-icon filled-delete"
                                 data-route="{{ route('onboard.deleteEmployement', ['employement_id' => $exp->id, 'user_id' => $employeeDetail->user_id]) }}" style="cursor: pointer;">
                                 <i class="fa-regular fa-trash-can"></i>
                             </span>
-                           
+
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6 mb-3">
                                 <label>Job Position <span class="text-danger">*</span> </label>
                                 <input type="text" name="positions[]" class="form-control" value="{{ $exp->position }}" required>
@@ -65,6 +72,7 @@
                             </div>
 
                             <div class="col-md-6">
+
                                 <x-form.input-block class="mb-2">
                                     <x-form.label class="mb-0">
                                         {{ __('Reporting Manager / HR Contact Number') }}</x-form.label>
@@ -72,10 +80,10 @@
                                     value="{{ $exp->person_contact }}" maxlength="10">
                                 </x-form.input-block>
                             </div>
-
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6 mb-3">
                                 <label>Employee ID</label>
                                 <input type="text" name="emp_ids[]" class="form-control text-uppercase" value="{{ $exp->employee_id }}">
@@ -85,37 +93,38 @@
                                 <label class="form-label">Location <span class="text-danger">*</span> </label>
                                 <input type="text" name="locations[]" class="form-control" value="{{ $exp->location }}" required>
                             </div>
-
                         </div>
 
                         <div class="row">
+
                             <div class="col-md-6 mb-3">
                                 <label>Start Date <span class="text-danger">*</span> </label>
-                                
+
                                 <input id="dob" name="exp_start_dates[]" value="{{ old('dob', optional($exp->start_date)->format('Y-m-d') ) }}" type="date"
                                 class="form-control" required>
-                                
                             </div>
+
                             <div class="col-md-6 mb-3">
+
                                 <label>End Date <span class="text-danger">*</span> </label>
-                                
                                 <input id="dob" name="exp_end_dates[]" value="{{ old('dob', optional($exp->end_date)->format('Y-m-d') ) }}" type="date"
                                 class="form-control" required>
-                               
                             </div>
                         </div>
 
                         <h6 class="mt-3">Documents</h6>
+
                         <div class="row">
-                            
+
                             @if(!empty($docFields))
                                 @foreach($docFields as $field => $label)
+
                                     <div class="col-md-6 mb-3 document-block">
                                         <label>{{ $label }}</label>
                                         <input type="file" name="{{ $field }}s[]" class="form-control" accept="image/*,application/pdf">
                                         <input type="hidden" name="old_{{ $field }}s[]" value="{{ $exp->$field }}">
-                                        @if($exp->$field)
 
+                                        @if($exp->$field)
                                             @php
                                                 $signedUrl = URL::signedRoute(
                                                     'secure.document.view',
@@ -125,6 +134,7 @@
                                                         'filename' => basename($exp->$field),
                                                         'mode'     => 'watermark'
                                                     ],
+
                                                     now()->addMinutes(5)
                                                 );
 
@@ -132,20 +142,25 @@
                                                 $statusField         = $firstWordOfDocument . '_status';
                                                 $remarkField         = $firstWordOfDocument . '_remarks';
 
-                                                $statusValue = $exp->$statusField ?? 0;
-                                                $remarkValue = $exp->$remarkField ?? '';
+                                                $docAction = $exp->documentActions
+                                                    ->where('document_type', $field)
+                                                    ->first();
+
+                                                $statusValue = $docAction?->status;
+                                                $remarkValue = $docAction?->remark;
+
+                                                $actionBy = optional($docAction?->actionBy)->name ?? null;
+                                                
                                             @endphp
 
                                             <div class="row">
                                                 <div class="col-md-6">
-
                                                     <a href="javascript:void(0);"
                                                         onclick="openSecureDocument('{{ $signedUrl }}')"
                                                         class="d-block mt-1">
                                                         {!! \App\Helpers\DocumentStatus::statusBadge($statusValue) !!}
                                                         View {{ $label }}
                                                     </a>
-
                                                 </div>
 
                                                 <div class="col-md-6 mt-1">
@@ -160,8 +175,14 @@
                                                     <span>Remarks</span> 
                                                     <input type="text" value="{{ $remarkValue }}" name="{{ $remarkField }}[]" class="form-control">
                                                 </div>
-                                            </div>
 
+                                                @if ($docAction?->actionBy)
+                                                    <small class="text-muted">
+                                                        By {{ $docAction->actionBy->fullname }}
+                                                        ({{ tz($docAction->action_at, 'd M Y') }})
+                                                    </small>
+                                                @endif
+                                            </div>
                                         @endif
                                     </div>
                                 @endforeach
@@ -175,7 +196,9 @@
                         </div>
                     </div>
                 @empty
+
                     {{-- If no experiences exist, show one blank form --}}
+
                     <div class="employment-item border rounded p-3 mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5>Employment</h5>
@@ -238,6 +261,7 @@
                         </div>
 
                         <h6 class="mt-3">Documents</h6>
+
                         <div class="row">
                             @foreach($docFields as $field => $label)
                                 <div class="col-md-6 mb-3">
@@ -262,17 +286,26 @@
             </div>
 
             <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Save Employment Details</button>
+                <button type="submit" id="saveBtn" class="btn btn-primary">
+                    <span class="btn-text">Save Employment Details</span>
+                    <span class="btn-loader" style="display:none;">
+                        <i class="fa fa-spinner fa-spin"></i> Saving...
+                    </span>
+                </button>
             </div>
         </form>
     </div>
+
 @endsection
 
 @push('page-scripts')
+
     <script>
+
         $(document).ready(function () {
             // Clone template for new employment
             $('#add-employment').click(function () {
+
                 let clone = $('.employment-item:first').clone();
                 clone.find('input[type=text], input[type=date], textarea').val('');
                 clone.find('input[type=file]').val('');
@@ -285,11 +318,13 @@
             });
 
             // Remove employment block
+
             $(document).on('click', '.remove-employment', function () {
                 $(this).closest('.employment-item').remove();
             });
 
             $(document).on('click', '.filled-delete', function () {
+
                 let isConfirm = confirm('Are you sure you want to delete?');
                 if (!isConfirm) return;
 
@@ -307,9 +342,19 @@
             });
 
             // Ajax submit
+
             $('#employmentForm').on('submit', function (e) {
+
                 e.preventDefault();
+
                 let formData = new FormData(this);
+
+                let btn = $('#saveBtn');
+
+                // show loader
+                btn.prop('disabled', true);
+                btn.find('.btn-text').hide();
+                btn.find('.btn-loader').show();
 
                 $.ajax({
                     url: $(this).attr('action'),
@@ -317,18 +362,27 @@
                     data: formData,
                     contentType: false,
                     processData: false,
+
                     success: function (res) {
-                        alert(res.message + ' ✅')
-                        toastr.success(res.message);
+                        alert(res.message);
                         window.location.href = "{{ route('employees.index') }}";
                     },
+
                     error: function (xhr) {
-                        toastr.error('Something went wrong');
+                        alert('Something went wrong');
                         console.log(xhr.responseText);
+                    },
+
+                    complete: function () {
+                        // reset button
+                        btn.prop('disabled', false);
+                        btn.find('.btn-text').show();
+                        btn.find('.btn-loader').hide();
                     }
                 });
             });
         });
 
     </script>
+
 @endpush

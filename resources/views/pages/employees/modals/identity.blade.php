@@ -37,7 +37,8 @@
             <input id="p_address" name="p_address" value="{{ $employeeDetail->permanent_address ?? '' }}" type="text" class="form-control">
           </div>
           
-          <h5 class="mt-3 fs-6">ID Proof</h5>
+          <h5 class="mt-3 fs-6">ID Proof <span class="text-muted" style="font-size: 11px !important;">(Allowed
+                                    jpg,jpeg,png,webp,pdf &nbsp; max: 2MB )</span></h5>
           
           @if (count($employeeIdList) > 0 ?? [])
             <div id="id-container">
@@ -93,28 +94,31 @@
                                             <a href="javascript:void(0);"
                                                 onclick="openSecureDocument('{{ $signedUrl }}')"
                                                 class="d-block mt-1">
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($list->status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge($list->documentAction?->status) !!}
                                                 View {{ $list->id_name }}
                                             </a>
                                         </div>
 
                                         <div class="col-md-4 mt-1">
                                             <select class="form-control form-select status-dropdown" name="status[]">
-                                                <option value="0" {{ $list->status == 0 ? 'selected' : '' }}>Pending</option>
-                                                <option value="1" {{ $list->status == 1 ? 'selected' : '' }}>Verified</option>
-                                                <option value="2" {{ $list->status == 2 ? 'selected' : '' }}>Rejected</option>
+                                                <option value="0" {{ $list->documentAction?->status == 0 ? 'selected' : '' }}>Pending</option>
+                                                <option value="1" {{ $list->documentAction?->status == 1 ? 'selected' : '' }}>Verified</option>
+                                                <option value="2" {{ $list->documentAction?->status == 2 ? 'selected' : '' }}>Rejected</option>
                                             </select>
                                         </div>
 
-                                        <div class="col-12 remarks-container" style="{{ $list->status == 2 ? '' : 'display:none;' }}">
+                                        <div class="col-12 remarks-container" style="{{ $list->documentAction?->status == 2 ? '' : 'display:none;' }}">
                                             <span>Remarks</span> 
-                                            <input type="text" value="{{ @$list->remarks ?? '' }}" name="remarks[]" class="form-control">
+                                            <input type="text" value="{{ @$list->documentAction?->remark ?? '' }}" name="remarks[]" class="form-control">
                                         </div>
+
+                                        @if ($list->actionBy)
+                                        <small class="text-muted">By {{ $list->actionBy?->fullname .' ('. tz($list->documentAction?->action_at, 'd M Y' ) . ')'}}</small>
+                                        @endif
                                     </div>
 
                                 @endif
-                                <small class="text-muted d-block" style="font-size: 11px !important;"><span class="text-danger">*</span>Allowed
-                                    jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
+                                
                             </div>
                         </div>
 
@@ -148,11 +152,6 @@
                         <input name="id_image[]" type="file"
                             class="form-control id_image"
                             accept="image/*,application/pdf" required>
-
-                        <small class="text-muted d-block">
-                            <span class="text-danger">*</span>
-                            Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB
-                        </small>
                     </div>
                 </div>
             </div>
@@ -236,11 +235,6 @@
                     accept="image/*,application/pdf">
 
                     <a href="javascript:void(0);" class="delete-icon"><i class="fa-regular fa-trash-can"></i></a>
-                </div>
-
-                <div class="">
-                    <small class="text-muted d-block" style="font-size: 11px !important;"><span class="text-danger">*</span>Allowed
-                    jpg,jpeg,png,webp,pdf &nbsp; max: 2MB</small>
                 </div>
             </div>
 

@@ -18,7 +18,7 @@ class TenantController extends Controller
     public function index ()
     {
         $title      = 'Organization List'; 
-        $tenants    = Tenant::all();
+        $tenants    = Tenant::where('id', '!=', 1)->get();
         $settings   = []; 
 
         foreach ($tenants as $tenant) {

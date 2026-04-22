@@ -256,57 +256,68 @@
                        class="form-control">
             </div>
 
-            <div class="col-lg-4 document-block mb-2">
-                <label for="bank_document">Bank Document (Passbook or Cancelled Cheque)</label>
-                <input id="bank_document" name="bank_document" type="file" accept="image/*,application/pdf"
-                    class="form-control">
+            <div class="col-md-8 document-block mb-2">
 
-                <input type="hidden" name="old_bank_document" id="old_bank_document" value="{{ $employeeDetail->bank_document ?? '' }}">
+                <div class="row">
 
-                <div class="">
-                    @if(!empty($employeeDetail->bank_document))
-                        @php
-                            $signedUrl = URL::signedRoute(
-                                'secure.document.view',
-                                [
-                                    'path'     => encrypt($employeeDetail->bank_document),
-                                    'mime'     => $employeeDetail->bank_document_mime,
-                                    'filename' => basename($employeeDetail->bank_document),
-                                    'mode'     => 'clean'
-                                ],
-                                now()->addMinutes(5)
-                            );
-                        @endphp
+                    <div class="col-md-6">
+                        <label for="bank_document" class="form-label">Bank Document (Passbook or Cancelled Cheque)</label>
+                        <input id="bank_document" name="bank_document" type="file" accept="image/*,application/pdf"
+                            class="form-control">
+
+                        <input type="hidden" name="old_bank_document" id="old_bank_document" value="{{ $employeeDetail->bank_document ?? '' }}">
+
+                        @if(!empty($employeeDetail->bank_document))
+                            @php
+                                $signedUrl = URL::signedRoute(
+                                    'secure.document.view',
+                                    [
+                                        'path'     => encrypt($employeeDetail->bank_document),
+                                        'mime'     => $employeeDetail->bank_document_mime,
+                                        'filename' => basename($employeeDetail->bank_document),
+                                        'mode'     => 'clean'
+                                    ],
+                                    now()->addMinutes(5)
+                                );
+                            @endphp
 
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <a href="javascript:void(0);"
-                                    onclick="openSecureDocument('{{ $signedUrl }}')"
-                                    class="d-block mt-1 view-edu-file">
-                                    {!! \App\Helpers\DocumentStatus::statusBadge($employeeDetail->bank_document_status) !!}
-                                    View File
-                                </a>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="javascript:void(0);"
+                                        onclick="openSecureDocument('{{ $signedUrl }}')"
+                                        class="d-block mt-1 view-edu-file">
+                                        {!! \App\Helpers\DocumentStatus::statusBadge($employeeDetail->documentAction?->status) !!}
+                                        View File
+                                    </a>
+                                </div>
                             </div>
+                        @endif
+                         <small class="text-muted d-block">
+                            <span class="text-danger">*</span>
+                            Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB
+                        </small>
+                    </div>
 
-                            <div class="col-md-6 mt-1">
-                                <select class="form-control form-select status-dropdown" name="bank_document_status">
-                                    <option value="0" {{ $employeeDetail->bank_document_status == 0 ? 'selected' : '' }}>Pending</option>
-                                    <option value="1" {{ $employeeDetail->bank_document_status == 1 ? 'selected' : '' }}>Verified</option>
-                                    <option value="2" {{ $employeeDetail->bank_document_status == 2 ? 'selected' : '' }}>Rejected</option>
-                                </select>
-                            </div>
+                    <div class="col-md-6">
+                        
+                        <label class="form-label">Document Status</label>
+                        <select class="form-control form-select status-dropdown" name="bank_document_status">
+                            <option value="0" {{ $employeeDetail->documentAction?->status == 0 ? 'selected' : '' }}>Pending</option>
+                            <option value="1" {{ $employeeDetail->documentAction?->status == 1 ? 'selected' : '' }}>Verified</option>
+                            <option value="2" {{ $employeeDetail->documentAction?->status == 2 ? 'selected' : '' }}>Rejected</option>
+                        </select>
 
-                            <div class="col-12 remarks-container" style="{{ $employeeDetail->bank_document_status == 2 ? '' : 'display:none;' }}">
-                                <span>Remarks</span> 
-                                <input type="text" value="{{ @$employeeDetail->bank_document_remarks ?? '' }}" name="bank_document_remarks" class="form-control">
-                            </div>
+                        <div class="remarks-container" style="{{ $employeeDetail->documentAction?->status == 2 ? '' : 'display:none;' }}">
+                            <span>Remarks</span> 
+                            <input type="text" value="{{ $employeeDetail->documentAction?->remark ?? '' }}" name="bank_document_remarks" class="form-control">
                         </div>
-                    @endif
-                     <small class="text-muted d-block">
-                        <span class="text-danger">*</span>
-                        Allowed jpg,jpeg,png,webp,pdf &nbsp; max: 2MB
-                    </small>
+
+                        @if ($employeeDetail->actionBy)
+                        <small class="text-muted">By {{ $employeeDetail->actionBy?->fullname .' ('. tz($employeeDetail->documentAction?->action_at, 'd M Y' ) . ')'}}</small>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -62,11 +62,22 @@
                 <div class="col-md-4 col-sm-6 col-12 col-lg-4">
                     <div class="card">
 
-                    	@if ($logo)
-                    	<div class="p-3">
-                        	<img src="{{ $file ? asset('storage/settings/theme/' . $file) : asset('images/company-placeholder.png') }}" class="card-img-top" alt="Organization" style="height: 6rem; object-fit: contain;">
+                    	
+
+                       <div class="p-3 text-center" style="height:100px; display:flex; align-items:center; justify-content:center;">
+
+                            @php
+                                $logoPath = $file ? asset('storage/' . ltrim($file, '/')) : asset('images/company-placeholder.png');
+                            @endphp
+
+                            <img 
+                                src="{{ $logoPath }}"
+                                alt="Organization Logo"
+                                style="max-height:80px; max-width:100%; object-fit:contain;"
+                                onerror="this.onerror=null;this.src='{{ asset('images/company-placeholder.png') }}';"
+                            >
+
                         </div>
-                        @endif
 
                         <div class="dropdown profile-action">
                             <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>

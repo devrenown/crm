@@ -129,6 +129,7 @@
             @php 
                 $features = json_decode($plan->features, true) ?? [];
             @endphp
+                @if ($plan->id != 1)
                 <div class="col-md-3 mb-5 mb-lg-3 mb-md-3">
                     <div class="card {{ $plan->is_popular ? 'bg-gradient-tri' : 'bg-white' }} shadow border-0 rounded">
                         @if ($plan->is_popular)
@@ -206,6 +207,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 
             @endforeach
 

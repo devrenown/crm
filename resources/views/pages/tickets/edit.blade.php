@@ -5,14 +5,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="input-block mb-3">
-                    <x-form.label>{{ __('Subject') }}</x-form.label>
-                    <x-form.input type="text" name="subject" value="{{ $ticket->subject }}" />
+                    <x-form.label>{{ __('Subject') }} <span class="text-danger">*</span></x-form.label>
+                    <x-form.input type="text" name="subject" value="{{ $ticket->subject }}" required />
                 </div>
             </div>
             <div @can('edit-ticket')class="col-md-6"@else class="col-md-12"@endcan>
                 <div class="input-block mb-3">
-                    <x-form.label>{{ __('Priority') }}</x-form.label>
-                    <select name="priority" class="form-control">
+                    <x-form.label>{{ __('Priority') }} <span class="text-danger">*</span></x-form.label>
+                    <select name="priority" class="form-control" required>
                         <option value="">{{ __('Select Priority') }}</option>
                         @foreach (\App\Enums\GeneralPriority::cases() as $item)
                             <option {{ $ticket->priority == $item ? 'selected': '' }} value="{{ $item->value }}">{{ $item->name }}</option>
@@ -24,7 +24,7 @@
             <div class="col-md-6">
                 <div class="input-block mb-3">
                     <x-form.label>{{ __('Ticket Id') }}</x-form.label>
-                    <x-form.input type="text" name="tk_id" value="{{ $ticket->tk_id ?? '#TKT-'.pad_zeros(\App\Models\Ticket::count()+1) }}" />
+                    <x-form.input type="text" name="tk_id" value="{{ $ticket->tk_id ?? '#TKT-'.pad_zeros(\App\Models\Ticket::count()+1) }}" readOnly />
                 </div>
             </div>
            
@@ -52,13 +52,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="input-block mb-3">
-                    <label class="col-form-label">{{ __('Description') }}</label>
+                    <label class="col-form-label">{{ __('Description') }} <span class="text-danger">*</span></label>
                     <x-form.ckeditor name="description" id="editor">{{ $ticket->description }}</x-form.ckeditor>
                 </div>
             </div>
             <div class="input-block mb-3">
                 <label class="col-form-label">{{ __('Attachment') }} <small class="text-info">{{ __('You can upload multiple files') }}</small></label>
-                <x-form.input type="file" name="ticketFiles" multiple />
+                <x-form.input type="file" name="ticketFiles[]" multiple />
             </div>
         </div>
         <div class="submit-section my-3">

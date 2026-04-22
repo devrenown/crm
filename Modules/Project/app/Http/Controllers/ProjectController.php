@@ -91,7 +91,7 @@ class ProjectController extends Controller
             'created_by' => auth()->user()->id
         ]);
         $projectFiles = $request->projectFiles ?? [];
-        if(!empty($projectFiles) && count($projectFiles) > 0){
+        if($request->hasFile('project-files')){
             foreach($projectFiles as $file){
                 $project->addMedia($file)->toMediaCollection('project-files');
             }
@@ -183,7 +183,7 @@ class ProjectController extends Controller
             'created_by' => auth()->user()->id
         ]);
         $projectFiles = $request->projectFiles ?? [];
-        if(!empty($projectFiles) && $request->hasFile('projectFiles') && count($projectFiles) > 0){
+        if($request->hasFile('projectFiles')){
             foreach($projectFiles as $file){
                 $project->addMedia($file)->toMediaCollection('project-files');
             }

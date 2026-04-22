@@ -27,7 +27,7 @@
                 <div class="card-body text-center">
 
                     <!-- Tenant Logo -->
-                    <img src="{{ $file ? asset('storage/settings/theme/' . $file) : asset('images/company-placeholder.png') }}"
+                    <img src="{{ $file ? asset('storage/' . $file) : asset('images/company-placeholder.png') }}"
                          class="img-fluid mb-3"
                          style="max-height: 110px;" alt="Logo">
 
@@ -118,7 +118,7 @@
             <div class="row">
 
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
-                    <img src="{{ @$tenant->adminUser->avatar ? asset('storage/users/' . @$tenant->adminUser->avatar) : asset('images/user.jpg') }}" style="height: 100px; width: 100px; object-fit: cover;">
+                    <img src="{{ @$tenant->adminUser->avatar ? asset('storage/' . @$tenant->adminUser->avatar) : asset('images/user.jpg') }}" style="height: 100px; width: 100px; object-fit: cover;">
                 </div>
 
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">

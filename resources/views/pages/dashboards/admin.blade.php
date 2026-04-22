@@ -37,7 +37,7 @@
     }
 
     .welcome-card {
-        color: #ffffff;
+        /* color: #ffffff; */
         border-radius: 15px;
     }
 
@@ -65,7 +65,6 @@
         background: #fef9c3;
         color: #ca8a04;
     }
-
 
     .small-muted {
         font-size: 12px;
@@ -864,12 +863,14 @@
 
 <!-- Expenses & invoices -->
 <div class="row gx-3">
+    @activeCan('view-expenses')
     <div class="col-md-6">
         <div class="card card-dashboard p-3 mb-3">
             <p class="m-0 fs-5 fw-bold">Expenses</p>
             <canvas id="expensesChart" style="max-height: 320px;"></canvas>
         </div>
     </div>
+    @endactiveCan
 
     @activeCan('view-invoices')
     <div class="col-md-6 mb-3 mb-md-0 mb-lg-0">
@@ -1162,20 +1163,23 @@
 
 <!-- Budget & Estimates -->
 <div class="row gx-3 my-3">
-
+    @activeCan('view-budgets')
     <div class="col-lg-6 mb-3 mb-md-0 mb-lg-0">
         <div class="card card-dashboard p-3">
             <p class="mb-1 fs-5 fw-bold">Budget</p>
             <canvas id="budgetChart" style="height:320px;"></canvas>
         </div>
     </div>
+    @endactiveCan
 
+    @activeCan('view-estimates')
     <div class="col-lg-6">
         <div class="card card-dashboard p-3">
             <p class="mb-1 fs-5 fw-bold">Estimates & Invoices Overview</p>
             <canvas id="invoiceChart" style="height:320px;"></canvas>
         </div>
     </div>
+    @endactiveCan
 </div>
 
 {{-- dd($monthly_expense) --}}

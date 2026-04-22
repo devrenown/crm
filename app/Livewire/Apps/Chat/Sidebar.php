@@ -19,37 +19,31 @@ class Sidebar extends Component
 
     public function getChats()
     {
-        $chats = ChatMessage::join('users',  function ($join) {
-            $join->on('chat_messages.user_id', '=', 'users.id')
-                ->orOn('chat_messages.receiver_id', '=', 'users.id');
-        })
-        ->where(function ($q) {
-            $q->where('chat_messages.user_id', Auth::user()->id)
-            ->orWhere('chat_messages.receiver_id', Auth::user()->id);
-        })
-        ->where('users.id','!=',Auth::user()->id)
-        ->select('users.*',DB::raw('MAX(chat_messages.created_at) max_created_at'))
-        ->orderBy('max_created_at', 'desc')
-        ->groupBy('users.id')->get();
+        $chats = User::where(
+            ['is_onboarding_complete' => 1, 'is_active' => true ])
+            ->where('id', '!=', Auth::id())
+            ->select('id', 'firstname', 'middlename', 'lastname', 'avatar', 'is_online')
+            ->get();
         return $chats;
     }
-
-
 
     public function render()
     {
         $query = $this->searchQuery;
         $users = null;
         if(!empty($query)){
-            $users = User::where('username','LIKE','%'.$query.'%')
-                ->orWhere('firstname','LIKE','%'.$query.'%')
-                ->orWhere('middlename','LIKE','%'.$query.'%')
-                ->orWhere('lastname','LIKE','%'.$query.'%')
-                ->orWhere('email','LIKE','%'.$query.'%')
-                ->orWhere('phone','LIKE','%'.$query.'%')
+            $users = User::where(['is_onboarding_complete' => 1, 'is_active' => true ])
+                ->where(function ($q) use ($query) {
+                    $q->where('username','LIKE','%'.$query.'%')
+                    ->orWhere('firstname','LIKE','%'.$query.'%')
+                    ->orWhere('middlename','LIKE','%'.$query.'%')
+                    ->orWhere('lastname','LIKE','%'.$query.'%')
+                    ->orWhere('email','LIKE','%'.$query.'%')
+                    ->orWhere('phone','LIKE','%'.$query.'%');
+                })
                 ->get();
-            
         }
+        
         $chats = $this->getChats();
         return view('livewire.apps.chat.sidebar',compact(
            'users','chats'

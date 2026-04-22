@@ -18,7 +18,7 @@ class EmployeeDetail extends Model
         'marital_status', 'spouse_occupation', 'no_of_children', 'emergency_contacts', 'date_joined', 'dob',
         'total_exp', 'blood_group', 'know_about', 'major_illness',
         'ref_emp_name', 'ref_emp_id',
-        'bank', 'branch', 'account', 'ifsc', 'bank_document', 'bank_document_mime', 'bank_document_status', 'bank_document_remarks',
+        'bank', 'branch', 'account', 'ifsc', 'bank_document', 'bank_document_mime',
         'current_city', 'current_state', 'current_address', 'permanent_city', 'permanent_state', 'permanent_address'
     ];
 
@@ -66,5 +66,15 @@ class EmployeeDetail extends Model
     public function deductions()
     {
         return $this->hasMany(EmployeeDeduction::class);
+    }
+
+    public function documentAction()
+    {
+        return $this->morphOne(DocumentAction::class, 'documentable');
+    }
+
+    public function getActionByAttribute()
+    {
+        return $this->documentAction?->actionBy;
     }
 }

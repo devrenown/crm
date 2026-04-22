@@ -7,6 +7,7 @@
         background: url("{{ asset('images/features/feature-project-breadc.webp') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
+        padding: 80px 0;
     }
 
     .breadcrump-heading {
@@ -33,14 +34,14 @@
         <div class="container text-white">
 
             <div class="row mt-5">
-                <div class="col-12 col-md-8 col-lg-6">
+                <div class="col-12 col-md-10 col-lg-8">
 
                     <h1 class="breadcrump-heading display-5 display-md-4 display-lg-3 fw-bold">
-                        PROJECT <br class="d-none d-md-block"> MANAGEMENT
+                       Project Management  <br class="d-none d-md-block"> Software
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Plan, manage, and deliver projects on time with powerful tools designed to keep your team aligned and productive.
+                        Small businesses must utilize their limited resources to their full potential. With Renown project management software, you can help such dynamic teams meet deadlines and deliver outcomes effectively - through collaboration and planned workflows. 
                     </p>
 
                     <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
@@ -67,13 +68,13 @@
 
                     <!-- Heading -->
                     <h2 class="fw-bold mb-3">
-                        <span class="text-primary">WHAT IS PROJECT </span><br>
-                        <span class="text-dark">MANAGEMENT SYSTEM?</span>
+                        <span class="text-primary">Manage Global Teams with </span><br>
+                        <span class="text-dark">Renown Project CRM</span>
                     </h2>
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A Project Management System helps businesses plan, organize, and manage projects efficiently from start to finish. It enables teams to collaborate, track progress, and ensure timely delivery—all from a single platform. A Project Management System helps businesses plan, organize, and manage projects efficiently from start to finish. 
+                        Renown’s project management software is not just designed for small businesses. It supports global team collaboration through adequate task allocation and tracking progress. You can better control your resources while your teams get more clarity about daily KRAs. The centralized system software, with easy access to tasks and data, eliminates confusion, keeps teams aligned, and ensures accountability. Additionally, the integrated task tracking software helps streamline workflows so your teams can prioritize tasks based on deadlines and deliver projects with confidence. 
                     </p>
 
                     <!-- Features -->
@@ -105,12 +106,12 @@
                 <!-- LEFT TEXT -->
                 <div class="col-12 col-lg-5 mb-4 mb-lg-0">
                     <h2 class="fw-bold">
-                        <span class="text-primary">POWERFUL PROJECT</span><br>
-                        MANAGEMENT FEATURES
+                        <span class="text-primary">Boost Project Success 10X </span><br>
+                        with Our Management Tool
                     </h2>
 
                     <p class="text-muted my-3">
-                      Manage your workforce efficiently with smart tools designed to simplify operations, improve productivity, and give you full control over your team.
+                      Renown’s simple project management tool allows you to build projects end-to-end. With its powerful features, you can personalize workflows, track industry-specific metrics, and do a lot more. Develop accountability in your teams through engagement and high productivity, for your business growth. 
                     </p>
 
                     <button class="btn btn-primary px-4 py-2">
@@ -127,7 +128,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Project Creation</h5>
-                                <p class="text-muted small">Create tasks easily and assign them to individuals or teams with clear instructions and deadlines.</p>
+                                <p class="text-muted small">Create and onboard global teams from separate departments easily.</p>
                             </div>
                         </div>
 
@@ -135,7 +136,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-arrow-repeat fs-2 icon-box"></i>
                                 <h5 class="mt-3">Priority Management</h5>
-                                <p class="text-muted small">Set task priorities (High, Medium, Low) to ensure important work gets done first.</p>
+                                <p class="text-muted small">Decide priorities based on project deadlines and alert assigned teams.</p>
                             </div>
                         </div>
 
@@ -143,7 +144,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-star fs-2 icon-box"></i>
                                 <h5 class="mt-3">Task Status Tracking</h5>
-                                <p class="text-muted small">Track task progress with statuses like Pending, In Progress, and Completed for better visibility.</p>
+                                <p class="text-muted small">Through the task tracking feature, our project management software monitors team progress.</p>
                             </div>
                         </div>
 
@@ -151,7 +152,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-people fs-2 icon-box"></i>
                                 <h5 class="mt-3">Assign Task</h5>
-                                <p class="text-muted small">Create tasks easily and assign them to individuals or teams with clear instructions and deadlines.
+                                <p class="text-muted small">Allocate responsibilities suitable and relevant to each team member from a single project management CRM software.
                                 </p>
                             </div>
                         </div>
@@ -160,7 +161,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Due Dates & Deadlines</h5>
-                                <p class="text-muted small">Assign deadlines to tasks and get reminders to ensure timely completion.
+                                <p class="text-muted small">With Due Dates, you can ensure the timely delivery of each project from your respective teams. 
                                 </p>
                             </div>
                         </div>
@@ -169,7 +170,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Team Collaboration</h5>
-                                <p class="text-muted small">Add comments, share updates, and collaborate with team members in real-time.</p>
+                                <p class="text-muted small">The unified CRM dashboard fosters team collaboration and faster execution.</p>
                             </div>
                         </div>
 
@@ -185,9 +186,9 @@
         <div class="container text-center">
 
             <!-- Heading -->
-            <h2 class="fw-bold mb-3">HOW IT WORKS</h2>
+            <h2 class="fw-bold mb-3">Step Up Your Project Execution Speed with Renown</h2>
             <p class="mb-5">
-                Manage your employees effortlessly with a simple and streamlined process designed for maximum efficiency.
+                Our project management CRM comes with an intuitive dashboard to simplify project execution for small businesses. This simple project management system allows you to streamline tasks, track progress, and strengthen team collaboration for consistent, on-time delivery.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -196,25 +197,25 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Create Tasks</h5>
-                    <p class="small">Quickly create tasks by adding essential details like descriptions, priorities, and deadlines to keep everything well-organized from the start.</p>
+                    <p class="small">Easy to create tasks in the Renown project management system for better clarity, accountability, and streamlined workflows.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">02</div>
                     <h5>Assign to Team</h5>
-                    <p class="small">Assign tasks to the right team members or departments, ensuring clear responsibilities and smooth collaboration.</p>
+                    <p class="small">Allocate tasks to respective teams as per their individual experience and relevant expertise.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">03</div>
                     <h5>Track Progress</h5>
-                    <p class="small">Monitor task status, updates, and ongoing activities in real-time to stay informed and maintain productivity.</p>
+                    <p class="small">Monitor task status using Renown’s project management software with a task tracking feature.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">04</div>
                     <h5>Complete & Analyze</h5>
-                    <p class="small">Review completed tasks, analyze performance, and generate insights to continuously improve your workflow.</p>
+                    <p class="small">Review outcomes on the project management CRM and compare them against industry-specific metrics.</p>
                 </div>
 
             </div>

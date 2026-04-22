@@ -277,7 +277,12 @@ class DashboardController extends BaseController
         $allInvoiceCount    = Invoice::count();
         $allAssetCount      = Asset::count();
         $allUsersCount      = User::count();
-        $totalActiveUser    = User::where('is_active', true)->count();
+
+        if (activeRole() === UserType::TL->value) {
+            $totalActiveUser    = User::where(['is_active' => true, 'reporting_manager' => auth()->id()])->count();
+        }else {
+            $totalActiveUser    = User::where('is_active', true)->count();
+        }
 
         $this->data['presentCount']         = $presentCount;
         $this->data['absentCount']          = $absentCount;

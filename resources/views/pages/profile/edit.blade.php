@@ -5,7 +5,7 @@
             <div class="col-md-12">
                 <div class="profile-img-wrap edit-img">
                     <img class="inline-block user-profile"
-                        src="{{ !empty($user->avatar) ? asset('storage/users/' . $user->avatar) : asset('assets/img/user.jpg') }}"
+                        src="{{ !empty($user->avatar) ? asset('storage/' . $user->avatar) : asset('assets/img/user.jpg') }}"
                         alt="User Image">
                     <div class="fileupload btn">
                         <span class="btn-text">edit</span>
