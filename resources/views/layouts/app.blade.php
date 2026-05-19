@@ -2,7 +2,11 @@
 
 @section('content')
     <!-- Header -->
-    @include('partials.header')
+    @hasSection('header')
+        @yield('header')
+    @else
+        @include('partials.header')
+    @endif
     <!-- /Header -->
     <!-- Sidebar -->
     
@@ -71,7 +75,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">View Document</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close black" data-bs-dismiss="modal" >×</button>
             </div>
             <div class="modal-body p-0">
                 <iframe id="globalDocumentFrame"
@@ -84,7 +88,55 @@
     </div>
 </div>
 @push('page-scripts')
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.15.0/echo.iife.js"></script>
+
 <script>
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: "{{ env('PUSHER_APP_KEY') }}",
+        cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+        forceTLS: true,
+
+        authEndpoint: '/broadcasting/auth',
+
+        auth: {
+            withCredentials: true,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        },
+    });
+
+    let userId = {{ auth()->id() }};
+
+    window.Echo.private('chat.user.' + userId)
+    .listen('.chat.message.sent', function (e) {
+        Livewire.dispatch('messageReceived', [e.sender_id]);
+
+        let badge = document.getElementById('chat-unread-badge');
+
+        if (badge) {
+            let count = parseInt(badge.innerText || 0);
+            count++;
+
+            badge.innerText = count;
+            badge.style.display = 'inline-block';
+        }
+    });
+    
+    function markAsRead(userId) {
+        if (window.Livewire) {
+            Livewire.dispatch('markAsRead', [userId]);
+        }
+
+        let badge = document.getElementById('chat-unread-badge');
+        if (badge) {
+            badge.innerText = 0;
+            badge.style.display = 'none';
+        }
+    }
+    
     function openSecureDocument(url) {
         $('#globalDocumentFrame').attr('src', url);
         $('#globalDocumentModal').modal('show');

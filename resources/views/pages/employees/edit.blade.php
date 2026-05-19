@@ -117,18 +117,14 @@
                 </x-form.input-block>
             </div>
 
-            {{-- <div class="col-md-12">
-                <x-form.input-block>
-                    <x-form.label>{{ __('Address') }}</x-form.label>
-                    <x-form.input type="text" name="address" value="{{ $employee->address }}" />
-                </x-form.input-block>
-            </div> --}}
-
             <div class="col-sm-6">
-                <x-form.input-block>
-                    <label class="col-form-label">{{ __('Avatar') }}</label>
-                    <x-form.input type="file" name="avatar" />
-                </x-form.input-block>
+                <div class="input-block mb-3">
+                    <label class="col-form-label">{{ __('Joining Date') }}</label>
+                    <div class="cal-icon">
+                        <input id="date_joined" name="date_joined" value="{{ $employee->employeeDetail?->date_joined ?? '' }}" type="text"
+                            class="form-control datepicker">
+                    </div>
+                </div>
             </div>
 
             <div class="col-sm-6">
@@ -142,21 +138,39 @@
             </div>
 
             <div class="col-sm-6">
+                <label class="col-form-label">{{ __('Experience Level') }}</label>
+                <select name="experience_level" id="experience_level" class="select" required>
+                    <option value="" disabled selected>--Choose--</option>
+                    <option value="experienced" {{ optional($employee->onboarding)->type == 'experienced' ? 'selected' : '' }}>Experienced</option>
+                    <option value="fresher" {{ optional($employee->onboarding)->type == 'fresher' ? 'selected' : '' }}>Fresher</option>
+                </select>
+            </div>
+
+            <div class="col-sm-6">
+                <label class="col-form-label">{{ __('Status') }}</label>
+                <select name="status" id="status" class="select" required>
+                    <option value="2" {{ $employee->is_active == 2 ? 'selected' : '' }}>Pending</option>
+                    <option value="1" {{ $employee->is_active == 1 ? 'selected' : '' }}>Active</option>
+                    <option value="0" {{ $employee->is_active == 0 ? 'selected' : '' }}>Deactive</option>
+                </select>
+            </div>
+
+            {{-- <div class="col-sm-6">
                 <div class="status-toggle">
                     <x-form.label>{{ __('Status') }}</x-form.label>
                     <input type="checkbox" id="edit-emp-status" class="form-control check" name="status" {{ $employee->is_active == 1 ? 'checked' : '' }} />
                     <label for="status" class="checktoggle">checkbox</label>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="submit-section mb-3">
-            <x-form.button class="btn btn-primary submit-btn">{{ __('Submit') }}</x-form.button>
+            <x-form.button type="submit" class="btn btn-primary submit-btn">{{ __('Submit') }}</x-form.button>
         </div>
     </form>
 </div>
 
-<script>
+<!-- <script>
     $(document).on('click', '.checktoggle', function () {
         $('#edit-emp-status').prop('checked', !$('#edit-emp-status').prop('checked'));
     });
-</script>
+</script> -->

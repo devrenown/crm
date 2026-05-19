@@ -38,9 +38,9 @@
                         Turn leads into loyal, brand advocates with personalized, data-driven engagement - all from one powerful CRM software.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -54,7 +54,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-client.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-client.webp') }}" alt="Employee Management" loading="lazy" class="img-fluid">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -68,7 +68,7 @@
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        Renown’s client management software for small businesses helps improve communication with clients by automating lead tracking, reminders, and follow-ups. This powerful software system streamlines workflows for your teams, frees up time from manual work, eliminates human errors and prevents missed opportunities for your business. Small teams can easily manage multiple clients and leads while maintaining personalized engagement and building stronger relationships with them. This client management system improves efficiency across every stage of the client journey. 
+                        Renown’s client management software for businesses helps improve communication with clients by automating lead tracking, reminders, and follow-ups. This powerful software system streamlines workflows for your teams, frees up time from manual work, eliminates human errors and prevents missed opportunities for your business. Teams can easily manage multiple clients and leads while maintaining personalized engagement and building stronger relationships with them. This client management system improves efficiency across every stage of the client journey. 
                     </p>
 
                     <!-- Features -->
@@ -112,9 +112,9 @@
                         Renown’s customer management software creates a data repository that allows teams to make informed decisions, improve forecasting, and enhance engagement with clients at every stage of the funnel.  Remove bottlenecks and improve conversions for your business.
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -126,7 +126,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Client Database</h5>
-                                <p class="text-muted small">Centralized client records help simplify data access and management for small businesses.</p>
+                                <p class="text-muted small">Centralized client records help simplify data access and management for businesses.</p>
                             </div>
                         </div>
 
@@ -159,7 +159,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Document Management</h5>
-                                <p class="text-muted small">Securely store and access client documents from a single dashboard to help streamline workflows for small teams.
+                                <p class="text-muted small">Securely store and access client documents from a single dashboard to help streamline workflows for teams.
                                 </p>
                             </div>
                         </div>
@@ -168,7 +168,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-file-earmark-text fs-2 icon-box"></i>
                                 <h5 class="mt-3">Notes & Activity Logs</h5>
-                                <p class="text-muted small">Our client tracking software for small teams helps maintain detailed logs of every client interaction and their status.</p>
+                                <p class="text-muted small">Our client tracking software for teams helps maintain detailed logs of every client interaction and their status.</p>
                             </div>
                         </div>
 
@@ -228,7 +228,7 @@
                 <!-- Admin UI -->
                 <div class="mb-4 mb-lg-0">
                     
-                    <img src="{{ asset('images/features/feature-client-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-client-ui.webp') }}" loading="lazy" class="img-fluid rounded-4">
                 </div>
 
             </div>

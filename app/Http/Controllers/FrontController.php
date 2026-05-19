@@ -7,6 +7,8 @@ use App\Models\DemoRequest;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
+use App\Models\Blog;
+use App\Models\BlogCategory;
 
 class FrontController extends Controller
 {
@@ -231,6 +233,84 @@ class FrontController extends Controller
      }
 
      abort(404);
+   }
+   
+   public function blogs (Request $request, $slug = '')
+   {
+       $query = Blog::where('status', 'published');
+       
+       if(!empty($slug)) {
+           $query->whereHas('category', function($q) use ($slug) {
+               $q->where('slug', $slug);
+           });
+       }
+       
+       $blogs = $query->paginate(10);
+       
+       $categories = BlogCategory::withCount([
+           'blogs' => function ($q) {
+               $q->where('status', 'published');
+           }
+        ])
+        ->where('status', 1)
+        ->latest()
+        ->get();
+        
+        $recentBlogs = Blog::where('status', 'published')
+                        ->latest()
+                        ->take(5)
+                        ->get();
+       
+       return view('pages.front.blogs', 
+       [
+           'blogs'          => $blogs,
+           'categories'     => $categories,
+           'recentBlogs'    => $recentBlogs
+       ]);
+   }
+   
+   public function blogDetails (Request $request, $slug)
+   {
+        if (!$slug) {
+          abort(404);
+        }
+       
+       $blog = Blog::where(['slug' => $slug, 'status' => 'published'])->first();
+       
+       $title         = $blog->meta_title         ?? null;
+       $description   = $blog->meta_description   ?? null;
+       $keywords      = $blog->kaywords           ?? null;
+       
+       $categories = BlogCategory::withCount([
+           'blogs' => function ($q) {
+               $q->where('status', 'published');
+           }
+        ])
+        ->where('status', 1)
+        ->latest()
+        ->get();
+        
+        $recentBlogs = Blog::where('status', 'published')
+                        ->latest()
+                        ->take(5)
+                        ->get();
+       
+       $relatedBlogs = Blog::where('status', 'published')
+                        ->where('id', '!=', $blog->id)
+                        ->latest()
+                        ->take(3)
+                        ->get();
+       
+       return view('pages.front.blog-details', 
+        [
+           'blog'           => $blog, 
+           'relatedBlogs'   => $relatedBlogs, 
+           'title'          => $title, 
+           'description'    => $description, 
+           'keywords'       => $keywords,
+           'categories'     => $categories,
+           'recentBlogs'    => $recentBlogs
+        ]);
    }
 
 }

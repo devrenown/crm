@@ -7,6 +7,6 @@
 
     <div class="mt-3 d-flex align-items-center">
         <label for="acceptTerms">I agree with the Terms and Conditions.</label>
-        <input id="acceptTerms" name="acceptTerms" type="checkbox" class="ms-1 form-check required necessary" {{ $user->is_term_accepted == 1 ? 'checked' : '' }}>
+        <input id="acceptTerms" name="acceptTerms" type="checkbox" class="ms-1 form-check required necessary" {{ optional($user->onboarding)->term_accepted_at ? 'checked disabled' : '' }}>
     </div>
 </section>

@@ -34,6 +34,7 @@
                         <form action="{{ route('employees.list') }}" method="GET" class="mb-0">
                             <select class="form-control" name="status" id="status" style="max-width: 100px;" onchange="this.form.submit()">
                                 <option value="active" {{ request('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </form>

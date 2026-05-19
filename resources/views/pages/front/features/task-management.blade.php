@@ -41,12 +41,12 @@
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Empower teams with Renown’s task management system, designed for small businesses. Now you can streamline workflows, track progress, and keep your team organized for better productivity.
+                        Empower teams with Renown’s task management system, designed for all businesses. Now you can streamline workflows, track progress, and keep your team organized for better productivity.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -60,7 +60,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-task.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-task.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -114,9 +114,9 @@
                        Our task management software centralizes projects and promotes team collaboration for better outcomes.
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -197,7 +197,7 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Create Tasks</h5>
-                    <p class="small">Create tasks easily on the task management system for small business. It doesn't take more than a few minutes.</p>
+                    <p class="small">Create tasks easily on the task management software for business. It doesn't take more than a few minutes.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
@@ -233,12 +233,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-task-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-task-admin-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -247,7 +247,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-task-emp-ui.png') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-task-emp-ui.png') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

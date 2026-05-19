@@ -3,6 +3,7 @@
     
 @include('pages.front.layouts.head')
 
+
 <!-- =================  For specific pages styles ===============  -->
 @stack('styles')
 
@@ -11,6 +12,7 @@
 @yield('content')
 
 @include('pages.front.layouts.footer')
+@include('pages.front.blocks.demo-modal')
 
 <!-- =================  For specific pages scripts ===============  -->
 

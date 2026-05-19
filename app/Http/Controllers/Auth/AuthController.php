@@ -15,13 +15,16 @@ use App\Models\EmployeeDetail;
 use App\Enums\UserType;
 use App\Traits\GenerateEmployeeCode;
 
+use App\Models\LoginHistory;
+use Jenssegers\Agent\Agent;
+
 class AuthController extends BaseController
 {
     use GenerateEmployeeCode;
 
     public function __construct() 
     {
-        $this->tenant = app('tenant');
+        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
     }
 
     public function signup (Request $request) 
@@ -92,7 +95,7 @@ class AuthController extends BaseController
         ]);
         $user = User::where('email', $request->email)->first();
         if (!empty($user)) {
-            if ($user->is_active === 1) {
+            if ($user->is_active == 1 || $user->is_active == 2) {
                 $credentials = $request->only('email', 'password');
                 if (Auth::attempt($credentials)) {
                     

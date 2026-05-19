@@ -1,5 +1,9 @@
 @php
-    $identityRejectedCount = collect($employeeIdList)->where('status', 2)->count();
+    $identityRejectedCount = collect($employeeIdList ?? [])
+    ->filter(function ($identity) {
+        return optional($identity->documentAction)->status == 2;
+    })
+    ->count();
 @endphp
 
 
@@ -113,13 +117,13 @@
                             @endphp
 
                             
-                            {!! \App\Helpers\DocumentStatus::statusBadge($pan->status) !!}
+                            {!! \App\Helpers\DocumentStatus::statusBadge($pan->documentAction?->status) !!}
                             <a href="javascript:void(0);" onclick="openSecureDocument('{{ $signedUrl }}')">
                                 View PAN
                             </a>
 
-                            @if ($pan->status == 2)
-                                {!! \App\Helpers\DocumentStatus::remarks($pan->remarks) !!}
+                            @if ($pan->documentAction?->status == 2)
+                                {!! \App\Helpers\DocumentStatus::remarks($pan->documentAction?->remark) !!}
                             @endif 
                         @endif
 
@@ -177,14 +181,14 @@
                                             now()->addMinutes(5)
                                         );
                                     @endphp
-                                    {!! \App\Helpers\DocumentStatus::statusBadge($list->status) !!}
+                                    {!! \App\Helpers\DocumentStatus::statusBadge($list->documentAction?->status) !!}
                                     <a href="javascript:void(0);"
                                     onclick="openSecureDocument('{{ $signedUrl }}')">
                                     View Document
                                     </a>
 
-                                    @if ($list->status == 2)
-                                        {!! \App\Helpers\DocumentStatus::remarks($list->remarks) !!}
+                                    @if ($list->documentAction?->status == 2)
+                                        {!! \App\Helpers\DocumentStatus::remarks($list->documentAction?->remark ?? '') !!}
                                     @endif
                                 @endif
                                  <small class="text-muted d-block">

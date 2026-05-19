@@ -6,7 +6,7 @@
             <div class="col-lg-6 position-relative text-center platform-visual">
 
                 <!-- Main Person Image -->
-                <img src="./images/platform-left.png" class="img-fluid main-person" alt="CRM software tools">
+                <img src="./images/platform-left.webp" loading="lazy" class="img-fluid main-person" alt="CRM software tools">
             </div>
 
             <!-- RIGHT: CONTENT -->
@@ -17,8 +17,7 @@
                 </span>
 
                 <h2 class="section-title mb-3 mt-4">
-                    <span class="text-uppercase">All-in-One </span>
-                    CRM <br> for Complete Business Management
+                    All-in-One CRM <br> for Complete Business Management
                 </h2>
 
                 <p class="section-desc mb-4">

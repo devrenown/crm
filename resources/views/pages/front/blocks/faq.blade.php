@@ -5,7 +5,7 @@
                 <span class="section-title-badge">FAQS</span>
             </div>
 
-            <h2 class="section-title mb-3 mt-4"><span class="text-uppercase">Frequently </span> asked questions
+            <h2 class="section-title mb-3 mt-4">Frequently asked questions
             </h2>
             <p class="fs-5 text-secondary lh-base mt-3">Everything you need to know about Renown System. Can't  find what
                 you're looking for? Contact our support team.</p>

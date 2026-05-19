@@ -60,4 +60,12 @@ class EmployeeWorkExperience extends Model
     {
         return $this->morphMany(DocumentAction::class, 'documentable');
     }
+    
+    public function getDocument($type)
+    {
+        return $this->documentActions()
+            ->where('document_type', $type)
+            ->latest()
+            ->first();
+    }
 }

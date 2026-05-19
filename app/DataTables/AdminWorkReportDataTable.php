@@ -56,7 +56,8 @@ class AdminWorkReportDataTable extends DataTable
             })
 
             ->addColumn('created_at', function ($row) {
-                return $row->created_at->format('d M Y, h:i A');
+                // return $row->created_at->format('d M Y, h:i A');
+                return tz($row->created_at, 'd M Y, h:i A');
             })
 
             ->addColumn('action', function ($row) {

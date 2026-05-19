@@ -28,6 +28,7 @@ use App\Models\LeaveType;
 use App\Models\LeaveBalance;
 use App\Models\Shift;
 use App\Models\EmployeeShift;
+use App\Models\UserOnboarding;
 use Carbon\Carbon;
 
 class EmployeesController extends Controller
@@ -40,7 +41,7 @@ class EmployeesController extends Controller
 
     public function __construct() 
     {
-        $this->tenant = app('tenant');
+        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
     }
 
     public function index(Request $request)
@@ -54,12 +55,14 @@ class EmployeesController extends Controller
 
         if ($request->filled('status')) {
             if ($request->status === 'active') {
-                $query->where('is_active', true);
-            } elseif ($request->status === 'inactive') {
-                $query->where('is_active', false);
+                $query->where('is_active', 1);
+            }elseif ($request->status === 'pending') {
+                $query->where('is_active', 2);
+            }elseif ($request->status === 'inactive') {
+                $query->where('is_active', 0);
             }
         } else {
-            $query->where('is_active', true);
+            $query->where('is_active', 1);
         }
 
         $employees = $query->paginate(12);
@@ -128,7 +131,7 @@ class EmployeesController extends Controller
             'reporting_manager'     => $request->reporting_manager ?? null,
             'sub_reporting_manager' => $request->sub_reporting_manager ?? null,
             'created_by'            => auth()->user()->id,
-            'is_active'             => !empty($request->status),
+            'is_active'             => $request->status,
             'password'              => Hash::make($request->password)
         ]);
         if ($user) {
@@ -147,16 +150,24 @@ class EmployeesController extends Controller
             $empId = $this->generateEmployeeCode($this->tenant);
             
             EmployeeDetail::create([
-                'emp_id' => $empId,
-                'user_id' => $user->id,
-                'department_id' => $request->department,
-                'designation_id' => $request->designation,
+                'emp_id'            => $empId,
+                'user_id'           => $user->id,
+                'department_id'     => $request->department,
+                'designation_id'    => $request->designation,
+                'date_joined'       => $request->date_joined
             ]);
 
             EmployeeShift::create([
                 'user_id'   => $user->id,
                 'shift_id'  => $request->shift,
             ]);
+
+            if ($request->experience_level) {
+                UserOnboarding::create([
+                    'user_id'       => $user->id,
+                    'type'          => $request->experience_level,
+                ]);
+            }
         }
         $notification = notify(__('Employee has been added'));
         return back()->with($notification);
@@ -241,7 +252,7 @@ class EmployeesController extends Controller
             'avatar'                => $fileName,
             'reporting_manager'     => $request->reporting_manager ?? null,
             'sub_reporting_manager' => $request->sub_reporting_manager ?? null,
-            'is_active'             => !empty($request->status),
+            'is_active'             => $request->status,
             'password'              => !empty($request->password) ? Hash::make($request->password) : $user->password
         ]);
         if (!empty($user)) {
@@ -255,16 +266,22 @@ class EmployeesController extends Controller
                 'user_id'           => $user->id,
                 'department_id'     => $request->department,
                 'designation_id'    => $request->designation,
+                'date_joined'       => $request->date_joined
             ]);
 
-            // EmployeeShift::create([
-            //     'user_id'   => $user->id,
-            //     'shift_id'  => $request->shift,
-            // ]);
             EmployeeShift::updateOrCreate(
                 ['user_id' => $user->id],
                 ['shift_id' => $request->shift]
             );
+
+            if ($request->experience_level) {
+
+                UserOnboarding::updateOrCreate([
+                'user_id' => $user->id,
+                ], [
+                    'type'  => $request->experience_level,
+                ]);
+            }
         }
         $notification = notify(__("Employee has been updated"));
         return back()->with($notification);
@@ -374,7 +391,11 @@ class EmployeesController extends Controller
         }
 
         try {
-            $user->update(['is_onboarding_complete' => 1]);
+            $userOnboarding = UserOnboarding::where('user_id', $user->id)->first();
+
+            $user->update(['is_onboarding_complete' => 1, 'is_active' => 1]);
+            $userOnboarding->update(['status' => 2]);
+
             Mail::to($user->email)->send(new OnboardingApprovedMail($user));
         }catch(\Exception $e) {
             return response()->json(['error' => 'Failed to send email', 'details' => $e->getMessage()], 500);
@@ -404,6 +425,13 @@ class EmployeesController extends Controller
                     'verification_code' => $code,
                     'expired_at'        => now()->addDays(5), 
                     'is_sent'           => 1,
+                ]
+            );
+
+            UserOnboarding::updateOrCreate(
+                ['user_id' => $userId],
+                [
+                    'invited_at' => now(),
                 ]
             );
 

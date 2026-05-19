@@ -1,23 +1,13 @@
 @php
-    $employmentRejectedCount = 0;
+$employmentRejectedCount = 0;
 
-    foreach (($employeeEmployementList->workExperience ?? []) as $exp) {
-        $statuses = [
-            $exp->offer_status,
-            $exp->appointment_status,
-            $exp->experience_status,
-            $exp->relieving_status,
-            $exp->increment_status,
-            $exp->salary_status,
-            $exp->bank_status,
-        ];
-
-        foreach ($statuses as $status) {
-            if ($status == 2) {
-                $employmentRejectedCount++;
-            }
+foreach (($employeeEmployementList->workExperience ?? []) as $exp) {
+    foreach ($exp->documentActions as $doc) {
+        if ($doc->status == 2) {
+            $employmentRejectedCount++;
         }
     }
+}
 @endphp
 
 <h3>Employment
@@ -33,8 +23,8 @@
 
                 {{-- Existing Employment Records --}}
                 @if (count($employeeEmployementList->workExperience ?? []) > 0)
+                 
                     @foreach ($employeeEmployementList->workExperience as $employement)
-                        
 
                         <div class="card experience-item deletable-item">
 
@@ -144,6 +134,7 @@
                                                     'salary_slip'        => $employement->salary_slip,
                                                     'bank_statement'     => $employement->bank_statement,
                                                 ];
+                                                
                                             @endphp
 
                                             @if($employement->offer_letter)
@@ -159,16 +150,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('offer_letter');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->offer_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Offer Letter
                                                 </a>
 
-                                                @if ($employement->offer_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->offer_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
 
                                             @endif
@@ -200,16 +193,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('appointment_letter');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->appointment_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Appointment Letter
                                                 </a>
 
-                                                @if ($employement->appointment_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->appointment_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
                                             <small class="text-muted d-block"><span class="text-danger">*</span>Allowed pdf
@@ -240,16 +235,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('experience_letter');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->experience_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Experience Letter
                                                 </a>
 
-                                                @if ($employement->experience_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->experience_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
 
@@ -280,16 +277,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('relieving_letter');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->relieving_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Relieving Letter
                                                 </a>
 
-                                                @if ($employement->relieving_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->relieving_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
 
@@ -321,16 +320,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('increment_letter');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->increment_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Increment Letter
                                                 </a>
 
-                                                @if ($employement->increment_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->increment_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
 
@@ -361,16 +362,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('salary_slip');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->salary_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Salary Slip
                                                 </a>
 
-                                                @if ($employement->salary_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->salary_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
 
@@ -401,16 +404,18 @@
                                                         ],
                                                         now()->addMinutes(5)
                                                     );
+                                                    
+                                                    $doc = $employement->getDocument('bank_statement');
                                                 @endphp
 
-                                                {!! \App\Helpers\DocumentStatus::statusBadge($employement->bank_status) !!}
+                                                {!! \App\Helpers\DocumentStatus::statusBadge(@$doc->status) !!}
                                                 <a href="javascript:void(0);" 
                                                 onclick="openSecureDocument('{{ $signedUrl }}')">
                                                     View Bank Statement
                                                 </a>
 
-                                                @if ($employement->bank_status == 2)
-                                                    {!! \App\Helpers\DocumentStatus::remarks($employement->bank_remarks) !!}
+                                                @if (@$doc->status == 2)
+                                                    {!! \App\Helpers\DocumentStatus::remarks(@$doc->remark ?? '') !!}
                                                 @endif
                                             @endif
 

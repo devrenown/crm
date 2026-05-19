@@ -345,4 +345,9 @@ class User extends Authenticatable
     {
         return $this->employeeDetail?->department;
     }
+
+    public function onboarding ()
+    {
+      return $this->hasOne(UserOnboarding::class, 'user_id');
+    }
 }

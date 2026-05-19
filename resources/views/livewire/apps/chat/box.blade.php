@@ -47,71 +47,396 @@
                         <div class="chat-box">
                             <div class="chats">
                                 @if ($messages && $messages->count() > 0)
-                                @foreach ($messages as $message)
-                                    @if (auth()->user()->id == $message->user_id)
-                                    <div class="chat chat-right">
-                                        <div class="chat-body">
-                                            <div class="chat-bubble">
-                                                <div class="chat-content">
-                                                    <p>{{ $message->body }}</p>
-                                                    <span class="chat-time">{{ tz($message->created_at, 'H:i a') }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @else
                                     
-                                    <div class="chat chat-left">
-                                        <div class="chat-avatar">
-                                            <a href="#" class="avatar">
-                                                <img src="{{ !empty($message->sender->avatar) ? asset('storage/'.$message->sender->avatar): asset('images/user.jpg') }}" alt="{{ __('Avatar') }}">
-                                            </a>
-                                        </div>
-                                        <div class="chat-body">
-                                            <div class="chat-bubble">
-                                                <div class="chat-content">
-                                                    {{ $message->body }}
-                                                    <span class="chat-time">{{ tz($message->created_at,'H:i a') }}</span>
+                                    @foreach ($messages as $index => $message)
+
+                                        {{-- Date Separator --}}
+                                        @if ($index == 0 || $messages[$index - 1]->created_at->format('Y-m-d') != $message->created_at->format('Y-m-d'))
+                                            <div class="chat-line">
+                                                <span class="chat-date">
+                                                    {{ $message->created_at->format('d M, Y') }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                    
+                                        @if (auth()->user()->id == $message->user_id)
+                                    
+                                            <div class="chat chat-right" wire:key="message-{{ $message->id }}">
+                                                <div class="chat-body">
+                                                    <div class="chat-bubble">
+                                                        <div class="chat-content">
+                                                            <p>{{ $message->body }}</p>
+                                    
+                                                            @if ($message->getMedia('chat-attachments')->count())
+
+                                                                    <div class="mt-2 d-flex flex-column gap-2">
+                                                                
+                                                                        @foreach ($message->getMedia('chat-attachments') as $media)
+                                                                
+                                                                            @php
+                                                                                $mime = $media->mime_type;
+                                                                                $isImage = str_contains($mime, 'image');
+                                                                            @endphp
+                                                                
+                                                                            @if ($isImage)
+                                                                
+                                                                                {{-- Image Attachment --}}
+                                                                                <a
+                                                                                    href="{{ $media->getUrl() }}"
+                                                                                    target="_blank"
+                                                                                    class="d-inline-block"
+                                                                                >
+                                                                                    <img
+                                                                                        src="{{ $media->getUrl() }}"
+                                                                                        alt="Attachment"
+                                                                                        style="
+                                                                                            max-width:220px;
+                                                                                            max-height:220px;
+                                                                                            border-radius:12px;
+                                                                                            object-fit:cover;
+                                                                                            border:1px solid #ddd;
+                                                                                        "
+                                                                                    >
+                                                                                </a>
+                                                                
+                                                                            @else
+                                                                
+                                                                                {{-- File Attachment --}}
+                                                                                <a
+                                                                                    href="{{ $media->getUrl() }}"
+                                                                                    target="_blank"
+                                                                                    class="d-flex align-items-center gap-2 p-2 border rounded text-decoration-none bg-light"
+                                                                                    style="
+                                                                                        max-width:250px;
+                                                                                        color:#333;
+                                                                                    "
+                                                                                >
+                                                                                    <i class="fa-solid fa-file fa-lg text-primary"></i>
+                                                                
+                                                                                    <div style="overflow:hidden;">
+                                                                                        <div
+                                                                                            style="
+                                                                                                font-size:13px;
+                                                                                                white-space:nowrap;
+                                                                                                overflow:hidden;
+                                                                                                text-overflow:ellipsis;
+                                                                                                max-width:180px;
+                                                                                            "
+                                                                                        >
+                                                                                            {{ $media->file_name }}
+                                                                                        </div>
+                                                                
+                                                                                        <small class="text-muted">
+                                                                                            {{ round($media->size / 1024, 1) }} KB
+                                                                                        </small>
+                                                                                    </div>
+                                                                                </a>
+                                                                
+                                                                            @endif
+                                                                
+                                                                        @endforeach
+                                                                
+                                                                    </div>
+                                                                
+                                                                @endif
+                                    
+                                                            <span class="chat-time">
+                                                                {{ tz($message->created_at, 'H:i a') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    @endif
-                                    @if ($message->created_at->format('y-m-d') != now()->format('y-m-d'))
-                                    <div class="chat-line">
-                                        <span class="chat-date">{{ $message->created_at->format('d M, Y') }}</span>
-                                    </div>
-                                    @endif
-                                @endforeach
+                                    
+                                        @else
+                                    
+                                            <div class="chat chat-left" wire:key="message-{{ $message->id }}">
+                                                <div class="chat-avatar">
+                                                    <a href="#" class="avatar">
+                                                        <img src="{{ !empty($message->sender->avatar)
+                                                            ? asset('storage/'.$message->sender->avatar)
+                                                            : asset('images/user.jpg') }}"
+                                                            alt="Avatar">
+                                                    </a>
+                                                </div>
+                                    
+                                                <div class="chat-body">
+                                                    <div class="chat-bubble">
+                                                        <div class="chat-content">
+                                                            <p>{{ $message->body }}</p>
+                                    
+                                                            @if ($message->getMedia('chat-attachments')->count())
+
+                                                                    <div class="mt-2 d-flex flex-column gap-2">
+                                                                
+                                                                        @foreach ($message->getMedia('chat-attachments') as $media)
+                                                                
+                                                                            @php
+                                                                                $mime = $media->mime_type;
+                                                                                $isImage = str_contains($mime, 'image');
+                                                                            @endphp
+                                                                
+                                                                            @if ($isImage)
+                                                                
+                                                                                {{-- Image Attachment --}}
+                                                                                <a
+                                                                                    href="{{ $media->getUrl() }}"
+                                                                                    target="_blank"
+                                                                                    class="d-inline-block"
+                                                                                >
+                                                                                    <img
+                                                                                        src="{{ $media->getUrl() }}"
+                                                                                        alt="Attachment"
+                                                                                        style="
+                                                                                            max-width:220px;
+                                                                                            max-height:220px;
+                                                                                            border-radius:12px;
+                                                                                            object-fit:cover;
+                                                                                            border:1px solid #ddd;
+                                                                                        "
+                                                                                    >
+                                                                                </a>
+                                                                
+                                                                            @else
+                                                                
+                                                                                {{-- File Attachment --}}
+                                                                                <a
+                                                                                    href="{{ $media->getUrl() }}"
+                                                                                    target="_blank"
+                                                                                    class="d-flex align-items-center gap-2 p-2 border rounded text-decoration-none bg-light"
+                                                                                    style="
+                                                                                        max-width:250px;
+                                                                                        color:#333;
+                                                                                    "
+                                                                                >
+                                                                                    <i class="fa-solid fa-file fa-lg text-primary"></i>
+                                                                
+                                                                                    <div style="overflow:hidden;">
+                                                                                        <div
+                                                                                            style="
+                                                                                                font-size:13px;
+                                                                                                white-space:nowrap;
+                                                                                                overflow:hidden;
+                                                                                                text-overflow:ellipsis;
+                                                                                                max-width:180px;
+                                                                                            "
+                                                                                        >
+                                                                                            {{ $media->file_name }}
+                                                                                        </div>
+                                                                
+                                                                                        <small class="text-muted">
+                                                                                            {{ round($media->size / 1024, 1) }} KB
+                                                                                        </small>
+                                                                                    </div>
+                                                                                </a>
+                                                                
+                                                                            @endif
+                                                                
+                                                                        @endforeach
+                                                                
+                                                                    </div>
+                                                                
+                                                                @endif
+                                    
+                                                            <span class="chat-time">
+                                                                {{ tz($message->created_at, 'H:i a') }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    
+                                        @endif
+                                    
+                                    @endforeach
                                 @endif 
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
             <div class="chat-footer" x-data>
                 <div class="message-bar">
                     <div class="message-inner">
-                        <button type="button" class="btn btn-custom emoji-button">
+            
+                        {{-- Emoji Button --}}
+                        <button type="button" class="btn btn-custom emoji-button me-3">
                             <i class="fa-solid fa-smile"></i>
                         </button>
-                        <div class="message-area">
-                            <div class="input-group">
-                                <!-- <textarea class="form-control" wire:model="messageBody" wire:keydown.enter.prevent="$wire.sendMessage" @keyup.enter="$wire.sendMessage" id="messageInput" placeholder="Type message..."></textarea> -->
-
+            
+                        <div class="message-area w-100">
+            
+                            {{-- Attachment Preview --}}
+                            @if ($attachments && count($attachments) > 0)
+            
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+            
+                                    @foreach ($attachments as $index => $file)
+            
+                                        <div
+                                            class="position-relative border rounded overflow-hidden bg-light"
+                                            style="width:90px;height:90px;"
+                                            wire:key="attachment-preview-{{ $index }}"
+                                        >
+            
+                                            {{-- Image Preview --}}
+                                            @if (str_contains($file->getMimeType(), 'image'))
+            
+                                                <img
+                                                    src="{{ $file->temporaryUrl() }}"
+                                                    alt="Preview"
+                                                    style="
+                                                        width:100%;
+                                                        height:100%;
+                                                        object-fit:cover;
+                                                    "
+                                                >
+            
+                                            @else
+            
+                                                {{-- File Preview --}}
+                                                <div
+                                                    class="d-flex flex-column align-items-center justify-content-center h-100 p-2 text-center"
+                                                    style="font-size:11px;"
+                                                >
+                                                    <i class="fa-solid fa-file fa-2x mb-1 text-secondary"></i>
+            
+                                                    <span
+                                                        style="
+                                                            word-break:break-word;
+                                                            line-height:1.2;
+                                                        "
+                                                    >
+                                                        {{ $file->getClientOriginalName() }}
+                                                    </span>
+                                                </div>
+            
+                                            @endif
+            
+                                            {{-- Remove Button --}}
+                                            <button
+                                                type="button"
+                                                wire:click="removeAttachment({{ $index }})"
+                                                class="btn btn-danger btn-sm position-absolute"
+                                                style="
+                                                    top:2px;
+                                                    right:2px;
+                                                    width:20px;
+                                                    height:20px;
+                                                    border-radius:50%;
+                                                    padding:0;
+                                                    line-height:18px;
+                                                    font-size:12px;
+                                                "
+                                            >
+                                                ×
+                                            </button>
+            
+                                        </div>
+            
+                                    @endforeach
+            
+                                </div>
+            
+                            @endif
+            
+                            {{-- Input Area --}}
+                            <div class="input-group align-items-center">
+            
+                                {{-- Attachment Button --}}
+                                <label
+                                    for="chat-attachment"
+                                    class="btn btn-custom d-flex justify-content-center align-items-center"
+                                    style="
+                                        cursor:pointer;
+                                        height:45px;
+                                        min-width:45px;
+                                    "
+                                    title="Attach files"
+                                >
+                                    <i class="fa-solid fa-paperclip"></i>
+                                </label>
+            
+                                {{-- Hidden File Input --}}
+                                <input
+                                    type="file"
+                                    wire:model="attachments"
+                                    id="chat-attachment"
+                                    class="d-none"
+                                    multiple
+                                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.zip,.txt"
+                                >
+            
+                                {{-- Message Input --}}
                                 <textarea
                                     class="form-control"
                                     wire:model.defer="messageBody"
-                                    wire:keydown.enter.prevent="$wire.sendMessage"
+                                    wire:keydown.enter.exact.prevent="sendMessage"
                                     id="messageInput"
-                                    placeholder="Type message...">
-                                </textarea>
-                                <button class="btn btn-custom" type="button" wire:click="sendMessage"><i class="fa-solid fa-paper-plane"></i></button>
+                                    rows="1"
+                                    placeholder="Type your message..."
+                                    style="
+                                        resize:none;
+                                        min-height:45px;
+                                        max-height:120px;
+                                    "
+                                ></textarea>
+            
+                                {{-- Send Button --}}
+                                <button
+                                    class="btn btn-custom"
+                                    type="button"
+                                    wire:click="sendMessage"
+                                    wire:loading.attr="disabled"
+                                    style="
+                                        height:45px;
+                                        min-width:50px;
+                                    "
+                                >
+            
+                                    {{-- Loading --}}
+                                    <span
+                                        wire:loading
+                                        wire:target="attachments,sendMessage"
+                                    >
+                                        <i class="fa-solid fa-spinner fa-spin"></i>
+                                    </span>
+            
+                                    {{-- Normal Icon --}}
+                                    <span
+                                        wire:loading.remove
+                                        wire:target="attachments,sendMessage"
+                                    >
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </span>
+            
+                                </button>
+            
                             </div>
+            
+                            {{-- Upload Loading --}}
+                            <div
+                                wire:loading
+                                wire:target="attachments"
+                                class="small text-muted mt-2"
+                            >
+                                Uploading files...
+                            </div>
+            
+                            {{-- Validation Errors --}}
+                            @error('attachments.*')
+                                <div class="text-danger small mt-1">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+            
                         </div>
+            
                     </div>
                 </div>
             </div>
+            
             @else
             <div class="d-flex align-items-center justify-content-center flex-column text-center h-100" style="min-height: 70vh;">
     

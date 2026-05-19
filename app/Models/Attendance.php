@@ -13,6 +13,11 @@ class Attendance extends Model
     protected $fillable = [
         'user_id', 'tenant_id', 'startDate','endDate', 'location', 'platform',
     ];
+    
+    protected $casts = [
+        'startDate' => 'datetime',
+        'endDate' => 'datetime',
+    ];
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id');

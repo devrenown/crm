@@ -73,7 +73,7 @@
 <nav class="navbar navbar-expand-lg fixed-top custom-navbar pt-0">
     <div class="container-fluid mx-lg-5 shadow-sm mt-lg-3 bg-white position-relative rounded-pill">
         <a class="navbar-brand d-flex align-items-center" href="{{ route('front') }}">
-            <img src="{{ asset('images/front/logo-home.png') }}" alt="RenownCRM" class="m-0 p-0"
+            <img src="{{ asset('images/front/logo-home.webp') }}" alt="RenownCRM" class="m-0 p-0"
                     style="height:50px;">
         </a>
 
@@ -198,7 +198,7 @@
                                                     <i class="bi bi-ticket-detailed text-primary fs-3 me-3"></i>
                                                     <div>
                                                         <p class="fw-bold mb-1 fs-6 text-dark">Ticket Management</p>
-                                                        <p class="text-muted">Manage salaries, deductions, and payments efficiently with an accurate and streamlined payroll system.</p>
+                                                        <p class="text-muted">Create, assign, track, and resolve support tickets efficiently for smooth issue management and faster resolution.</p>
                                                     </div>
                                                 </div>
                                             </a>
@@ -233,7 +233,15 @@
                 </li>
             </ul>
             
-            @if (Auth::check())
+            <div class="d-flex align-items-center gap-3">
+                <a href="{{ route('login') }}" class="nav-link fs-19 me-2"><i class="fa-regular fa-user"></i> Login</a>
+                
+                <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary border-white rounded-pill px-2 px-lg-4 fs-19 shadow">
+                    Request Demo <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            {{-- @if (Auth::check())
             <div>
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="btn btn-sm text-white"
@@ -250,7 +258,7 @@
                     Request Demo <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
-            @endif
+            @endif --}}
             
         </div>
         

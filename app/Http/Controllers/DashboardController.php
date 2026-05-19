@@ -23,6 +23,7 @@ use Spatie\Permission\PermissionRegistrar;
 use App\Enums\TenantStatus;
 use App\Services\CurrencyService;
 use Illuminate\Support\Facades\DB;
+use App\Models\Blog;
 
 class DashboardController extends BaseController
 {
@@ -39,6 +40,7 @@ class DashboardController extends BaseController
         $rate = CurrencyService::getRate('INR', $currencyCode);
 
         $currency = DB::table('currencies')->where('code', $currencyCode)->first();
+        $blogs = Blog::where('status', 'published')->latest()->take(3)->get();
 
         $plans = Plan::where('status', 1)->get()->map(function ($plan) use ($rate) {
             $plan->display_price = round($plan->price * $rate, 2);
@@ -46,7 +48,7 @@ class DashboardController extends BaseController
         });
 
         if ($request->getHost() === env('PRIMARY_HOST', 'renownsystem.com')) {
-            return view("pages.front.index", ['plans' => $plans, 'currency' => $currency]);
+            return view("pages.front.index", ['plans' => $plans, 'currency' => $currency, 'blogs' => $blogs]);
         }
 
         return redirect()->route('tenant.login');

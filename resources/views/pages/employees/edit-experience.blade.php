@@ -365,11 +365,11 @@
 
                     success: function (res) {
                         alert(res.message);
-                        window.location.href = "{{ route('employees.index') }}";
+                        location.reload();
                     },
 
                     error: function (xhr) {
-                        alert('Something went wrong');
+                        alert('Something went wrong !');
                         console.log(xhr.responseText);
                     },
 

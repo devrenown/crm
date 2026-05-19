@@ -44,9 +44,9 @@
                         A secure employee management CRM to handle daily HR work, from adding and maintaining employee records to tracking performance, and more - all from a single dashboard.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -60,7 +60,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/image 68.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/image 68.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -74,7 +74,7 @@
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        Operational bottlenecks directly impact visibility, performance, and resource alignment. Disconnected systems, manual logging, and raw employee data cause job delays, inconsistencies in work hours/deliverables, and resource allocation blind spots. Additionally, your existing system becomes insufficient when it comes to supporting large, distributed global teams. Employee management software is a powerful automation tool for small businesses. It manages the complete employee lifecycle with minimal human intervention. It simplifies HR operations and scales as your small team expands beyond your geography.
+                        Operational bottlenecks directly impact visibility, performance, and resource alignment. Disconnected systems, manual logging, and raw employee data cause job delays, inconsistencies in work hours/deliverables, and resource allocation blind spots. Additionally, your existing system becomes insufficient when it comes to supporting large, distributed global teams. Employee management software is a powerful automation tool for your businesses. It manages the complete employee lifecycle with minimal human intervention. It simplifies HR operations and scales as your team expands beyond your geography.
                     </p>
                         <p class="text-muted mb-4">
                             For better workforce management, this automation software provides:
@@ -117,9 +117,9 @@
                         Manage your workforce and elevate their performance with our employee management CRM - designed to simplify operations and improve productivity.
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -131,7 +131,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-clock fs-2 icon-box"></i>
                                 <h5 class="mt-3">Attendance</h5>
-                                <p class="text-muted small">For small business teams, accurate management of employee check-ins is crucial. With Renown employee management software for small business with attendance tracking, you can record employee attendance without any difficulty.</p>
+                                <p class="text-muted small">For business teams, accurate management of employee check-ins is crucial. With Renown employee management software for all business with attendance tracking, you can record employee attendance without any difficulty.</p>
                             </div>
                         </div>
 
@@ -201,7 +201,7 @@
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="bg-white text-dark p-3 rounded-4 d-inline-block mb-3">01</div>
                     <h5>Add Employees</h5>
-                    <p class="small">Easy to onboard employees to the employee management system for small teams, creating a single repository for recording their roles, departments, and other essential information.</p>
+                    <p class="small">Easy to onboard employees to the employee management system for teams, creating a single repository for recording their roles, departments, and other essential information.</p>
                 </div>
 
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
@@ -237,12 +237,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-admin-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -251,7 +251,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/emp-dash.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/emp-dash.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

@@ -57,10 +57,12 @@ class UsersDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->with('roles')
-        ->whereDoesntHave('roles', function ($q) {
-            $q->whereIn('name', ['Employee', 'Admin', 'Client']);
-        });
+        return $model->newQuery()
+            ->whereIn('id', function ($query) {
+                $query->select('model_id')
+                    ->from('model_has_roles')
+                    ->whereIn('role_id', [4, 5, 6, 10]);
+            });
     }
 
     /**

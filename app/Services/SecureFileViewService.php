@@ -7,6 +7,14 @@ use setasign\Fpdi\PdfParser\StreamReader;
 
 class SecureFileViewService
 {
+    private function logDebug(string $stage, array $data = [])
+    {
+        // \Log::channel('daily')->debug('PDF_STREAM_DEBUG', array_merge([
+        //     'stage' => $stage,
+        //     'time' => now()->toDateTimeString(),
+        // ], $data));
+    }
+
     public function streamDocument(
         string $path,
         string $mime,
@@ -16,91 +24,125 @@ class SecureFileViewService
         string $mode = 'watermark'
     ) {
 
-        // Get decrypted file binary
+        $this->logDebug('ENTRY', compact('path','mime','filename','mode'));
+
+        // Decrypt file
         $binary = $this->decryptFromPrivateDisk($path);
 
+        if (!$binary) {
+            abort(500, 'File decryption failed');
+        }
+
+        // Detect REAL mime
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $realMime = $finfo->buffer($binary) ?: 'application/octet-stream';
+
+        $this->logDebug('MIME_DETECTED', [
+            'real' => $realMime,
+            'db' => $mime,
+            'size' => strlen($binary),
+        ]);
+
         /*
-        |--------------------------------------------------------------------------
-        | CLEAN MODE (No watermark, direct streaming)
-        |--------------------------------------------------------------------------
+        | CLEAN MODE (no processing)
         */
         if ($mode === 'clean') {
             return response($binary, 200, [
-                'Content-Type' => $mime,
+                'Content-Type' => $realMime,
                 'Content-Disposition' => "inline; filename=\"$filename\"",
                 'Cache-Control' => 'no-store, no-cache, must-revalidate',
-                'Pragma' => 'no-cache',
-                'Expires' => '0',
                 'X-Content-Type-Options' => 'nosniff',
             ]);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | WATERMARK MODE
-        |--------------------------------------------------------------------------
-        */
 
         $tenantName = $user->tenant->name ?? 'Tenant';
         $timestamp  = now()->format('d-m-Y H:i');
         $watermark  = "$tenantName | $timestamp";
 
-        $pdf = $this->initializePdf($user, $originalName, $mime, $tenantName);
+        $pdf = $this->initializePdf($user, $originalName, $realMime, $tenantName);
 
         /*
-        |--------------------------------------------------------------------------
-        | HANDLE PDF
-        |--------------------------------------------------------------------------
+        | TRY REAL MIME FIRST
         */
-        if ($mime === 'application/pdf') {
+        try {
 
-            try {
-                // Try applying watermark using FPDI
-                $this->handlePdf($pdf, $binary, $watermark);
+            if ($realMime === 'application/pdf') {
 
-            } catch (\Exception $e) {
-
-                // FPDI unsupported PDF (compressed / object streams etc.)
-                if ($e->getMessage() === 'FPDI_UNSUPPORTED') {
-
-                    // \Log::warning('FPDI unsupported → serving clean PDF', [
-                    //     'file' => $path
-                    // ]);
-
-                    // Fallback: return original PDF without watermark
-                    return response($binary, 200, [
-                        'Content-Type' => 'application/pdf',
-                        'Content-Disposition' => "inline; filename=\"$filename\"",
-                        'Cache-Control' => 'no-store',
-                        'X-Content-Type-Options' => 'nosniff',
-                    ]);
+                // Safety check
+                if (substr($binary, 0, 4) !== '%PDF') {
+                    throw new \Exception('INVALID_PDF_HEADER');
                 }
 
-                // Unknown error → rethrow
-                throw $e;
+                $this->handlePdf($pdf, $binary, $watermark);
+
+            } elseif (str_starts_with($realMime, 'image/')) {
+
+                $this->handleImage($pdf, $binary, $watermark);
+
+            } else {
+                throw new \Exception('REAL_MIME_UNSUPPORTED');
             }
 
-        /*
-        |--------------------------------------------------------------------------
-        | HANDLE IMAGE
-        |--------------------------------------------------------------------------
-        */
-        } elseif (str_starts_with($mime, 'image/')) {
+        } catch (\Throwable $e) {
 
-            $this->handleImage($pdf, $binary, $watermark);
+            $this->logDebug('REAL_MIME_FAILED', [
+                'error' => $e->getMessage()
+            ]);
 
-        } else {
-            abort(415, 'Unsupported document type');
+            /*
+            | FALLBACK TO DB MIME
+            */
+            if ($mime !== $realMime) {
+
+                try {
+
+                    if ($mime === 'application/pdf') {
+
+                        $this->handlePdf($pdf, $binary, $watermark);
+
+                    } elseif (str_starts_with($mime, 'image/')) {
+
+                        $this->handleImage($pdf, $binary, $watermark);
+
+                    } else {
+                        throw new \Exception('DB_MIME_UNSUPPORTED');
+                    }
+
+                } catch (\Throwable $e2) {
+
+                    $this->logDebug('DB_MIME_FAILED', [
+                        'error' => $e2->getMessage()
+                    ]);
+
+                    // FINAL FALLBACK → RAW
+                    return $this->rawResponse($binary, $realMime, $filename);
+                }
+
+            } else {
+                return $this->rawResponse($binary, $realMime, $filename);
+            }
         }
 
-        // Return final generated PDF
         return $this->streamResponse($pdf, $filename);
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Decrypt file from private storage
-    |--------------------------------------------------------------------------
+    | RAW FALLBACK RESPONSE
+    */
+    private function rawResponse(string $binary, string $mime, string $filename)
+    {
+        $this->logDebug('RAW_FALLBACK');
+
+        return response($binary, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => "inline; filename=\"$filename\"",
+            'Cache-Control' => 'no-store',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    /*
+    | DECRYPT
     */
     private function decryptFromPrivateDisk(string $path): string
     {
@@ -112,18 +154,22 @@ class SecureFileViewService
 
         $content = $disk->get($path);
 
-        // If encrypted file
         if (str_ends_with($path, '.enc')) {
-            return FileEncryptionService::decrypt($content);
+
+            $decrypted = FileEncryptionService::decrypt($content);
+
+            if ($decrypted === false) {
+                throw new \RuntimeException('Decryption failed (wrong key or corrupted file)');
+            }
+
+            return $decrypted;
         }
 
         return $content;
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Initialize FPDI instance
-    |--------------------------------------------------------------------------
+    | INIT PDF
     */
     private function initializePdf($user, $subject, $mime, $tenant)
     {
@@ -134,7 +180,6 @@ class SecureFileViewService
         $pdf->SetCompression(true);
         $pdf->SetAutoPageBreak(false);
 
-        // Metadata
         $pdf->SetCreator($user->name ?? 'System');
         $pdf->SetAuthor($user->email ?? 'unknown');
         $pdf->SetSubject($subject ?? 'Document');
@@ -144,47 +189,32 @@ class SecureFileViewService
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Apply watermark on PDF
-    |--------------------------------------------------------------------------
+    | HANDLE PDF
     */
     private function handlePdf($pdf, string $binary, string $watermark)
     {
         try {
-            // Try parsing PDF
-            $pageCount = $pdf->setSourceFile(
-                StreamReader::createByString($binary)
-            );
+            $stream = StreamReader::createByString($binary);
+            $pageCount = $pdf->setSourceFile($stream);
 
             for ($page = 1; $page <= $pageCount; $page++) {
 
                 $tpl  = $pdf->importPage($page);
                 $size = $pdf->getTemplateSize($tpl);
 
-                // Add page with same size
                 $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
                 $pdf->useTemplate($tpl);
 
-                // Apply watermark
                 $this->applyWatermark($pdf, $watermark, $size);
             }
 
         } catch (\Throwable $e) {
-
-            // FPDI cannot read this PDF (compressed / newer format)
-            // \Log::warning('FPDI parsing failed', [
-            //     'error' => $e->getMessage()
-            // ]);
-
-            // Trigger fallback
             throw new \Exception('FPDI_UNSUPPORTED');
         }
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Handle image watermarking
-    |--------------------------------------------------------------------------
+    | HANDLE IMAGE
     */
     private function handleImage($pdf, string $binary, string $watermark)
     {
@@ -192,8 +222,6 @@ class SecureFileViewService
         file_put_contents($tmp, $binary);
 
         $pdf->AddPage();
-
-        // Draw image
         $pdf->Image($tmp, 10, 10, 190);
 
         unlink($tmp);
@@ -207,9 +235,7 @@ class SecureFileViewService
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Watermark logic
-    |--------------------------------------------------------------------------
+    | WATERMARK
     */
     private function applyWatermark($pdf, string $text, array $size)
     {
@@ -217,15 +243,11 @@ class SecureFileViewService
         $pdf->SetFont('helvetica', 'B', 16);
         $pdf->SetTextColor(160, 160, 160);
 
-        $pageWidth  = $size['width'];
-        $pageHeight = $size['height'];
+        $w = $size['width'];
+        $h = $size['height'];
 
-        $xSpacing = $pageWidth / 2.2;
-        $ySpacing = $pageHeight / 3;
-
-        // Repeat watermark diagonally
-        for ($x = -$pageWidth; $x < $pageWidth * 2; $x += $xSpacing) {
-            for ($y = 0; $y < $pageHeight * 1.5; $y += $ySpacing) {
+        for ($x = -$w; $x < $w * 2; $x += $w / 2.2) {
+            for ($y = 0; $y < $h * 1.5; $y += $h / 3) {
 
                 $pdf->StartTransform();
                 $pdf->Rotate(35, $x, $y);
@@ -234,30 +256,24 @@ class SecureFileViewService
             }
         }
 
-        //  Invisible forensic hash
-        $pdf->SetAlpha(0.01);
-        $pdf->SetFont('courier', '', 6);
-        $pdf->Text(1, $pageHeight - 2, hash('sha256', $text));
         $pdf->SetAlpha(1);
     }
 
     /*
-    |--------------------------------------------------------------------------
-    | Final response stream
-    |--------------------------------------------------------------------------
+    | OUTPUT
     */
     private function streamResponse($pdf, string $filename)
     {
-        return response($pdf->Output('', 'S'), 200, [
+        $output = $pdf->Output('', 'S');
+
+        return response($output, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => "inline; filename=\"$filename\"",
             'Cache-Control' => 'no-store',
             'X-Content-Type-Options' => 'nosniff',
-            'Content-Security-Policy' => "default-src 'none'; frame-ancestors 'self'",
         ]);
     }
 }
-
     // private function handlePdf($pdf, string $binary, string $watermark)
     // {
     //     $pageCount = $pdf->setSourceFile(StreamReader::createByString($binary));

@@ -357,8 +357,8 @@
                     },
 
                     success: function (response) {
-                        alert('Employee updated successfully! ✅');
-                        window.location.href = "{{ route('employees.index') }}";
+                        alert('Employee updated successfully');
+                        location.reload();
                     },
 
                     error: function (xhr) {
@@ -374,7 +374,7 @@
 
                             alert("Validation Error:\n" + errorMessage);
                         } else {
-                            alert("Something went wrong ❌");
+                            alert("Something went wrong !");
                         }
                     },
 

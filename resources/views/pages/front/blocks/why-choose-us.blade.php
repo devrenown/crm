@@ -1,3 +1,9 @@
+<style>
+    .icon-feature i {
+        font-size: 3em;
+    }
+</style>
+
 <section class="why-choose-section bg-soft-pink py-5">
     <div class="container-fluid px-lg-5">
 
@@ -5,10 +11,10 @@
         <div class="text-center mb-5">
             <span class="section-title-badge">Why Choose Us</span>
             <h2 class="section-title mt-4">
-               <span class="text-uppercase"> Trusted By Thousands </span> of Companies for Accelerated Growth
+               Trusted By Thousands of Companies for Accelerated Growth
             </h2>
             <p class="text-secondary fs-5 mt-3 lh-base">
-                Empower your small business with a project management CRM that streamlines operations, tracks performance in real time, and improves productivity - just like thousands of companies already using Renown System.
+                Empower your business with a project management CRM that streamlines operations, tracks performance in real time, and improves productivity - just like thousands of companies already using Renown System.
             </p>
         </div>
 
@@ -17,35 +23,35 @@
 
             <div class="card icon-feature shadow col-md-4 col-lg text-center py-3 active" data-icon="1">
                 <div>
-                    <i class="fa-solid fs-1 fa-layer-group text-warning"></i>
+                    <i class="fa-solid fa-layer-group text-warning"></i>
                     <h6 class="mt-3 fs-5">All-in-One<br>Business Solution</h6>
                 </div>
             </div>
 
             <div class="card icon-feature shadow col-md-4 col-lg text-center py-3" data-icon="2">
                 <div>
-                    <i class="fa-regular fs-1 fa-face-smile text-danger"></i>
+                    <i class="fa-regular fa-face-smile text-danger"></i>
                     <h6 class="mt-3 fs-5">Easy Setup &<br>User-Friendly UI</h6>
                 </div>
             </div>
 
             <div class="card icon-feature shadow col-md-4 col-lg text-center py-3" data-icon="3">
                 <div>
-                    <i class="fa-solid fs-1 fa-bolt text-primary"></i>
+                    <i class="fa-solid fa-bolt text-primary"></i>
                     <h6 class="mt-3 fs-5">Automation-<br>Driven Workflow</h6>
                 </div>
             </div>
 
             <div class="card icon-feature shadow col-md-4 col-lg text-center py-3" data-icon="4">
                 <div>
-                    <i class="fa-solid fs-1 fa-arrow-trend-up text-success"></i>
+                    <i class="fa-solid fa-arrow-trend-up text-success"></i>
                     <h6 class="mt-3 fs-5">Scalable for Any<br>Business Size</h6>
                 </div>
             </div>
 
             <div class="card icon-feature shadow col-md-4 col-lg text-center py-3" data-icon="5">
                 <div>
-                    <i class="fa-solid fs-1 fa-shield-halved text-purple"></i>
+                    <i class="fa-solid fa-shield-halved text-purple"></i>
                     <h6 class="mt-3 fs-5">Secure Cloud-<br>Based Platform</h6>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                         Simplified daily operations</div>
                 </div>
 
-                <a href="#"
+                <a href="{{ url('/#features') }}"
                     class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
                     Explore Features →
                 </a>
@@ -98,10 +104,10 @@
                         Guided tutorials & support assistance</div>
                 </div>
 
-                <a href="#"
+                <!-- <a href="#"
                     class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
                     Get Started →
-                </a>
+                </a> -->
             </div>
         </div>
 
@@ -123,10 +129,10 @@
                         Smart reports generation</div>
                 </div>
 
-                <a href="#"
+                <!-- <a href="#"
                     class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
                     Get Started →
-                </a>
+                </a> -->
             </div>
         </div>
 
@@ -148,10 +154,10 @@
                         Customizable features & integrations</div>
                 </div>
 
-                <a href="#"
+                <!-- <a href="#"
                     class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
                     Get Started →
-                </a>
+                </a> -->
             </div>
         </div>
 
@@ -173,10 +179,10 @@
                         Role-based access control</div>
                 </div>
 
-                <a href="#"
+                <!-- <a href="#"
                     class="btn btn-lg px-lg-4 px-md-3 px-2 btn-primary mt-3 border-3 border-top-0 border-white shadow-lg">
                     Get Started →
-                </a>
+                </a> -->
             </div>
         </div>
 

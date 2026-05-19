@@ -19,7 +19,8 @@ class Box extends Component
 
     public int $authUserId;
     public $userId;
-    public $messageBody, $attachment;
+    public $messageBody;
+    public $attachments = [];
     
 
     public function mount($userId = null)
@@ -37,58 +38,89 @@ class Box extends Component
     
     public function sendMessage()
     {
+        if (
+            empty(trim($this->messageBody ?? '')) &&
+            count($this->attachments) === 0
+        ) {
+            return;
+        }
+        
         $receiver = $this->getUser();
 
         $message = ChatMessage::create([
             'user_id' => auth()->user()->id,
             'from_id' => auth()->user()->id,
             'receiver_id' => $receiver->id,
-            'body' => $this->messageBody,
-            'type' => 'text',
+            'body' => trim($this->messageBody ?? ''),
+            'type' => !empty($this->attachments) ? 'file' : 'text',
             'is_read' => false,
         ]);
 
+        if (!empty($this->attachments)) {
+            foreach ($this->attachments as $file) {
+                $message->addMedia($file)->toMediaCollection('chat-attachments');
+            }
+        }
+
         broadcast(new ChatMessageSent($message))->toOthers();
         $this->messageBody = '';
+        $this->attachments = [];
         // ChatMessageSent::dispatch($message);
         $this->dispatch('scroll-chat');
     }
 
     // [On('echo:chat-message,ChatMessageSent')]
-   #[On('echo-private:chat.user.{authUserId},chat.message.sent')]
-public function refreshMessages()
-{
-    $this->dispatch('scroll-chat');
-    $this->reset('messageBody');// forces component refresh
-}
-
-   public function fetchMessages()
-{
-    $user_id = $this->getUser()->id;
-
-    // mark unread as read
-    ChatMessage::where('from_id', $user_id)
-        ->where('receiver_id', auth()->id())
-        ->update([
-            'is_read' => true
-        ]);
-
-    return ChatMessage::where(function ($q) use ($user_id) {
-        $q->where('from_id', auth()->id())
-          ->where('receiver_id', $user_id);
-    })
-    ->orWhere(function ($q) use ($user_id) {
-        $q->where('from_id', $user_id)
-          ->where('receiver_id', auth()->id());
-    });
-}
+   #[On('echo-private:chat.user.{authUserId},.chat.message.sent')]
+    public function refreshMessages()
+    {
+        $this->dispatch('scroll-chat');
+    }
+    
+    public function fetchMessages()
+    {
+        $user_id = $this->getUser()->id;
+    
+        // mark unread messages as read
+        ChatMessage::where('from_id', $user_id)
+            ->where('receiver_id', auth()->id())
+            ->where('is_read', false)
+            ->update([
+                'is_read' => true
+            ]);
+    
+        return ChatMessage::where(function ($q) use ($user_id) {
+                $q->where('from_id', auth()->id())
+                  ->where('receiver_id', $user_id);
+            })
+            ->orWhere(function ($q) use ($user_id) {
+                $q->where('from_id', $user_id)
+                  ->where('receiver_id', auth()->id());
+            })
+            ->orderBy('created_at', 'asc');
+    }
 
     #[Js] 
     public function scrollDown()
     {
-        return 'setTimeout(() => {
-            document.getElementById("chatContent").scrollTop = document.getElementById("chatContent").scrollHeight
-        }, 500);';
+        return '
+        setTimeout(() => {
+            let chatBox = document.getElementById("chatContent");
+        
+            if(chatBox){
+                chatBox.scrollTo({
+                    top: chatBox.scrollHeight,
+                    behavior: "smooth"
+                });
+            }
+        }, 200);
+        ';
+    }
+    
+    public function removeAttachment($index)
+    {
+        unset($this->attachments[$index]);
+    
+        $this->attachments = array_values($this->attachments);
     }
 
     public function render()
@@ -99,10 +131,9 @@ public function refreshMessages()
 
         if(!empty($this->userId)){
             $user = $this->getUser();
-            $query = $this->fetchMessages();
+            $messages = $this->fetchMessages()->get();
+            $lastMessage = $messages->last();
 
-            $messages = $query->get();
-            $lastMessage = (clone $query)->latest()->first();
         }
         return view('livewire.apps.chat.box',compact(
             'user','lastMessage','messages'

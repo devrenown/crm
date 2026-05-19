@@ -38,9 +38,9 @@
                         Keep your entire billing workflow streamlined with Renown's advanced invoice management software. Stay organised, improve cash flow visibility, and manage client billing across projects.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -54,7 +54,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-invoice.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-invoice.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -68,7 +68,7 @@
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A powerful management software that helps small businesses and startups streamline billing and improve financial visibility. It centralises invoicing workflow, from capturing client data to generating accurate invoices, accelerating approvals and tracking cash flow in real-time. In simple words, Renown CRM scales up how invoices are created, managed, and monitored, adapting to your operations while keeping everything organised, compliant, and accessible from a single dashboard.
+                        A powerful invoice management software that helps to businesses and startups streamline billing and improve financial visibility. It centralises invoicing workflow, from capturing client data to generating accurate invoices, accelerating approvals and tracking cash flow in real-time. In simple words, Renown CRM scales up how invoices are created, managed, and monitored, adapting to your operations while keeping everything organised, compliant, and accessible from a single dashboard.
                     </p>
 
                     <!-- Features -->
@@ -112,9 +112,9 @@
                        Manual invoicing includes multiple errors that create approval bottlenecks and delays payments. With our online invoice management system, you can accelerate payment cycles and easily handle increased billing volumes. 
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -187,7 +187,7 @@
             <!-- Heading -->
             <h2 class="fw-bold mb-3">Master Your Invoice Management Process in Four Steps</h2>
             <p class="mb-5">
-                For small businesses, our invoice management tool is the best choice. It is simple and navigation-friendly. Creating, sharing, and tracking invoices becomes much faster through automation. Start managing your billing operations like a professional - from day one.
+                For businesses, our invoice management tool is the best choice. It is simple and navigation-friendly. Creating, sharing, and tracking invoices becomes much faster through automation. Start managing your billing operations like a professional - from day one.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -232,7 +232,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5> --}}
-                    <img src="{{ asset('images/features/feature-invoice-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-invoice-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

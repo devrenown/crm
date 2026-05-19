@@ -110,7 +110,7 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                                 'endTime' => $autoClockoutAt->copy()->setTimezone('UTC'),
                             ]);
                             $attendance->update([
-                                'endDate' => $autoClockoutAt->toDateString()
+                                'endDate' => $autoClockoutAt->copy()->setTimezone('UTC')
                             ]);
 
                             logger()->info('AUTO CLOCK-OUT EXECUTED', [

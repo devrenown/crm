@@ -43,9 +43,9 @@
                         Transform your outdated payroll system and automate the entire workflow from one unified platform.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -59,7 +59,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-payroll.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-payroll.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -73,7 +73,7 @@
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                       Simplify the entire payroll cycle and save valuable HR hours wasted on manual data entry and reconciliations. Renown’s online payroll system is easily scalable. It helps small businesses not only handle salaries, compliance, and employee records from one place, but it can also accommodate new payroll for future hires. It supports growing teams, creates structured processes, accelerates workflows, and provides better visibility across every payroll cycle.  
+                       Simplify the entire payroll cycle and save valuable HR hours wasted on manual data entry and reconciliations. Renown’s online payroll system is easily scalable. It helps businesses not only handle salaries, compliance, and employee records from one place, but it can also accommodate new payroll for future hires. It supports growing teams, creates structured processes, accelerates workflows, and provides better visibility across every payroll cycle.  
                     </p>
 
                     <!-- Features -->
@@ -113,9 +113,9 @@
                      Keep your payroll processes consistent, accurate, and compliant with Renown’s payroll management system. Automate workflows and reduce manual errors by upto 30%, delivering a positive payroll experience to your employees. 
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -232,12 +232,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-payroll-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-payroll-admin-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -246,7 +246,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-payroll-emp-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-payroll-emp-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

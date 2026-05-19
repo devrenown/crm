@@ -4,7 +4,7 @@
 	#breadcrump {
         min-height: 60vh;
         width: 100%;
-        background: url("{{ asset('images/features/feature-ticket-breadc.webp') }}") center/cover no-repeat;
+        background: url("{{ asset('images/features/feature-ticket-breadc.png') }}") center/cover no-repeat;
         display: flex;
         align-items: center;
     }
@@ -43,9 +43,9 @@
                         Get quick access to client history from a single, reliable ticket management system. Automate workflows to accelerate response and reduce resolution time. 
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -59,7 +59,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-ticket.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-ticket.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -116,9 +116,9 @@
                         Our ticket software brings automation to the workflow. Also, with logged timestamps and assigned agents, ticket tracking becomes more simple. Build full accountability throughout the resolution process.
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -236,12 +236,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-ticket-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-ticket-admin-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -250,7 +250,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-ticket-emp-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-ticket-emp-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

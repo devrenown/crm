@@ -41,16 +41,37 @@ trait SecureFileUpload
     // Encrypt file
     $data = file_get_contents($file->getRealPath());
     if ($data === false) {
-    throw new \RuntimeException('Failed to read uploaded file');
+        throw new \RuntimeException('Failed to read uploaded file');
     }
+
+    // Detect real mime FIRST
+    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+    $realMime = $finfo->file($file->getRealPath());
+
+    // Allow only PDF & images
+    if (
+        $realMime !== 'application/pdf' &&
+        !str_starts_with($realMime, 'image/')
+    ) {
+        throw new \Exception('Only PDF and image files are allowed');
+    }
+
+    // Extra protection: validate PDF header
+    if ($realMime === 'application/pdf') {
+        if (substr($data, 0, 4) !== '%PDF') {
+            throw new \Exception('Invalid PDF file (fake or corrupted)');
+        }
+    }
+
+    // Now encrypt
     $encrypted = FileEncryptionService::encrypt($data);
 
-    // Store encrypted file
+    // Store AFTER validation
     $disk->put($fullPath, $encrypted);
 
     return [
         'path' => $fullPath,
-        'mime' => $file->getMimeType(),
+        'mime' => $realMime,
         //'original_name' => $file->getClientOriginalName(),
         //'size' => $file->getSize(),
     ];

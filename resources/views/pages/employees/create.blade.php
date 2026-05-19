@@ -119,16 +119,14 @@
                     </select>
                 </x-form.input-block>
             </div>
-            {{-- <div class="col-md-12">
-                <div class="input-block mb-3">
-                    <x-form.label>{{ __('Address') }}</x-form.label>
-                    <x-form.input type="text" name="address" />
-                </div>
-            </div> --}}
+            
             <div class="col-sm-6">
                 <div class="input-block mb-3">
-                    <label class="col-form-label">{{ __('Avatar') }}</label>
-                    <x-form.input type="file" name="avatar" />
+                    <label class="col-form-label">{{ __('Joining Date') }}</label>
+                    <div class="cal-icon">
+                        <input id="date_joined" name="date_joined" type="text"
+                            class="form-control datepicker">
+                    </div>
                 </div>
             </div>
 
@@ -142,11 +140,30 @@
             </div>
 
             <div class="col-sm-6">
+                <label class="col-form-label">{{ __('Experience Level') }}</label>
+                <select name="experience_level" id="experience_level" class="select" required>
+                    <option value="" disabled selected>--Choose--</option>
+                    <option value="experienced">Experienced</option>
+                    <option value="fresher">Fresher</option>
+                </select>
+            </div>
+
+            <div class="col-sm-6">
+                <label class="col-form-label">{{ __('Status') }}</label>
+                <select name="status" id="status" class="select" required>
+                    <option value="2">Pending</option>
+                    <option value="1">Active</option>
+                    <option value="0">Deactive</option>
+                </select>
+            </div>
+
+            {{-- <div class="col-sm-6">
                 <div class="status-toggle">
+                    <label class="col-form-label">{{ __('Status') }}</label>
                     <x-form.input type="checkbox" id="add-emp-status" class="check" name="status" />
                     <label for="status" class="checktoggle">checkbox</label>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="submit-section mb-3">
             <x-form.button class="btn btn-primary submit-btn">{{ __('Submit') }}</x-form.button>
@@ -154,8 +171,8 @@
     </form>
 </div>
 
-<script>
+<!-- <script>
     $(document).on('click', '.checktoggle', function () {
         $('#add-emp-status').prop('checked', !$('#add-emp-status').prop('checked'));
     });
-</script>
+</script> -->

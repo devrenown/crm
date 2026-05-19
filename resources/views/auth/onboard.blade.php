@@ -9,7 +9,10 @@
                 @include('auth.wizard-section.personal-details')
                 @include('auth.wizard-section.identity')
                 @include('auth.wizard-section.education-details')
-                @include('auth.wizard-section.experience')
+
+                @if(optional($user->onboarding)->type !== 'fresher')
+                  @include('auth.wizard-section.experience')
+                @endif
             </div>
         </form>
     </div>
@@ -27,7 +30,7 @@
         }
 
         .wizard>.steps>ul>li {
-            width: 20% !important;
+            /*width: 20% !important;*/
             position: relative;
         }
 
@@ -125,7 +128,13 @@
     <script>
         $(document).ready(function () {
 
-            let steps = { 0: false, 1: false, 2: false, 3: false, 4: false };
+            let isFresher = "{{ optional($user->onboarding)->type }}" === 'fresher';
+            let totalSteps = $("#example-form section").length;
+            let steps = {};
+
+            for (let i = 0; i < totalSteps; i++) {
+                steps[i] = false;
+            }
 
             var form = $("#example-form");
 
@@ -159,6 +168,12 @@
                 bodyTag: "section",
                 transitionEffect: "fade",
                 transitionEffectSpeed: 400,
+                onInit: function (event, currentIndex) {
+                    let stepCount = $(".wizard .steps ul li").length;
+
+                    $(".wizard .steps ul li").css("width", (100 / stepCount) + "%");
+                },
+
                 onStepChanging: function (event, currentIndex, newIndex) {
                     const form = $("#example-form"); 
                 
@@ -186,8 +201,11 @@
                         savePersonalInfoData,
                         saveIdentityData,
                         () => saveEducationData('{{ @$userDetails->id }}'),
-                        saveExperienceData
                     ];
+
+                    if (!isFresher) {
+                        saveFns.push(saveExperienceData);
+                    }
                 
                     const saveFn = saveFns[currentIndex];
                     if (!saveFn) return true;
@@ -228,56 +246,112 @@
                     return dfd.promise();
                 },
 
-                onFinishing: function (event, currentIndex) {
+                // onFinishing: function (event, currentIndex) {
                     
+                //     form.validate().settings.ignore = ":disabled";
+                //     let currentSection = form.find('section').eq(currentIndex);
+
+                //     let isValid = currentSection.find("input, select, textarea").valid();
+
+                //     if (!isValid) return false;
+
+
+                //     let finishBtn = $('.actions ul li:last-child a'); 
+
+                //       finishBtn.text('Saving...').css({
+                //             pointerEvents: 'none',
+                //             opacity: '0.6'
+                //         });
+
+                    
+                //     if (steps[currentIndex]) {
+                //         return saveExperienceData('{{ @$userDetails->id }}')
+                //             .done(function (res) {
+                //                 steps[currentIndex] = false;
+
+                //                 // progressBar();
+
+                //                 Toastify({
+                //                     text: 'Submitted!',
+                //                     className: 'success',
+                //                 }).showToast();
+
+                //                 window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
+                //             })
+                //             .fail(function (xhr) {
+                //                 Toastify({
+                //                     text: 'Error saving experience. Please try again.',
+                //                     className: 'error',
+                //                 }).showToast();
+
+                //                 finishBtn.text('Finish').css({
+                //                     pointerEvents: 'auto',
+                //                     opacity: '1'
+                //                 });
+
+                //                 return false;
+                //             });
+                //     }
+
+                //     window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
+                    
+                //     return true;
+                // },
+
+                onFinishing: function (event, currentIndex) {
+
                     form.validate().settings.ignore = ":disabled";
                     let currentSection = form.find('section').eq(currentIndex);
 
                     let isValid = currentSection.find("input, select, textarea").valid();
-
                     if (!isValid) return false;
 
+                    let finishBtn = $('.actions ul li:last-child a');
 
-                    let finishBtn = $('.actions ul li:last-child a'); 
+                    finishBtn.text('Saving...').css({
+                        pointerEvents: 'none',
+                        opacity: '0.6'
+                    });
 
-                      finishBtn.text('Saving...').css({
-                            pointerEvents: 'none',
-                            opacity: '0.6'
-                        });
-
-                    
-                    if (steps[currentIndex]) {
-                        return saveExperienceData('{{ @$userDetails->id }}')
-                            .done(function (res) {
-                                steps[currentIndex] = false;
-
-                                // progressBar();
-
-                                Toastify({
-                                    text: 'Submitted!',
-                                    className: 'success',
-                                }).showToast();
-
-                                window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
-                            })
-                            .fail(function (xhr) {
-                                Toastify({
-                                    text: 'Error saving experience. Please try again.',
-                                    className: 'error',
-                                }).showToast();
-
-                                finishBtn.text('Finish').css({
-                                    pointerEvents: 'auto',
-                                    opacity: '1'
-                                });
-
-                                return false;
-                            });
+                    if (!steps[currentIndex]) {
+                        window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
+                        return true;
                     }
 
-                    window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
-                    
-                    return true;
+                    let saveFn;
+
+                    if (isFresher) {
+                        saveFn = () => saveEducationData('{{ @$userDetails->id }}');
+                    } else {
+                        saveFn = () => saveExperienceData('{{ @$userDetails->id }}');
+                    }
+
+                    return Promise.resolve(saveFn())
+                        .then(function () {
+                            steps[currentIndex] = false;
+
+                            Toastify({
+                                text: 'Submitted!',
+                                className: 'success',
+                            }).showToast();
+
+                            window.location.href = "{{ route('onboard.welcome', ['user_id' => encrypt(@$userDetails->user_id)]) }}";
+
+                            return true;
+                        })
+                        .catch(function () {
+                            Toastify({
+                                text: 'Error saving data. Please try again.',
+                                className: 'error',
+                            }).showToast();
+
+                            finishBtn.text('Finish').css({
+                                pointerEvents: 'auto',
+                                opacity: '1'
+                            });
+
+                            return false;
+                        });
                 },
 
                 onStepChanged: function (event, currentIndex, priorIndex) {

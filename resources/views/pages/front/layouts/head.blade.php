@@ -13,11 +13,11 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ @$title ?? 'CRM for Small Business, Employee Management CRM | Renown System' }}</title>
+    <title>{{ @$title ?? 'Best CRM Software for Business Management | Renown System' }}</title>
 
-    <meta name="description" content="{{ @$description ?? 'Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure CRM platform.' }} ">
+    <meta name="description" content="{{ @$description ?? 'Simplify operations with the Best CRM Software for Business Management. Track leads, manage sales performance, and grow with Renown System CRM dashboard software.' }} ">
 
-    <meta name="keywords" content="Best CRM tools for small businesses, Business management CRM, CRM system for tracking leads and sales, CRM solution for sales performance tracking, CRM for small business, Task and project management CRM, CRM with reporting and analytics, CRM for employee and task management, client management system for small business, Project management CRM tools, Customer relationship management system, CRM dashboard software, Client management system, Employee management CRM, CRM for client management. CRM software tools, sales and lead management tools, Best CRM for project management, Employee management system">
+    <meta name="keywords" content="{{ @$keywords ?? 'Best CRM tools for small businesses, Business management CRM, CRM system for tracking leads and sales, CRM solution for sales performance tracking, CRM for small business, Task and project management CRM, CRM with reporting and analytics, CRM for employee and task management, client management system for small business, Project management CRM tools, Customer relationship management system, CRM dashboard software, Client management system, Employee management CRM, CRM for client management. CRM software tools, sales and lead management tools, Best CRM for project management, Employee management system' }}">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content="Best CRM tools for small businesses | Renown System">
@@ -34,20 +34,61 @@
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://renownsystem.com/">
+    
+    @vite([
+        'resources/assets/css/bootstrap.min.css',
+        'resources/assets/css/style.css',
+        'resources/css/app.scss',
+    ])
 
-    <!-- AOS CSS -->
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-    <!-- Jquery Steps CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/plugins/jquery-steps-master/demo/css/jquery.steps.css') }}">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/plugins/jQuery-Infinite-Carousel-Slider/loopslider.css') }}">
+    
+    <link rel="preload" href="{{ asset('assets/plugins/jQuery-Infinite-Carousel-Slider/loopslider.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="{{ asset('assets/css/front.css') }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/front.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preload" as="image" href="./images/banner-right-phone.webp" media="(max-width: 768px)">
+    <link rel="preload" as="image" href="./images/hero-right.webp" media="(min-width: 769px)">
+    <link rel="preload" as="image" href="./images/front/logo-home.webp">
+
+
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": "https://renownsystem.com/#software",
+    "name": "Renown System - Employee Management & CRM Software",
+    "url": "https://renownsystem.com/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web-based",
+    "description": "Renown System is a powerful employee management and CRM software designed to help businesses automate operations, track performance, and improve productivity.",
+    
+    "creator": {
+      "@type": "Organization",
+      "name": "Renown System",
+      "url": "https://renownsystem.com/"
+    },
+
+    "publisher": {
+      "@type": "Organization",
+      "name": "Renown System",
+      "url": "https://renownsystem.com/"
+    },
+
+    "areaServed": "Worldwide",
+
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 </head>
 
-    @include('partials.styles')
+    {{-- @include('partials.styles') --}}
 
 <body>

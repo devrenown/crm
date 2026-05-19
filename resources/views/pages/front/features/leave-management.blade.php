@@ -43,9 +43,9 @@
                         Automate leave requests, approvals, and records with the Renown leave management system. Keep your teams aligned and prevent staffing gaps.
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -59,7 +59,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-leave.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-leave.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -73,7 +73,7 @@
 
                     <!-- Description -->
                     <p class="text-muted mb-4">
-                        A structured leave tracking through the Renown management system eliminates critical HR issues. It gives more clarity to small businesses when handling employee time-off. Manage multiple leave applications, approvals, and records from one platform and avoid constant follow-ups. You can track availability, leave types, schedules and approvals without disrupting operations or hurting your employees. 
+                        A structured leave tracking through the Renown management system eliminates critical HR issues. It gives more clarity to your businesses when handling employee time-off. Manage multiple leave applications, approvals, and records from one platform and avoid constant follow-ups. You can track availability, leave types, schedules and approvals without disrupting operations or hurting your employees. 
                     </p>
 
                     <!-- Features -->
@@ -117,9 +117,9 @@
                       Powerful leave management features provide real-time visibility of your teams and their availability. Anticipate leaves, ensure adequate staffing levels, and improve project management despite absences.
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -156,7 +156,7 @@
                             <div class="p-4 bg-white rounded-4 shadow-sm h-100">
                                 <i class="bi bi-calendar fs-2 icon-box"></i>
                                 <h5 class="mt-3">Leave Types Management</h5>
-                                <p class="text-muted small">Our leave management system clearly defines leave types and company policies. This protects small businesses from any legal issues.
+                                <p class="text-muted small">Our leave management system clearly defines leave types and company policies. This protects businesses from any legal issues.
                                 </p>
                             </div>
                         </div>
@@ -236,12 +236,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-leave-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-leave-admin-ui.png') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -250,7 +250,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-leave-emp-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-leave-emp-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

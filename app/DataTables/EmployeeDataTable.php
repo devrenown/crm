@@ -65,6 +65,8 @@ class EmployeeDataTable extends DataTable
 
         if ($status === 'active') {
             $query->where('is_active', 1); 
+        } elseif ($status === 'pending') {
+            $query->where('is_active', 2); 
         } elseif ($status === 'inactive') {
             $query->where('is_active', 0); 
         }
@@ -78,18 +80,23 @@ class EmployeeDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('employee-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->orderBy(1)
-                    ->buttons([
-                        Button::make('excel'),
-                        Button::make('csv'),
-                        Button::make('pdf'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
-                    ]);
+            ->setTableId('employee-table')
+            ->columns($this->getColumns())
+            ->ajax([
+                'url' => route('employees.list'),
+                'data' => 'function(d) {
+                    d.status = $("#status").val();
+                }'
+            ])
+            ->orderBy(1)
+            ->buttons([
+                Button::make('excel'),
+                Button::make('csv'),
+                Button::make('pdf'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload')
+            ]);
     }
 
     /**

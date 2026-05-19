@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Traits\SecureFileUpload;
 use App\Traits\uploadFile;
 use App\Services\SaveDocumentAction;
+use App\Models\UserOnboarding;
 
 class OnboardController extends Controller
 {
@@ -25,7 +26,7 @@ class OnboardController extends Controller
 
     public function __construct ()
     {
-        $this->tenant = app('tenant');
+        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
     }
 
     public function verifyOnboarding(Request $request) {
@@ -112,7 +113,7 @@ class OnboardController extends Controller
     }
 
     public function acceptTermCondition (Request $request) {
-        $user = User::findOrFail(Auth::user()->id);
+        $user = Auth::user();
 
         if (!$user) {
             return response()->json([
@@ -121,7 +122,16 @@ class OnboardController extends Controller
             ]);
         }
 
-        $user->update(['is_term_accepted' => $request->boolean('is_term_accepted')]);
+        // $user->update(['is_term_accepted' => $request->boolean('is_term_accepted')]);
+
+        UserOnboarding::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'started_at' => now(),
+                'term_accepted_at' => now()
+            ]
+        );
+
         return response()->json([
             'status'    => 200,
             'message'   => 'Terms & Conditions Accepted Successfully'
@@ -147,8 +157,6 @@ class OnboardController extends Controller
             'contact'               => 'required|numeric',
             'dob'                   => 'required',
             'company'               => 'required',
-            'designation'           => 'required',
-            'joining_date'          => 'required',
             'photo'                 => 'nullable|mimes:jpg,jpeg,png,webp|max:2048',
             'bank_document'         => 'nullable|mimes:jpg,jpeg,png,webp,pdf|max:2048',
         ]);
@@ -196,8 +204,6 @@ class OnboardController extends Controller
             'dob'                   => $request->dob                        ?? null,
             'marital_status'        => $request->marital_status             ?? null,
             'no_of_children'        => $request->no_of_children             ?? null,
-            'date_joined'           => $request->joining_date               ?? null,
-            'designation_id'        => $request->designation                ?? null,
             'total_exp'             => $request->total_exp                  ?? null,
             'blood_group'           => $request->blood_group                ?? null,
             'know_about'            => $request->how_know                   ?? null,
@@ -798,9 +804,31 @@ class OnboardController extends Controller
                     'bank_statement' => [$bank_statuses[$index] ?? null, $bank_remarks[$index] ?? null],
                 ];
 
-                foreach ($documents as $type => [$status, $remark]) {
-                    if (!is_null($status)) {
-                        SaveDocumentAction::save($exp, $type, $status, $remark, $userId);
+                $hasStatusUpdate =
+                $request->has('offer_status') ||
+                $request->has('appointment_status') ||
+                $request->has('experience_status') ||
+                $request->has('relieving_status') ||
+                $request->has('increment_status') ||
+                $request->has('salary_status') ||
+                $request->has('bank_status');
+
+                if ($hasStatusUpdate) {
+                    foreach ($documents as $type => [$status, $remark]) {
+
+                        $existingDoc = $exp->documentActions()
+                            ->where('document_type', $type)
+                            ->first();
+
+                        if ($existingDoc &&
+                            $existingDoc->status == $status &&
+                            $existingDoc->remark == $remark) {
+                            continue;
+                        }
+
+                        if (!is_null($status)) {
+                            SaveDocumentAction::save($exp, $type, $status, $remark, $userId);
+                        }
                     }
                 }
 
@@ -808,6 +836,15 @@ class OnboardController extends Controller
 
         }
 
+        if (!$request->input('user_id')) {
+            UserOnboarding::updateOrCreate(
+                ['user_id' => $userId],
+                [
+                    'completed_at' => now(),
+                ]
+            );
+        }
+        
         return response()->json(['status' => 200, 'message' => 'Employement details saved']);
     }
 
@@ -868,6 +905,5 @@ class OnboardController extends Controller
 
         return view('auth.onboarding-complete', $data);
     }
-
 
 }

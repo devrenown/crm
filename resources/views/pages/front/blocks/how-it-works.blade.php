@@ -3,13 +3,13 @@
         <div class="text-center">
             <span class="section-title-badge">How Renown System Works</span>
             <div class="mt-4 mb-5">
-                <h2 class="section-title mb-3 mt-4"><span class="text-uppercase">Launch Your Business</span> CRM in 4 Simple Steps </h2>
-                <p class="fs-5 text-secondary mt-3 lh-base">Our easy-to-install CRM for small businesses integrates quickly with your workflows and streamline operations without friction.</p>
+                <h2 class="section-title mb-3 mt-4">Launch Your Business CRM in 4 Simple Steps </h2>
+                <p class="fs-5 text-secondary mt-3 lh-base">Our easy-to-install CRM for businesses integrates quickly with your workflows and streamline operations without friction.</p>
             </div>
 
             <div class="main row">
                 <div class="left col-md-6 p-2 d-flex justify-content-center align-items-center">
-                    <img src="./images/registration-image.png" alt="Business management CRM" class="w-100 sticky-image"
+                    <img src="./images/registration-image.png" loading="lazy" alt="Business management CRM" class="w-100 sticky-image"
                         id="howItWorksImage">
                 </div>
 

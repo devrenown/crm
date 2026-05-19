@@ -21,7 +21,7 @@ class UsersController extends BaseController
 
     public function __construct ()
     {
-        $this->tenant = app('tenant');
+        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
     }
 
     /**

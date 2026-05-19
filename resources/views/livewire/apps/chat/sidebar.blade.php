@@ -28,12 +28,11 @@
     @php
         $contactId = \Crypt::encrypt($user->id);
         $requestContact = request()->input('contact');
-        $unreadMessages = \App\Models\ChatMessage::where('user_id', $user->id)
-                        ->where('receiver_id', auth()->user()->id)
-                        ->where('is_read', false)->count();
+        $unreadMessages = $unreadCounts[$user->id] ?? 0;
     @endphp
     <li class="{{ !empty($requestContact) && ($user->id == \Crypt::decrypt($requestContact)) ? 'active': '' }}">
-        <a href="{{ route('app.chat').'?contact='.$contactId }}">
+        <a href="{{ route('app.chat').'?contact='.$contactId }}" 
+           onclick="event.preventDefault(); markAsRead({{ $user->id }}); window.location=this.href;">
             <span class="chat-avatar-sm user-img">
                 <img class="rounded-circle" src="{{ !empty($user->avatar) ? asset('storage/'.$user->avatar): asset('images/user.jpg') }}" alt="{{ __('avatar') }}" style="object-fit: cover;">
                 @if (!empty($user->is_online)) 
@@ -47,7 +46,7 @@
             @endphp
             <span class="chat-user">{{ strlen($fullname) > 12 ? trim(substr($fullname,0,12)).'..' : $fullname }}</span> 
             @if ($unreadMessages > 0)
-            <span class="badge rounded-pill bg-danger">{{ $unreadMessages ?? 0 }}</span>
+            <span class="badge rounded-pill bg-danger">{{ $unreadMessages }}</span>
             @endif
         </a>
     </li>

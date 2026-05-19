@@ -118,7 +118,7 @@
                 <span class="section-title-badge">Pricing Plans</span>
             </div>
 
-            <h2 class="section-title mb-3 mt-4">SIMPLE, TRANSPARENT PRICING</h2>
+            <h2 class="section-title mb-3 mt-4">Simple, Transparent Pricing</h2>
             <p class="fs-5 text-secondary lh-base mt-3">Choose the plan that fits your business. All plans include a 15-day
                 free trial.</p>
         </div>

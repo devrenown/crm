@@ -60,6 +60,8 @@ Route::get('terms-conditions', [FrontController::class, 'termsConditionsView'])-
 Route::post('contact', [FrontController::class, 'saveContact'])->name('save.contact');
 
 Route::get('feature/{slug}', [FrontController::class, 'featureDetail'])->name('feature.detail');
+Route::get('blog/{slug}', [FrontController::class, 'blogDetails'])->name('blog.details');
+Route::get('blogs/{slug?}', [FrontController::class, 'blogs'])->name('blogs');
 
 // Cache routes
 

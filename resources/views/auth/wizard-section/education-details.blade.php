@@ -1,5 +1,9 @@
 @php
-    $educationRejectedCount = collect($employeeEducationList->education)->where('status', 2)->count();
+$educationRejectedCount = collect($employeeEducationList->education ?? [])
+    ->filter(function ($edu) {
+        return optional($edu->documentAction)->status == 2;
+    })
+    ->count();
 @endphp
 
 <h3>Education Details
@@ -91,11 +95,11 @@
                                                 );
                                                 
                                             @endphp
-                                            {!! \App\Helpers\DocumentStatus::statusBadge($education->status) !!}
+                                            {!! \App\Helpers\DocumentStatus::statusBadge($education->documentAction?->status) !!}
                                             <a href="javascript:void(0);" onclick="openSecureDocument('{{ $signedUrl }}')">View File</a>
 
-                                            @if ($education->status == 2)
-                                                {!! \App\Helpers\DocumentStatus::remarks($education->remarks) !!}
+                                            @if ($education->documentAction?->status == 2)
+                                                {!! \App\Helpers\DocumentStatus::remarks($education->documentAction?->remark) !!}
                                             @endif
                                         @endif
 
@@ -179,26 +183,37 @@
 
 @push('page-scripts')
 <script>
+
     function educationRepeater() {
         let newCard = $('.education-item').first().clone();
 
-        // Reset all inputs
-        newCard.find('input[type="text"], input[type="hidden"], select').val('').addClass('required necessary');
-        newCard.find('input[type="file"]').val('').removeAttr('data-file').removeClass('is-valid').addClass('required necessary');
+        newCard.find('input[type="text"], input[type="hidden"], select').each(function () {
+            $(this).val('');
+            $(this).removeClass('is-valid is-invalid');
+        });
 
+        newCard.find('input[type="file"]')
+            .val('')
+            .removeAttr('data-file')
+            .removeClass('is-valid is-invalid')
+            .addClass('required necessary');
+
+        newCard.find('.invalid-feedback').remove();
         newCard.find('i.status-mark, a[href*="storage/employees"]').remove();
         newCard.find('.remarks-message').remove();
         newCard.find('img, a').remove();
-        newCard.find('.delete-icon').removeAttr('data-id');
-
-        // Reset validation states
-        newCard.find('.invalid-feedback').remove();
-        newCard.find('.is-invalid').removeClass('is-invalid');
 
         $('#education-container').append(newCard.hide().slideDown(400));
 
-        // Initialize datepicker for new inputs
         initDatepicker(newCard);
+
+        let form = $("#example-form");
+        form.validate().destroy();
+        form.validate({
+            errorPlacement: function (error, element) {
+                element.before(error);
+            }
+        });
     }
 
     $(document).on('click', '.education-item .delete-icon', function () {

@@ -1,11 +1,16 @@
+<style>
+    .feature-icon {
+        font-size: 28px !important;
+    }
+</style>
+
 <section class="features-section mt-md-5 mt-0 mt-lg-0" id="features">
     <div class="container-fluid px-lg-5 text-center">
 
         <span class="section-title-badge">Key Features</span>
 
         <h2 class="section-title mt-5">
-            <span class="text-uppercase">Powerful CRM</span>
-            Solutions for Small Businesses
+            Powerful CRM Software for Business Management
         </h2>
 
         <p class="section-subtitle">
@@ -15,10 +20,10 @@
         <div class="row gx-3 gy-4 mt-4">
 
             <!-- Feature Card -->
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-regular fa-user fs-2"></i>
+                        <i class="fa-regular fa-user feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Employee Management</h5>
                     <p>
@@ -32,10 +37,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-solid fa-list-check fs-2"></i>
+                        <i class="fa-solid fa-list-check feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Task Management</h5>
                     <p>
@@ -49,10 +54,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-solid fa-clipboard-check fs-2"></i>
+                        <i class="fa-solid fa-clipboard-check feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Project Management</h5>
                     <p>
@@ -66,10 +71,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-regular fa-calendar fs-2"></i>
+                        <i class="fa-regular fa-calendar feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Leave Management</h5>
                     <p>
@@ -83,10 +88,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-regular fa-handshake fs-2"></i>
+                        <i class="fa-regular fa-handshake feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Onboarding Management</h5>
                     <p>
@@ -100,10 +105,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-solid fa-wallet fs-2"></i>
+                        <i class="fa-solid fa-wallet feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Payroll Management</h5>
                     <p>
@@ -117,10 +122,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-solid fa-user-tie fs-2"></i>
+                        <i class="fa-solid fa-user-tie feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Client Management</h5>
                     <p>
@@ -134,10 +139,10 @@
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg-4">
                 <div class="feature-card">
                     <div class="icon-box">
-                        <i class="fa-solid fa-file-invoice-dollar fs-2"></i>
+                        <i class="fa-solid fa-file-invoice-dollar feature-icon"></i>
                     </div>
                     <h5 class="fw-bold">Invoice Management</h5>
                     <p>
@@ -147,6 +152,23 @@
 
                     <div class="text-end mt-2">
                         <a href="{{ route('feature.detail', 'invoice-management') }}">Read More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="icon-box">
+                        <i class="fa-solid fa-file-invoice-dollar feature-icon"></i>
+                    </div>
+                    <h5 class="fw-bold">Ticket Management</h5>
+                    <p>
+                        Simplify Ticket, Assign,
+                        and tracking with ease.
+                    </p>
+
+                    <div class="text-end mt-2">
+                        <a href="{{ route('feature.detail', 'ticket-management') }}">Read More →</a>
                     </div>
                 </div>
             </div>

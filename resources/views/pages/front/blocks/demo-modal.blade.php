@@ -19,7 +19,7 @@
             <div class="row">
 
               <div class="col-lg-6">
-                <img src="{{ asset('images/demo-request-left.png') }}" alt="Employee management CRM" class="img">
+                <img src="{{ asset('images/demo-request-left.webp') }}" loading="lazy" alt="Employee management CRM" class="img">
               </div>
 
               <form action="{{ route('save.demo-request') }}" class="col-lg-6" id="demo-form" method="post">

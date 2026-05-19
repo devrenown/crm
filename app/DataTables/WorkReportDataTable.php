@@ -61,7 +61,7 @@ class WorkReportDataTable extends DataTable
             ->addColumn('created_at', function($row){
 
                 if(!empty($row->created_at)){
-                    return $row->created_at->format('d M Y, h:i A');
+                    return tz($row->created_at, 'd M Y, h:i A');
                 }
             })
 

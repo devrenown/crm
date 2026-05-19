@@ -41,12 +41,12 @@
                     </h1>
 
                     <p class="fs-6 fs-md-5 mb-3">
-                        Small businesses must utilize their limited resources to their full potential. With Renown project management software, you can help such dynamic teams meet deadlines and deliver outcomes effectively - through collaboration and planned workflows. 
+                        Businesses must utilize their limited resources to their full potential. With Renown System project management software, you can help such dynamic teams meet deadlines and deliver outcomes effectively - through collaboration and planned workflows. 
                     </p>
 
-                    <button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">
-                        Request a Demo <i class="bi bi-arrow-right"></i>
-                    </button>
+                    <!--<button class="btn btn-light text-primary fw-bold px-4 px-md-5 py-2 shadow-sm">-->
+                    <!--    Request a Demo <i class="bi bi-arrow-right"></i>-->
+                    <!--</button>-->
 
                 </div>
             </div>
@@ -60,7 +60,7 @@
 
                 <!-- LEFT IMAGE -->
                 <div class="col-12 col-lg-6 mb-4 mb-lg-0 text-center">
-                    <img src="{{ asset('images/features/feature-project.webp') }}" alt="Employee Management" class="img-fluid">
+                    <img src="{{ asset('images/features/feature-project.webp') }}" alt="Employee Management" class="img-fluid" loading="lazy">
                 </div>
 
                 <!-- RIGHT CONTENT -->
@@ -114,9 +114,9 @@
                       Renown’s simple project management tool allows you to build projects end-to-end. With its powerful features, you can personalize workflows, track industry-specific metrics, and do a lot more. Develop accountability in your teams through engagement and high productivity, for your business growth. 
                     </p>
 
-                    <button class="btn btn-primary px-4 py-2">
-                        Request Demo →
-                    </button>
+                    <!--<button class="btn btn-primary px-4 py-2">-->
+                    <!--    Request Demo →-->
+                    <!--</button>-->
                 </div>
 
                 <!-- RIGHT CARDS -->
@@ -188,7 +188,7 @@
             <!-- Heading -->
             <h2 class="fw-bold mb-3">Step Up Your Project Execution Speed with Renown</h2>
             <p class="mb-5">
-                Our project management CRM comes with an intuitive dashboard to simplify project execution for small businesses. This simple project management system allows you to streamline tasks, track progress, and strengthen team collaboration for consistent, on-time delivery.
+                Our project management CRM comes with an intuitive dashboard to simplify project execution for businesses. This simple project management system allows you to streamline tasks, track progress, and strengthen team collaboration for consistent, on-time delivery.
             </p>
 
             <div class="row text-start text-center text-md-start">
@@ -233,12 +233,12 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         ADMIN UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-project-admin-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-project-admin-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Arrow -->
                 <div class="d-none d-lg-block">
-                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/arrow.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
                 <!-- Employee UI -->
@@ -247,7 +247,7 @@
                         style="background: linear-gradient(90deg,#2b6ef2,#a020f0); border-radius: 5px;">
                         EMPLOYEE UI
                     </h5>
-                    <img src="{{ asset('images/features/feature-project-emp-ui.webp') }}" class="img-fluid rounded-4">
+                    <img src="{{ asset('images/features/feature-project-emp-ui.webp') }}" class="img-fluid rounded-4" loading="lazy">
                 </div>
 
             </div>

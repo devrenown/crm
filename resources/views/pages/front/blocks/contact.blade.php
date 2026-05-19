@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="text-center mb-5">
                 <span class="section-title-badge">Get In Touch</span>
-                <h2 class="mt-4"><span class="text-gradient fw-bold">CONTACT </span> US</h2>
+                <h2 class="mt-4"><span class="text-gradient fw-bold">Contact </span> Us</h2>
                 <p class="text-muted">We’d love to hear from you</p>
             </div>
             <div class="row g-4 align-items-stretch">

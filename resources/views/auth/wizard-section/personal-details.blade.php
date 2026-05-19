@@ -1,5 +1,5 @@
 @php
-    $personalInfoRejectedCount = $userDetails?->bank_document_status == 2 ? 1 : null;
+    $personalInfoRejectedCount = $userDetails?->documentAction?->status == 2 ? 1 : null;
 @endphp
 
 <h3>
@@ -79,14 +79,6 @@
         </div>
 
         <div class="col-lg-4 mb-2">
-            <label for="joining_date">Joining Date *</label>
-            <div class="cal-icon">
-                <input id="joining_date" name="joining_date" value="{{ $userDetails->date_joined ?? '' }}" type="text"
-                    class="form-control datepicker required necessary">
-            </div>
-        </div>
-
-        <div class="col-lg-4 mb-2">
             <label for="company">Company *</label>
             @if (is_array($companies) && count($companies > 0))
             <select name="company" id="company" class="form-select form-control required necessary">
@@ -103,9 +95,9 @@
             @endif
         </div>
 
-        <div class="col-lg-4 mb-2">
+        <!-- <div class="col-lg-4 mb-2">
             <label for="designation">Designation *</label>
-            <select name="designation" id="designation" class="form-select form-control required necessary">
+            <select name="designation" id="designation" class="form-select form-control required necessary" readonly>
                 @php
                     $designationList = App\Models\Designation::list();
                 @endphp
@@ -114,7 +106,7 @@
                 @endforeach
 
             </select>
-        </div>
+        </div> -->
 
         <div class="col-lg-4 mb-2">
             <label for="total_exp">Total Experience (In Year) *</label>
@@ -260,14 +252,14 @@
                             now()->addMinutes(5)
                         );
                     @endphp
-                    {!! \App\Helpers\DocumentStatus::statusBadge($userDetails->bank_document_status) !!}
+                    {!! \App\Helpers\DocumentStatus::statusBadge($userDetails->documentAction?->status) !!}
                     <a href="javascript:void(0);"
                     onclick="openSecureDocument('{{ $signedUrl }}')">
                     View Document
                     </a>
 
-                    @if ($userDetails->bank_document_status == 2)
-                        {!! \App\Helpers\DocumentStatus::remarks($userDetails->bank_document_remarks) !!}
+                    @if ($userDetails->documentAction?->status == 2)
+                        {!! \App\Helpers\DocumentStatus::remarks($userDetails->documentAction?->remark ?? '') !!}
                     @endif
                 @endif
                  <small class="text-muted d-block">

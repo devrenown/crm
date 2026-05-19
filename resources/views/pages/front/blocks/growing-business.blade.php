@@ -21,7 +21,7 @@
 
             <div class="d-flex justify-content-center gap-3 growing-business-checks text-white mt-5">
                 <div>
-                    ✓ <span>14-day free trial</span>
+                    ✓ <span>15-day free trial</span>
                 </div>
 
                 <div>

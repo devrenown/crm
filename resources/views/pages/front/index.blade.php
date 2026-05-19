@@ -15,7 +15,11 @@
     @include('pages.front.blocks.faq')
     @include('pages.front.blocks.contact')
     @include('pages.front.blocks.growing-business')
-    @include('pages.front.blocks.demo-modal')
+    
+    @if(isset($blogs) && count($blogs))
+    @include('pages.front.blocks.blog')
+    @endif
+    
 
     <!-- Scroll to Top Button -->
     <button id="scrollTopBtn">&#8679;</button>

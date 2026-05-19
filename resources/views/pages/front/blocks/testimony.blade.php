@@ -5,7 +5,7 @@
                 <span class="section-title-badge">Testimonial</span>
             </div>
 
-            <h2 class="section-title mb-3 mt-4"><span class="text-uppercase">Trusted CRM </span> for Businesses Worldwide
+            <h2 class="section-title mb-3 mt-4">Trusted CRM for Businesses Worldwide
             </h2>
             <p class="fs-5 text-secondary mt-3 lh-base">Discover how Renown System powers growing businesses like yours worldwide.</p>
         </div>

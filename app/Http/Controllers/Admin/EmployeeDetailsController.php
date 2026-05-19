@@ -24,7 +24,7 @@ class EmployeeDetailsController extends BaseController
 
     public function __construct ()
     {
-        $this->tenant = app('tenant');
+        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
     }
 
     public function personalInfo (EmployeeDetail $employeeDetail)
@@ -251,7 +251,7 @@ class EmployeeDetailsController extends BaseController
                 'id' => $education['id'] ?? null,
             ], [
                 'employee_detail_id'    => $employeeDetail->id,
-                'institution'           => $education['start_date'] ?? '',
+                'institution'           => $education['institution'] ?? '',
                 'subject'               => $education['subject'] ?? '',
                 'course'                => $education['course'] ?? '',
                 'grade'                 => $education['grade'] ?? '',

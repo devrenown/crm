@@ -42,13 +42,12 @@ class AppMenuListener
             $unreadMessages = \App\Models\ChatMessage::where('receiver_id', auth()->user()->id)
             ->where('is_read', false)->count();
 
-            $badge = '';
-            if (!empty($unreadMessages) && $unreadMessages > 0) {
-                $badge = '<span class="badge top-0 text-white rounded-pill bg-danger position-absolute">'
-                       . $unreadMessages .
-                       '</span>';
-            }
-
+            $badge = '<span id="chat-unread-badge"
+                class="badge top-0 text-white rounded-pill bg-danger position-absolute"
+                style="'.($unreadMessages > 0 ? '' : 'display:none').';">'
+                . $unreadMessages .
+            '</span>';
+            
             $menu->add(
                 Link::toRoute('app.chat', '<div>' . $badge . '<i class="lab la-rocketchat"></i> <span>'. __('Chat') . '</span></div>')
                     ->setActive(route_is('app.chat'))
@@ -75,7 +74,7 @@ class AppMenuListener
 
             $menu->canForActiveRole(
                 'view-organizations',
-                Link::toRoute('tenant.index', '<i class="la la-building"></i> <span>' . __('Organizations') . '</span>')
+                Link::toRoute('tenant.index', '<i class="la la-building"></i> <span>' . __('Clients') . '</span>')
                     ->setActive(route_is('tenant.*'))
             );
         });

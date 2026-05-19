@@ -47,6 +47,7 @@
                         <form action="{{ route('employees.index') }}" method="GET" class="mb-0">
                             <select class="form-control" name="status" id="status" style="max-width: 100px;" onchange="this.form.submit()">
                                 <option value="active" {{ request('status', 'active') === 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
                                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                             </select>
                         </form>
@@ -120,7 +121,7 @@
 
                         <div class="d-flex justify-content-between align-item-center">
                             <div>
-                                <span class="badge bg-inverse-{{ $employee->is_active == 1 ? 'success' : 'danger' }}">{{ $employee->is_active == 1 ? 'Active' : 'Deactive' }}</span>
+                                <span class="badge bg-inverse-{{ $employee->is_active == 1 ? 'success' : ($employee->is_active == 2 ? 'warning' : 'danger') }}">{{ $employee->is_active == 1 ? 'Active' : ($employee->is_active == 2 ? 'Pending' : 'Deactive') }}</span>
                             </div>
 
                             <p class="text-sm fw-bold">{{ $employee->shift?->shift?->name ?? 'N/A' }}</p>
@@ -129,7 +130,7 @@
                 </div>
                 @endforeach
 
-                {{ $employees->links() }}
+                {{ $employees->withQueryString()->links() }}
             @endif
         </div>
     </div>
