@@ -1,7 +1,7 @@
 <!-- Favicon -->
 <meta charset="UTF-8">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="shortcut icon" type="image/x-icon" href="{{Theme('favicon') ? asset('storage/settings/theme/' . Theme('favicon')) : Vite::asset('resources/assets/img/favicon.png') }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{Theme('favicon') ? asset('storage/' . Theme('favicon')) : Vite::asset('resources/assets/img/favicon.png') }}">
 
 <link rel="stylesheet" href="{{ asset('js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css') }}">
 <!-- Jquery Steps CSS -->

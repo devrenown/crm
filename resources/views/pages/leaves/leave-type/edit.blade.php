@@ -26,14 +26,130 @@
                         <h6 class="fw-bold mb-3">Basic Information</h6>
 
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6 col-12">
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">Leave Type Name</label>
                                 <input type="text" name="name"
                                        value="{{ old('name', $leaveType->name) }}"
                                        class="form-control" required>
                             </div>
 
-                            <div class="col-md-6 col-12">
+
+                           <div class="col-md-4 col-12">
+                                <label class="form-label">
+                                    Leave Type
+                                </label>
+
+                                <select
+                                    name="leave_code"
+                                    class="form-select"
+                                >
+                                    <option value="">
+                                        -- Select Leave --
+                                    </option>
+
+                                    <option value="CASUAL"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'CASUAL' ? 'selected' : '' }}>
+                                        Casual Leave
+                                    </option>
+
+                                    <option value="SICK"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'SICK' ? 'selected' : '' }}>
+                                        Sick Leave
+                                    </option>
+
+                                    <option value="EARNED"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'EARNED' ? 'selected' : '' }}>
+                                        Earned Leave
+                                    </option>
+
+                                    <option value="ANNUAL"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'ANNUAL' ? 'selected' : '' }}>
+                                        Annual Leave
+                                    </option>
+
+                                    <option value="VACATION"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'VACATION' ? 'selected' : '' }}>
+                                        Vacation Leave
+                                    </option>
+
+                                    <option value="BIRTHDAY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'BIRTHDAY' ? 'selected' : '' }}>
+                                        Birthday Leave
+                                    </option>
+
+                                    <option value="MATERNITY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'MATERNITY' ? 'selected' : '' }}>
+                                        Maternity Leave
+                                    </option>
+
+                                    <option value="PATERNITY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'PATERNITY' ? 'selected' : '' }}>
+                                        Paternity Leave
+                                    </option>
+
+                                    <option value="ADOPTION"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'ADOPTION' ? 'selected' : '' }}>
+                                        Adoption Leave
+                                    </option>
+
+                                    <option value="BEREAVEMENT"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'BEREAVEMENT' ? 'selected' : '' }}>
+                                        Bereavement Leave
+                                    </option>
+
+                                    <option value="COMP_OFF"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'COMP_OFF' ? 'selected' : '' }}>
+                                        Compensatory Off
+                                    </option>
+
+                                    <option value="MARRIAGE"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'MARRIAGE' ? 'selected' : '' }}>
+                                        Marriage Leave
+                                    </option>
+
+                                    <option value="STUDY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'STUDY' ? 'selected' : '' }}>
+                                        Study Leave
+                                    </option>
+
+                                    <option value="SABBATICAL"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'SABBATICAL' ? 'selected' : '' }}>
+                                        Sabbatical Leave
+                                    </option>
+
+                                    <option value="WFH"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'WFH' ? 'selected' : '' }}>
+                                        Work From Home
+                                    </option>
+
+                                    <option value="JURY_DUTY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'JURY_DUTY' ? 'selected' : '' }}>
+                                        Jury Duty Leave
+                                    </option>
+
+                                    <option value="MILITARY"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'MILITARY' ? 'selected' : '' }}>
+                                        Military Leave
+                                    </option>
+
+                                    <option value="RELIGIOUS"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'RELIGIOUS' ? 'selected' : '' }}>
+                                        Religious Leave
+                                    </option>
+
+                                    <option value="UNPAID"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'UNPAID' ? 'selected' : '' }}>
+                                        Unpaid Leave
+                                    </option>
+
+                                    <option value="OTHER"
+                                        {{ old('leave_code', $leaveType->leave_code) == 'OTHER' ? 'selected' : '' }}>
+                                        Other
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-12">
                                 <label class="form-label">Applicable Gender</label>
                                 <select name="gender" class="form-select">
                                     <option value="0" {{ $leaveType->gender == 0 ? 'selected' : '' }}>All</option>
@@ -111,6 +227,7 @@
                                 $checks = [
                                     ['carry_forward','Carry Forward'],
                                     ['is_paid','Paid Leave'],
+                                    ['allow_during_probation','Allow During Probation'],
                                     ['requires_document','Requires Document'],
                                     ['is_encashable','Encashable'],
                                     ['is_active','Active'],

@@ -1,46 +1,62 @@
 <?php
-namespace App\Console\Commands;
 
+namespace App\Console\Commands;
+use App\Settings\CompanySettings;
 use Illuminate\Console\Command;
 use App\Models\{Tenant, LeaveBalance, LeaveType};
 use App\Services\TenantService;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CarryForwardLeaves extends Command
 {
     protected $signature = 'leaves:carry-forward';
-    protected $description = 'Carry forward unused leaves to next year';
+
+    protected $description = 'Carry forward unused leaves to next financial year';
 
     public function handle()
     {
         Tenant::each(function ($tenant) {
 
-            // Tenant timezone
+            app()->instance('tenant', $tenant);
+
             $tz  = TenantService::timezone($tenant->id);
             $now = now($tz);
+
+            /*
+            |--------------------------------------------------
+            | Run only on April 1st (SAFE - no hour dependency)
+            |--------------------------------------------------
+            */
+            if ($now->month !== 4 || $now->day !== 1) {
+                $this->info("Skipping carry forward: not execution date");
+                return;
+            }
 
             $currentYear = $now->year;
             $nextYear    = $currentYear + 1;
 
             $this->info("Tenant {$tenant->id}: {$currentYear} → {$nextYear}");
 
-            app()->instance('tenant', $tenant);
+            $probationDays = (int) (app(CompanySettings::class)->probation_period ?? 90);
 
             $leaveTypes = LeaveType::where('carry_forward', 1)
                 ->where('is_active', 1)
-                ->where('monthly_accrual', 0) // ❗ yearly only
                 ->get();
 
             foreach ($leaveTypes as $type) {
 
-                LeaveBalance::where('tenant_id', $tenant->id)
+                LeaveBalance::with(['user.employeeDetail'])
+                    ->where('tenant_id', $tenant->id)
                     ->where('leave_type_id', $type->id)
                     ->where('year', $currentYear)
                     ->chunkById(100, function ($balances) use (
                         $tenant,
                         $type,
                         $currentYear,
-                        $nextYear
+                        $nextYear,
+                        $now,
+                        $probationDays
                     ) {
 
                         foreach ($balances as $balance) {
@@ -50,33 +66,105 @@ class CarryForwardLeaves extends Command
                                 $type,
                                 $balance,
                                 $currentYear,
-                                $nextYear
+                                $nextYear,
+                                $now,
+                                $probationDays
                             ) {
 
-                                // Already carried forward
+                                /*
+                                |----------------------------
+                                | LOCK ROW (prevents double run)
+                                |----------------------------
+                                */
+                                $balance = LeaveBalance::where('id', $balance->id)
+                                    ->lockForUpdate()
+                                    ->first();
+
+                                $user     = $balance->user;
+                                $employee = $user?->employeeDetail;
+
+                                if (
+                                    !$user ||
+                                    !$employee ||
+                                    !$user->is_active ||
+                                    !$user->is_onboarding_complete ||
+                                    $employee->date_exit ||
+                                    !$employee->date_joined
+                                ) {
+                                    return;
+                                }
+
+                                /*
+                                |----------------------------
+                                | Gender restriction
+                                |----------------------------
+                                */
+                                if (
+                                    $type->gender &&
+                                    (int) $type->gender !== (int) $user->gender
+                                ) {
+                                    return;
+                                }
+
+                                /*
+                                |----------------------------
+                                | Probation check (FIXED)
+                                |----------------------------
+                                */
+                                $joinDate = Carbon::parse($employee->date_joined, $now->timezone);
+                                $probationEnd = $joinDate->copy()->addDays($probationDays);
+
+                                $isInProbation = $now->lt($probationEnd);
+
+                                if ($isInProbation && !$type->allow_during_probation) {
+                                    return;
+                                }
+
+                                /*
+                                |----------------------------
+                                | Prevent duplicate processing
+                                |----------------------------
+                                */
                                 if ($balance->carry_forwarded_from_year === $currentYear) {
                                     return;
                                 }
 
-                                // Skip exited employees
-                                if ($balance->user?->employeeDetail?->date_exit) {
-                                    return;
-                                }
+                                /*
+                                |----------------------------
+                                | SAFE UNUSED CALCULATION (FIXED)
+                                |----------------------------
+                                */
+                                $used =
+                                    ($balance->opening_balance +
+                                     $balance->accrued_leaves +
+                                     $balance->carry_forwarded)
+                                    - $balance->used_leaves;
 
-                                $unused = max(0, $balance->remaining_leaves);
+                                $unused = max(0, $used);
 
                                 $carry = $type->max_carry_forward
                                     ? min($unused, $type->max_carry_forward)
                                     : $unused;
 
-                                // Nothing to carry
+                                /*
+                                |----------------------------
+                                | Mark processed even if zero
+                                |----------------------------
+                                */
                                 if ($carry <= 0) {
+
                                     $balance->update([
                                         'carry_forwarded_from_year' => $currentYear,
                                     ]);
+
                                     return;
                                 }
 
+                                /*
+                                |----------------------------
+                                | NEXT YEAR BALANCE
+                                |----------------------------
+                                */
                                 $nextBalance = LeaveBalance::firstOrCreate(
                                     [
                                         'tenant_id'     => $tenant->id,
@@ -93,26 +181,48 @@ class CarryForwardLeaves extends Command
                                     ]
                                 );
 
-                                // Respect yearly cap
+                                /*
+                                |----------------------------
+                                | YEAR CAP SAFETY
+                                |----------------------------
+                                */
                                 if ($type->max_days_per_year) {
+
                                     $available =
                                         $type->max_days_per_year -
-                                        ($nextBalance->opening_balance +
-                                         $nextBalance->accrued_leaves +
-                                         $nextBalance->carry_forwarded);
+                                        (
+                                            $nextBalance->opening_balance +
+                                            $nextBalance->accrued_leaves +
+                                            $nextBalance->carry_forwarded
+                                        );
 
                                     $carry = max(0, min($carry, $available));
                                 }
 
-                                if ($carry > 0) {
-                                    $nextBalance->increment('carry_forwarded', $carry);
-                                    $nextBalance->increment('remaining_leaves', $carry);
+                                if ($carry <= 0) {
+                                    return;
                                 }
 
-                                // Lock previous year
+                                /*
+                                |----------------------------
+                                | APPLY CARRY FORWARD
+                                |----------------------------
+                                */
+                                $nextBalance->increment('carry_forwarded', $carry);
+                                $nextBalance->increment('remaining_leaves', $carry);
+
+                                /*
+                                |----------------------------
+                                | MARK AS PROCESSED
+                                |----------------------------
+                                */
                                 $balance->update([
                                     'carry_forwarded_from_year' => $currentYear,
                                 ]);
+
+                                $this->info(
+                                    "User {$balance->user_id} → {$type->name} carry +{$carry}"
+                                );
                             });
                         }
                     });
@@ -120,7 +230,7 @@ class CarryForwardLeaves extends Command
         });
 
         $this->info('Year-end carry forward completed successfully.');
+
+        return Command::SUCCESS;
     }
 }
-
-

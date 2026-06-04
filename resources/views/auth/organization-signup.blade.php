@@ -144,6 +144,12 @@
                                    name="password_confirmation"
                                    placeholder="******">
                         </div>
+                        
+                        <div class="cf-turnstile" data-sitekey="{{ env('TURNSTILE_SITE_KEY') }}"></div>
+                        
+                        @error('captcha')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
 
                         <!-- Submit -->
                         <div class="col-12 mt-3">
@@ -244,6 +250,7 @@
 @push('scripts')
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 @if(session('tenant_status') == 'success')
 <script>

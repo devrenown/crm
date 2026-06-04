@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\AttendanceTimestamp;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Services\TenantService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -45,7 +46,7 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                     $attendance = $timestamp->attendance;
                     if (!$attendance || !$attendance->activeUser) continue;
 
-                    $user = $attendance->activeUser;
+                    $user = User::findOrFail($attendance->activeUser?->id);
 
                     try {
                         // Clock-in datetime in tenant timezone
@@ -112,6 +113,8 @@ class AutoClockoutUnsignedAttendances implements ShouldQueue
                             $attendance->update([
                                 'endDate' => $autoClockoutAt->copy()->setTimezone('UTC')
                             ]);
+                            
+                            $user->update(['is_online' => false]);
 
                             logger()->info('AUTO CLOCK-OUT EXECUTED', [
                                 'tenant_id' => $tenant->id,

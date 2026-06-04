@@ -4,73 +4,137 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BirthdayWishMail;
-use App\Models\User;
-use Carbon\Carbon;
-use App\Models\Scopes\TenantScope;
 use Illuminate\Support\Facades\DB;
+
+use App\Mail\BirthdayWishMail;
+use App\Models\Tenant;
+use App\Services\TenantService;
+use App\Settings\CompanySettings;
 
 class SendBirthdayEmails extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:send-birthday-emails';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Send birthday emails to users whose birthday is today';
+    protected $description = 'Send birthday emails to active employees whose birthday is today';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $today = Carbon::today();
+        Tenant::chunk(50, function ($tenants) {
 
-        $users = DB::table('users')
-        ->join('employee_details', 'employee_details.user_id', '=', 'users.id')
-        ->whereNull('users.birthday_mail_sent_at')
-        ->whereNotNull('users.email')
-        ->whereMonth('employee_details.dob', $today->month)
-        ->whereDay('employee_details.dob', $today->day)
-        ->select(
-            'users.id',
-            'users.firstname',
-            'users.lastname',
-            'users.email',
-            'users.avatar',
-            'employee_details.user_id',
-            'employee_details.dob'
-        )
-        ->get();
+            foreach ($tenants as $tenant) {
 
-        if ($users->isEmpty()) {
-            $this->info('No birthdays today.');
-            return Command::SUCCESS;
-        }
+                /*
+                |--------------------------------------------------------------------------
+                | Tenant Context
+                |--------------------------------------------------------------------------
+                */
+                app()->instance('tenant', $tenant);
 
-        foreach ($users as $user) {
-            try {
+                $tz = TenantService::timezone($tenant->id);
 
-               $send = Mail::to($user->email)->send(new BirthdayWishMail($user));
-               $this->info($send);
+                $now = now($tz);
+                $todayDate = $now->toDateString();
 
-                DB::table('users')
-                ->where('id', $user->id)
-                ->update(['birthday_mail_sent_at' => now()]);
-            }catch (\Throwable $e) {
+                $this->info("Tenant {$tenant->id} → Birthday check for {$todayDate}");
 
-                $this->error('Failed for user ID ' . $user->id . ': ' . $e->getMessage());
+                /*
+                |--------------------------------------------------------------------------
+                | Company Name
+                |--------------------------------------------------------------------------
+                */
+                $companyName = app(CompanySettings::class)->name ?? 'Company';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Fetch Birthday Users
+                |--------------------------------------------------------------------------
+                */
+                $users = DB::table('users')
+                    ->join('employee_details', 'employee_details.user_id', '=', 'users.id')
+                    ->where('users.tenant_id', $tenant->id)
+                    ->where('users.is_active', 1)
+                    ->where('users.is_onboarding_complete', 1)
+                    ->whereNull('employee_details.date_exit')
+                    ->whereNotNull('users.email')
+
+                    ->whereMonth('employee_details.dob', $now->month)
+                    ->whereDay('employee_details.dob', $now->day)
+
+                    ->where(function ($q) use ($todayDate) {
+                        $q->whereNull('users.birthday_mail_sent_at')
+                          ->orWhereDate('users.birthday_mail_sent_at', '!=', $todayDate);
+                    })
+
+                    ->select(
+                        'users.id',
+                        'users.firstname',
+                        'users.lastname',
+                        'users.email',
+                        'users.avatar',
+                        'employee_details.dob'
+                    )
+                    ->get();
+
+                /*
+                |--------------------------------------------------------------------------
+                | No Results
+                |--------------------------------------------------------------------------
+                */
+                if ($users->isEmpty()) {
+
+                    $this->info("Tenant {$tenant->id} → No birthdays today.");
+
+                    continue;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Send Emails
+                |--------------------------------------------------------------------------
+                */
+                foreach ($users as $user) {
+
+                    try {
+
+                        Mail::to($user->email)
+                            ->queue(
+                                new BirthdayWishMail(
+                                    $user,
+                                    $companyName
+                                )
+                            );
+
+                        /*
+                        |--------------------------------------------------------------------------
+                        | Mark Sent
+                        |--------------------------------------------------------------------------
+                        */
+                        DB::table('users')
+                            ->where('id', $user->id)
+                            ->update([
+                                'birthday_mail_sent_at' => $now,
+                            ]);
+
+                        $this->info("Sent → {$user->email}");
+
+                    } catch (\Throwable $e) {
+
+                        echo PHP_EOL;
+                        echo "================ ERROR ================".PHP_EOL;
+                        echo "User ID : ".$user->id.PHP_EOL;
+                        echo "Message : ".$e->getMessage().PHP_EOL;
+                        echo "File    : ".$e->getFile().PHP_EOL;
+                        echo "Line    : ".$e->getLine().PHP_EOL;
+                        echo "=======================================".PHP_EOL;
+                    }
+                }
+
+                $this->info(
+                    "Tenant {$tenant->id} → Sent {$users->count()} birthday emails"
+                );
             }
-        }
+        });
 
-        $this->info('Birthday emails sent successfully: ' . $users->count());
         return Command::SUCCESS;
     }
 }

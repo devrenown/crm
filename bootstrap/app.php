@@ -31,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetTenantTimezone::class,
             \App\Http\Middleware\DetectCurrency::class,
             \App\Http\Middleware\SessionTimeout::class,
+            \App\Http\Middleware\TeamsPermission::class,
+            \App\Http\Middleware\PermissionTenantMiddleware::class,
         ]);
 
         // 🔹 Middleware aliases (for route usage)

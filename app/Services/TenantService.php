@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Cache;
 
 class TenantService 
 {
+
 	/**
 	* Create a new tenant and initialize related records.
 	*
@@ -25,6 +26,7 @@ class TenantService
 
 	public static function createTenant (array $data): Tenant
 	{
+
 		return DB::transaction(function () use ($data) {
 
 			$subDomain 	= static::generateSubDomain($data['organization_name']);
@@ -41,6 +43,7 @@ class TenantService
 
 			// Create Default Admin User for Tenant
             $user = User::withoutGlobalScopes()->create([
+
                 'tenant_id' 				=> $tenant->id,
                 'firstname' 				=> $data['f_name'],
                 'lastname' 					=> $data['l_name'],
@@ -52,9 +55,9 @@ class TenantService
                 'is_active' 				=> 1,
             ]);
 
-            $user->assignRole('admin');
-
+            // $user->assignRole('admin');
             // Create Default Subscription (optional)
+
             Subscription::withoutGlobalScopes()->create([
                 'tenant_id' 	=> $tenant->id,
                 'plan_id' 		=> $plan->id ?? 1,
@@ -69,7 +72,6 @@ class TenantService
             Mail::to($user->email)->send(new TenantOnboardMail($tenant));
 
             return $tenant;
-
 		});
 	}
 
@@ -82,6 +84,7 @@ class TenantService
 
 	public static function updateTenant (array $data): Tenant
 	{
+
 		return DB::transaction (function () use ($data) {
 			$tenant 	= Tenant::findOrFail($data['tenant_id']);
 			$adminUser 	= User::withoutGlobalScopes()->findOrFail($data['user_id']);
@@ -100,7 +103,6 @@ class TenantService
 			]);
 
 			return $tenant;
-
 		});
 	}
 
@@ -113,6 +115,7 @@ class TenantService
 
 	private static function generateSubDomain(string $companyName): string
 	{
+
 	    // Take the first word only
 	    $firstWord = explode(' ', trim($companyName))[0];
 
@@ -133,29 +136,45 @@ class TenantService
 
 	    return $domain;
 	}
-	
+
+
 	/**
      * Get tenant timezone
      *
      * @param int $tenantId
      * @return string
      */
+
 // 	public static function timezone(int $tenantId): string
 // 	{
+
 // 		$tz = DB::table('settings')
+
 // 			->where('tenant_id', $tenantId)
+
 // 			->where('group', 'localization')
+
 // 			->where('name', 'timezone')
+
 // 			->value('payload');
+
 	
+
 // 		if (!$tz) {
+
 // 			return config('app.timezone');
+
 // 		}
+
 // 		// Remove quotes and fix escaped slashes
+
 // 		return str_replace('\/', '/', trim($tz, "\"'"));
+
 // 	}
 
+
     private static array $runtimeCache = [];
+
 	public static function timezone(int $tenantId): string
 	{
 		if (isset(self::$runtimeCache[$tenantId])) {
@@ -190,7 +209,5 @@ class TenantService
 			unset(self::$runtimeCache[$tenantId]);
 		}
 	}
-	
 
- 
 }

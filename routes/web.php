@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\AttendancesController;
 use App\Http\Controllers\Admin\DepartmentsController;
 use App\Http\Controllers\Admin\DesignationsController;
 use App\Http\Controllers\Admin\EmployeeDetailsController;
+use App\Http\Controllers\Admin\HierarchyController;
 use App\Http\Controllers\Admin\ReportingManagersController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Employee\OnboardController;
@@ -61,7 +62,7 @@ Route::post('contact', [FrontController::class, 'saveContact'])->name('save.cont
 
 Route::get('feature/{slug}', [FrontController::class, 'featureDetail'])->name('feature.detail');
 Route::get('blog/{slug}', [FrontController::class, 'blogDetails'])->name('blog.details');
-Route::get('blogs/{slug?}', [FrontController::class, 'blogs'])->name('blogs');
+Route::get('blog/{slug?}', [FrontController::class, 'blogs'])->name('blogs');
 
 // Cache routes
 
@@ -216,6 +217,49 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/add', 'create')->name('create');
             Route::get('/edit/{id}', 'edit')->name('edit');
             Route::put('/update', 'update')->name('update');
+            Route::post('/configure-default-services', 'configureDefaultServices')->name('configure-default');
+        });
+        
+        
+        
+        // ── Organization Hierarchy Routes ──
+        Route::controller(HierarchyController::class)->group(function () {
+
+            // Admin: Organization Hierarchy Tree (view page)
+            Route::get('hierarchy/org-tree', 'orgTree')
+                ->name('hierarchy.org-tree');
+        
+            // Admin: Organization Tree data (AJAX JSON)
+            Route::get('hierarchy/org-tree-data', 'orgTreeData')
+                ->name('hierarchy.org-tree-data');
+        
+            // Admin: Get subordinates tree for a user (AJAX lazy load)
+            Route::get('hierarchy/subordinates-tree', 'getSubordinatesTree')
+                ->name('hierarchy.subordinates-tree');
+        
+            // Employee: My Hierarchy (self-view page)
+            Route::get('hierarchy/my-hierarchy', 'myHierarchy')
+                ->name('hierarchy.my-hierarchy');
+        
+            // Employee: My Hierarchy JSON (AJAX)
+            Route::get('hierarchy/my-hierarchy-json', 'getMyHierarchyJson')
+                ->name('hierarchy.my-hierarchy-json');
+        
+            // Admin: Role Department Permissions page
+            Route::get('hierarchy/role-dept-permissions', 'roleDeptPermissions')
+                ->name('hierarchy.role-dept-permissions');
+        
+            // Admin: Update role department permission (AJAX POST)
+            Route::post('hierarchy/update-role-dept-permission', 'updateRoleDeptPermission')
+                ->name('hierarchy.update-role-dept-permission');
+        
+            // Admin: Search employees in hierarchy (AJAX)
+            Route::get('hierarchy/search', 'searchHierarchy')
+                ->name('hierarchy.search');
+        
+            // Admin: Department stats (AJAX)
+            Route::get('hierarchy/dept-stats', 'getDeptStats')
+                ->name('hierarchy.dept-stats');
         });
 
 

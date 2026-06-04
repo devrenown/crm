@@ -21,7 +21,7 @@ class AppMenuListener
      */
     public function handle(AppMenuEvent $event): void
     {
-        if (planFeature('modules.roles_permissions')) {
+        if (planFeature('modules.roles')) {
             $menu = $event->menu;
             $menu->canForActiveRole('view-roles',Link::toRoute('roles.index', '<i class="la la-key"></i> <span>'.__('Roles & Permissions'). '</span>')->setActive(route_is('roles.*') ? 'active' : ''));
         }

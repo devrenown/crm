@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\TenantService;
 use App\Enums\TenantStatus;
 use App\Models\Plan;
+use Illuminate\Support\Facades\Http;
 
 class OrganizationController extends Controller
 {
@@ -52,19 +53,41 @@ class OrganizationController extends Controller
         $plan = Plan::where('name', $planName)->first();
 
         $validated = $request->validate([
-            'organization_name' => 'required|string|max:255',
-            'organization_size' => 'required|string',
-            'f_name'            => 'required|string|min:3|max:255',
-            'l_name'            => 'required|string|max:255',
-            'email'             => 'required|email|unique:users,email',
-            'phone'             => 'required',
-            'password'          => 'required|min:6|confirmed',
+            'organization_name'     => 'required|string|max:255',
+            'organization_size'     => 'required|string',
+            'f_name'                => 'required|string|min:3|max:255',
+            'l_name'                => 'required|string|max:255',
+            'email'                 => 'required|email|unique:users,email',
+            'phone'                 => 'required',
+            'password'              => 'required|min:6|confirmed',
+            'cf-turnstile-response' => 'required'
         ]);
+        
+        $turnstile = Http::asForm()->post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            [
+                'secret'   => env('TURNSTILE_SECRET_KEY'),
+                'response' => $request->input('cf-turnstile-response'),
+                'remoteip' => $request->ip(),
+            ]
+        );
+        
+        $result = $turnstile->json();
+
+        if (!($result['success'] ?? false)) {
+    
+            return back()
+                ->withErrors([
+                    'captcha' => 'Captcha verification failed.'
+                ])
+                ->withInput();
+        }
 
         $validated['plan'] = $plan;
 
         try {
             $createTenant = TenantService::createTenant($validated);
+
             return back()->with('tenant_status', 'success');
         }catch (\Exception $e) {
             return back()->with('tenant_status', 'error');

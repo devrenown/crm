@@ -25,6 +25,15 @@ class TenantMiddleware
             abort(404, 'No Organization Found !');
         }
         
+        $primaryHosts = [
+            'renownsystem.com',
+            'www.renownsystem.com',
+        ];
+        
+        if (!$tenant && !in_array($host, $primaryHosts)) {
+            abort(404, 'No Organization Found !');
+        }
+        
         app()->instance('tenant', $tenant);
 
         if ($tenant->status === TenantStatus::INACTIVE || $tenant->status === TenantStatus::SUSPENDED) {

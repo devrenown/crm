@@ -3,8 +3,8 @@
 @section('page-content')
 <div class="content container-fluid">
 
-    {{-- Page Header --}}
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    {{-- Header --}}
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
         <div>
             <h3 class="mb-1">Leave Balances</h3>
             <p class="text-muted mb-0">
@@ -17,65 +17,126 @@
         </a>
     </div>
 
-    {{-- Card --}}
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
+    {{-- Filters --}}
+    <form method="GET" class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <div class="row g-2">
 
-            <table class="table table-hover table-striped align-middle mb-0">
+                <div class="col-md-4">
+                    <input type="text"
+                           name="search"
+                           class="form-control"
+                           placeholder="Search employee..."
+                           value="{{ request('search') }}">
+                </div>
+
+                <div class="col-md-3">
+                    <select name="year" class="form-select">
+                        <option value="">All Years</option>
+                        @for($y = now()->year; $y >= now()->year - 5; $y--)
+                            <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                {{ $y }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button class="btn btn-dark w-100">
+                        Filter
+                    </button>
+                </div>
+
+                <div class="col-md-2">
+                    <a href="{{ route('leave-balances.index') }}"
+                       class="btn btn-outline-secondary w-100">
+                        Reset
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    {{-- Table Card --}}
+    <div class="card shadow-sm">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle mb-0">
+
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Employee</th>
+                        <th class="ps-3">Employee</th>
                         <th>Year</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <!-- <th>Leave Types</th> -->
+                        <th class="text-end pe-3">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @forelse($leaveBalances as $row)
+                @forelse($leaveBalances as $row)
+
                     <tr>
-                        <td class="ps-4">
+
+                        {{-- Employee --}}
+                        <td class="ps-3">
                             <div class="fw-semibold">
                                 {{ $row->user?->name }}
                             </div>
                             <small class="text-muted">
-                                {{ $row->leave_types_count }} leave types
+                               {{ optional($row->user->employeeDetail)->designation?->name ?? 'Employee' }}
                             </small>
                         </td>
 
+                        {{-- Year --}}
                         <td>
                             <span class="badge bg-info">
                                 {{ $row->year }}
                             </span>
                         </td>
 
-                        <td class="text-end pe-4">
+                        {{-- Leave Types --}}
+                        <!-- <td>
+                            <span class="badge bg-secondary">
+                                {{ $row->leave_types_count }} Types
+                            </span>
+                        </td> -->
+
+                        {{-- Actions --}}
+                        <td class="text-end pe-3">
+
                             <a href="{{ route('leave-balances.edit', $row->user_id) }}?year={{ $row->year }}"
-                            class="btn btn-sm btn-outline-warning me-1"
-                            title="Edit">
+                               class="btn btn-sm btn-outline-warning"
+                               title="Edit">
                                 <i class="fa fa-edit"></i>
                             </a>
 
                             <form action="{{ route('leave-balances.destroy', $row->user_id) }}?year={{ $row->year }}"
-                                method="POST"
-                                class="d-inline"
-                                onsubmit="return confirm('Delete all leave balances for this employee and year?')">
+                                  method="POST"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Delete all leave balances for this employee and year?')">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger" title="Delete">
+
+                                <button class="btn btn-sm btn-outline-danger">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </form>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            No leave balances found
                         </td>
                     </tr>
-                    @empty
-
-                        <tr>
-                            <td colspan="3" class="text-center py-4 text-muted">
-                                No leave balances found
-                            </td>
-                        </tr>
-                    @endforelse
+                @endforelse
                 </tbody>
+
             </table>
 
         </div>
@@ -86,6 +147,8 @@
                 {{ $leaveBalances->links() }}
             </div>
         @endif
+
     </div>
+
 </div>
 @endsection

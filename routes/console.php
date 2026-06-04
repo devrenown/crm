@@ -13,6 +13,7 @@ use App\Jobs\AutoClockoutUnsignedAttendances;
 | Default Inspire Command
 |--------------------------------------------------------------------------
 */
+
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })
@@ -23,24 +24,30 @@ Artisan::command('inspire', function () {
 |--------------------------------------------------------------------------
 | Monthly Leave Accrual
 |--------------------------------------------------------------------------
-| Runs daily at 00:10 (server time)
-| Tenant timezone logic handled inside command
+| Runs hourly
+| Command itself checks tenant local timezone/date
 */
+
 Schedule::command('leaves:accrue-monthly')
-    ->dailyAt('00:10')
+    ->dailyAt('00:05')
     ->name('monthly-leave-accrual')
     ->withoutOverlapping()
     ->runInBackground()
     ->appendOutputTo(storage_path('logs/leaves-accrual.log'));
 
+
 /*
 |--------------------------------------------------------------------------
-| Year-end Leave Carry Forward
+| Yearly Leave Carry Forward
 |--------------------------------------------------------------------------
-| Runs daily at 00:20
+| Runs hourly
+| Command itself checks:
+| - tenant local timezone
+| - April 1st
 */
+
 Schedule::command('leaves:carry-forward')
-    ->dailyAt('00:20')
+    ->dailyAt('00:05')
     ->name('year-end-leave-carry-forward')
     ->withoutOverlapping()
     ->runInBackground()
@@ -48,47 +55,66 @@ Schedule::command('leaves:carry-forward')
 
 /*
 |--------------------------------------------------------------------------
-| Yearly Birthday & Anniversary Reset
+| Reset Birthday & Anniversary Flags
 |--------------------------------------------------------------------------
-| Runs daily at 00:30
+| Runs hourly
+| Callback checks tenant local April 1st
 */
+
 Schedule::call(function () {
-    DB::table('users')->update([
-        'birthday_mail_sent_at'    => null,
-        'anniversary_mail_sent_at' => null,
-    ]);
+
+    $now = now();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset only once yearly on April 1st at 00:30 server time
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        $now->month === 4 &&
+        $now->day === 1 &&
+        $now->format('H:i') === '00:30'
+    ) {
+
+        DB::table('users')->update([
+            'birthday_mail_sent_at'    => null,
+            'anniversary_mail_sent_at' => null,
+        ]);
+    }
+
 })
-->dailyAt('00:30')
-->name('birthday-anniversary-reset') 
+->hourly()
+->name('birthday-anniversary-reset')
 ->withoutOverlapping();
 
 /*
 |--------------------------------------------------------------------------
-| Birthday Notification Emails
+| Birthday Emails
 |--------------------------------------------------------------------------
-| Runs daily at 21:00
+| Runs hourly
+| Command itself checks tenant local 09:00 AM
 */
+
 Schedule::command('app:send-birthday-emails')
-    ->dailyAt('21:00')
-    ->name('send-birthday-emails') 
+    ->hourly()
+    ->name('send-birthday-emails')
     ->withoutOverlapping();
 
 /*
 |--------------------------------------------------------------------------
 | Auto Clock-out Unsigned Attendances
 |--------------------------------------------------------------------------
-| Runs every 5 minutes
-| Heavy logic runs in queue (database connection)
 */
 
 Schedule::call(function () {
+
     dispatch(new AutoClockoutUnsignedAttendances());
-        
+
 })
 ->everyFiveMinutes()
 ->name('auto-clockout-unsigned-attendances')
 ->withoutOverlapping();
-
 
 
 // use App\Jobs\AutoClockoutUnsignedAttendances;

@@ -1,23 +1,24 @@
 <?php
 
 namespace App\Traits;
+
 use App\Models\Scopes\TenantScope;
-use Illuminate\Database\Eloquent\Model;
 
 trait BelongsToTenant
 {
-    protected static function booted ()
+    protected static function bootBelongsToTenant()
     {
         static::addGlobalScope(new TenantScope);
-        
+
         static::creating(function ($model) {
 
-            $tenant = app()->bound('tenant') ? app('tenant') : null;
+            $tenant = app()->bound('tenant')
+                ? app('tenant')
+                : null;
 
-            if ($tenant && ! app()->bound('creating_tenant')) {
+            if ($tenant && empty($model->tenant_id)) {
                 $model->tenant_id = $tenant->id;
             }
-
         });
     }
 }

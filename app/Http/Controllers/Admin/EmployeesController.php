@@ -20,10 +20,9 @@ use App\Mail\OnboardingApprovedMail;
 use App\Models\OnboardingInvitation;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use App\Traits\GenerateEmployeeCode;
 use App\Traits\uploadFile;
-
 use App\Models\LeaveType;
 use App\Models\LeaveBalance;
 use App\Models\Shift;
@@ -31,10 +30,11 @@ use App\Models\EmployeeShift;
 use App\Models\UserOnboarding;
 use Carbon\Carbon;
 
+
 class EmployeesController extends Controller
 {
     use GenerateEmployeeCode, uploadFile;
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -61,6 +61,7 @@ class EmployeesController extends Controller
             }elseif ($request->status === 'inactive') {
                 $query->where('is_active', 0);
             }
+
         } else {
             $query->where('is_active', 1);
         }
@@ -76,9 +77,11 @@ class EmployeesController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function list(EmployeeDataTable $dataTable)
     {
         $pageTitle = __("employees");
+
         return $dataTable->render('pages.employees.list', compact(
             'pageTitle',
         ));
@@ -87,13 +90,14 @@ class EmployeesController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
         $departments     = Department::get();
         $designations    = Designation::get();
         $userList        = User::select('id', 'firstname', 'lastname')->get();
         $shifts          = Shift::all();
-        
+
         return view('pages.employees.create', compact(
             'departments',
             'designations',
@@ -105,8 +109,10 @@ class EmployeesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
+
         $request->validate([
             'firstname'     => 'required',
             'middlename'    => 'nullable|string',
@@ -134,6 +140,7 @@ class EmployeesController extends Controller
             'is_active'             => $request->status,
             'password'              => Hash::make($request->password)
         ]);
+
         if ($user) {
 
             if ($request->hasFile('avatar')) {
@@ -146,9 +153,8 @@ class EmployeesController extends Controller
             }
 
             $user->assignRole(UserType::EMPLOYEE);
-
             $empId = $this->generateEmployeeCode($this->tenant);
-            
+
             EmployeeDetail::create([
                 'emp_id'            => $empId,
                 'user_id'           => $user->id,
@@ -169,6 +175,7 @@ class EmployeesController extends Controller
                 ]);
             }
         }
+
         $notification = notify(__('Employee has been added'));
         return back()->with($notification);
     }
@@ -176,6 +183,7 @@ class EmployeesController extends Controller
     /**
      * Display the specified resource.
      */
+
     public function show(string $employee)
     {
 
@@ -185,6 +193,7 @@ class EmployeesController extends Controller
         $roles      = Role::whereNotIn('name', ['Super Admin', 'Admin'])->get();
 
         $pageTitle = __('Employee Profile');
+
         return view('pages.employees.show', compact(
             'employee',
             'user',
@@ -193,9 +202,11 @@ class EmployeesController extends Controller
         ));
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */
+
     public function edit(string $employee)
     {
         $userId         = Crypt::decrypt($employee);
@@ -217,6 +228,7 @@ class EmployeesController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, User $employee)
     {
         $request->validate([
@@ -224,15 +236,17 @@ class EmployeesController extends Controller
             'lastname'  => 'required',
             'password'  => 'nullable|string|confirmed',
             'shift'     => 'required',
+
             'email' => [
                 'required',
                 'email',
                 Rule::unique('users', 'email')->ignore($employee->id),
             ],
         ]);
-        $user       = $employee;
 
+        $user       = $employee;
         $fileName  = $user->avatar;
+
         if ($request->hasFile('avatar')) {
             $path      = $this->tenant->id . '/' . $user->id . '/';
             $fileName  = self::upload($request->file('avatar'), $path, $user->avatar ?? '');
@@ -255,11 +269,13 @@ class EmployeesController extends Controller
             'is_active'             => $request->status,
             'password'              => !empty($request->password) ? Hash::make($request->password) : $user->password
         ]);
+
         if (!empty($user)) {
+
             if(!$user->hasRole(UserType::EMPLOYEE)){
                 $user->assignRole(UserType::EMPLOYEE);
             }
-            
+
             EmployeeDetail::updateOrCreate([
                 'user_id' => $user->id,
             ], [
@@ -283,6 +299,7 @@ class EmployeesController extends Controller
                 ]);
             }
         }
+
         $notification = notify(__("Employee has been updated"));
         return back()->with($notification);
     }
@@ -290,95 +307,173 @@ class EmployeesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(User $employee)
     {
+
         if ($employee->avatar) {
             $path      = $this->tenant->id . '/' . $employee->id . '/';
             self::delete($employee->avatar, $path);
         }
+
         $employee->delete();
         $notification = notify(__("Employee has been deleted"));
         return back()->with($notification);
     }
 
 /*
+
   public function approveOnboarding(Request $request)
+
     {
+
         $user = User::findOrFail($request->user_id);
+
+
 
         try {
 
+
+
             //  Mark onboarding complete
+
             $user->update(['is_onboarding_complete' => 1]);
+
+
 
             $employee = EmployeeDetail::where('user_id', $user->id)->firstOrFail();
 
+
+
             $joinDate = Carbon::parse($employee->date_joined);
+
             $year     = $joinDate->year;
 
+
+
             
+
             $leaveTypes = LeaveType::where('is_active', 1)
+
                 ->where('is_paid', 1)
+
                 ->where('monthly_accrual', 0)
+
                 ->where('max_days_per_year', '>', 0)
+
                 ->where(function ($q) use ($user) {
+
                     if ($user->gender === 'male') {
+
                         $q->whereIn('gender', [0, 1]);
+
                     } elseif ($user->gender === 'female') {
+
                         $q->whereIn('gender', [0, 2]);
+
                     } else {
+
                         $q->where('gender', 0);
+
                     }
+
                 })
+
                 ->get();
+
+
 
             foreach ($leaveTypes as $type) {
 
+
+
                 //  Default full grant
+
                 $grant = $type->max_days_per_year;
 
+
+
                 
+
                 if ($type->max_days_per_year >= 12) {
+
                     $monthsRemaining = 12 - $joinDate->month + 1;
+
                     $grant = round(
+
                         ($type->max_days_per_year / 12) * $monthsRemaining,
+
                         2
+
                     );
+
                 }
 
+
+
                 LeaveBalance::updateOrCreate(
+
                     [
+
                         'tenant_id'     => $user->tenant_id,
+
                         'user_id'       => $user->id,
+
                         'leave_type_id' => $type->id,
+
                         'year'          => $year,
+
                     ],
+
                     [
+
                         'opening_balance'   => $grant,
+
                         'accrued_leaves'    => 0,
+
                         'carry_forwarded'   => 0,
+
                         'used_leaves'       => 0,
+
                         'encashed_leaves'   => 0,
+
                         'remaining_leaves'  => $grant,
+
                         'last_accrued_month'=> null,
+
                     ]
+
                 );
+
             }
+
+
 
             Mail::to($user->email)->send(new OnboardingApprovedMail($user));
 
+
+
         } catch (\Throwable $e) {
+
             report($e);
+
             return back()->withErrors('Onboarding approval failed');
+
         }
 
-        return response()->json([
-            'status' => 'success',
-            'msg'    => "Employee onboarding approved successfully",
-        ]);
-    }
-*/
 
+
+        return response()->json([
+
+            'status' => 'success',
+
+            'msg'    => "Employee onboarding approved successfully",
+
+        ]);
+
+    }
+
+*/
 
     public function approveOnboarding (Request $request) 
     {
@@ -392,7 +487,6 @@ class EmployeesController extends Controller
 
         try {
             $userOnboarding = UserOnboarding::where('user_id', $user->id)->first();
-
             $user->update(['is_onboarding_complete' => 1, 'is_active' => 1]);
             $userOnboarding->update(['status' => 2]);
 
@@ -405,8 +499,9 @@ class EmployeesController extends Controller
             'status' => 'success',
             'msg'    => "Employee's Onboarding Approved",
         ]);
-
     }
+
+
 
     public function sendOnboardingInvitation (Request $request)
     {
@@ -443,6 +538,7 @@ class EmployeesController extends Controller
 
     public function assignRoles(Request $request)
     {
+
         $request->validate([
             'user_id' => 'required',
             'roles' => 'nullable|array',
@@ -460,7 +556,6 @@ class EmployeesController extends Controller
         }
 
         $roles = $request->roles ?? [];
-
         $user->syncRoles($roles);
 
         return response()->json([
@@ -470,3 +565,4 @@ class EmployeesController extends Controller
     }
 
 }
+

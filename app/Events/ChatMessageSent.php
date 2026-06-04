@@ -9,9 +9,10 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Support\Facades\Crypt;
 
-class ChatMessageSent implements ShouldBroadcast
+class ChatMessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -41,5 +42,16 @@ class ChatMessageSent implements ShouldBroadcast
      public function broadcastAs()
     {
         return 'chat.message.sent';
+    }
+    
+    public function broadcastWith()
+    {
+        return [
+            'receiver_id' => $this->receiverId,
+            'sender_id'   => $this->message->user_id,
+            'sender_name' => optional($this->message->fromUser)->fullname,
+            'message'     => $this->message->body,
+            'contact'     => Crypt::encrypt($this->message->user_id),
+        ];
     }
 }

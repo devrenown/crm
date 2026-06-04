@@ -9,25 +9,16 @@
         <!-- Breadcrumb -->
         <div class="blog-breadcrumb mb-5">
 
-            <a href="{{ url('/') }}">
-                Home
-            </a>
-
-            <span class="mx-2">
-                <i class="fa fa-angle-right"></i>
-            </span>
-
-            <span>
-                Blog
-            </span>
-
+            <a href="{{ url('/') }}">Home</a>
+            <span class="mx-2"><i class="fa fa-angle-right"></i></span>
+            <span>Blog</span>
         </div>
 
         <div class="row">
 
             <!-- Blog List -->
             <div class="col-lg-8">
-
+                
                 <div class="row g-4">
 
                     @forelse($blogs as $blog)
@@ -44,7 +35,6 @@
                                         <img src="{{ asset($blog->featured_image) }}"
                                              alt="{{ $blog->title }}"
                                              class="blog-image">
-
                                     </a>
 
                                 </div>
@@ -61,31 +51,19 @@
                                         </span>
 
                                         <span>
-                                            <i class="fa fa-clock-o"></i>
-                                            4 min read
+                                            <i class="fa fa-clock-o"></i>4 min read
                                         </span>
 
                                     </div>
 
                                     <!-- Title -->
                                     <h3 class="blog-title">
-
-                                        <a href="{{ route('blog.details', $blog->slug) }}">
-
-                                            {{ $blog->title }}
-
-                                        </a>
-
+                                        <a href="{{ route('blog.details', $blog->slug) }}">{{ $blog->title }}</a>
                                     </h3>
 
                                     <!-- Read More -->
-                                    <a href="{{ route('blog.details', $blog->slug) }}"
-                                       class="read-more-btn">
-
-                                        Read More
-
+                                    <a href="{{ route('blog.details', $blog->slug) }}" class="read-more-btn">Read More
                                         <i class="fa fa-arrow-right"></i>
-
                                     </a>
 
                                 </div>
@@ -97,26 +75,17 @@
                     @empty
 
                         <div class="col-12">
-
                             <div class="empty-blog">
-
-                                <h4>
-                                    No Blogs Found
-                                </h4>
-
+                                <h4> No Blogs Found </h4>
                             </div>
-
                         </div>
-
                     @endforelse
 
                 </div>
 
                 <!-- Pagination -->
                 <div class="mt-5">
-
                     {{ $blogs->links() }}
-
                 </div>
 
             </div>
@@ -133,35 +102,20 @@
                         </h4>
     
                         <ul class="category-list">
-    
                             @forelse($categories as $category)
     
                                 <li>
-    
-                                    <a href="{{ route('blogs', $category->slug) }}">
-    
-                                        {{ $category->name }}
-    
-                                    </a>
-    
+                                    <a href="{{ route('blogs', $category->slug) }}">{{ $category->name }}</a>
                                     <span>
-    
                                         {{ $category->blogs_count ?? 0 }}
-    
                                     </span>
-    
                                 </li>
-    
                             @empty
-    
                                 <li>
                                     No Categories
                                 </li>
-    
                             @endforelse
-    
                         </ul>
-    
                     </div>
     
                     <!-- Recent Posts -->
@@ -186,43 +140,24 @@
                                 <div class="recent-content">
     
                                     <h6>
-    
                                         <a href="{{ route('blog.details', $recent->slug) }}">
-    
                                             {{ \Illuminate\Support\Str::limit($recent->title, 45) }}
-    
                                         </a>
-    
                                     </h6>
-    
+
                                     <span>
-    
                                         {{ $recent->created_at->format('M d, Y') }}
-    
                                     </span>
-    
                                 </div>
-    
                             </div>
-    
                         @empty
-    
-                            <p>
-                                No Recent Posts
-                            </p>
-    
+                            <p>No Recent Posts </p>
                         @endforelse
-    
                     </div>
-                
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 @endsection

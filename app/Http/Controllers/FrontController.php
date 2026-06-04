@@ -27,7 +27,7 @@ class FrontController extends Controller
         'r_name'                  => 'required|string|min:3',
         'r_organization'          => 'required|string',
         'r_company_size'          => 'required',
-        'r_email'                 => 'required|email|string',
+        'email'                   => 'required|string|email:rfc,dns',
         'r_contact'               => 'required|numeric',
         'g-recaptcha-response'    => 'required',
     ]);
@@ -82,7 +82,7 @@ class FrontController extends Controller
 
     $validate = $request->validate([
         'name'                  => 'required|string|min:3',
-        'email'                 => 'required|email|string',
+        'email'                 => 'required|string|email:rfc,dns',
         'phone'                 => 'required|numeric',
         'message'               => 'nullable|string|max:500',
         'g-recaptcha-response'  => 'required',
@@ -252,14 +252,10 @@ class FrontController extends Controller
                $q->where('status', 'published');
            }
         ])
-        ->where('status', 1)
-        ->latest()
-        ->get();
+        ->where('status', 1)->latest()->get();
         
         $recentBlogs = Blog::where('status', 'published')
-                        ->latest()
-                        ->take(5)
-                        ->get();
+                        ->latest()->take(5)->get();
        
        return view('pages.front.blogs', 
        [
@@ -291,15 +287,11 @@ class FrontController extends Controller
         ->get();
         
         $recentBlogs = Blog::where('status', 'published')
-                        ->latest()
-                        ->take(5)
-                        ->get();
+                        ->latest()->take(5)->get();
        
        $relatedBlogs = Blog::where('status', 'published')
                         ->where('id', '!=', $blog->id)
-                        ->latest()
-                        ->take(3)
-                        ->get();
+                        ->latest()->take(3)->get();
        
        return view('pages.front.blog-details', 
         [

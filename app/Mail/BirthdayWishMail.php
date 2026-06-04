@@ -14,43 +14,43 @@ class BirthdayWishMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
-    public $tenant;
+    public $companyName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user)
+    public function __construct($user, $companyName)
     {
-        $this->user   = $user;
-        $this->tenant = app()->bound('tenant') ? app('tenant') : null;
+        $this->user = $user;
+        $this->companyName = $companyName;
     }
 
     /**
-     * Get the message envelope.
+     * Mail Subject
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Happy Birthday ' . $this->user->firstname . '!'
+            subject: 'Happy Birthday '.$this->user->firstname.'!'
         );
     }
 
     /**
-     * Get the message content definition.
+     * Mail Content
      */
     public function content(): Content
     {
         return new Content(
             view: 'mail.birthday',
             with: [
-                'user'      => $this->user,
-                'tenant'    => $this->tenant,
+                'user'        => $this->user,
+                'companyName' => $this->companyName,
             ]
         );
     }
 
     /**
-     * Get the attachments for the message.
+     * Attachments
      */
     public function attachments(): array
     {

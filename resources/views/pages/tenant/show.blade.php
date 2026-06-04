@@ -6,6 +6,7 @@
 
     <!-- Page Header -->
     <x-breadcrumb class="col">
+
         <x-slot name="title">
             {{ __('Organization Details') }} :– {{ $tenant->name }} 
         </x-slot>
@@ -18,7 +19,6 @@
             </div>
         </x-slot>
     </x-breadcrumb>
-
 
     <!-- Tenant Overview -->
     <div class="row">
@@ -48,7 +48,6 @@
         <!-- Summary Cards -->
         <div class="col-md-8">
             <div class="row">
-
             	<div class="col-md-4 col-sm-6 mb-1">
                     <div class="card text-center shadow-sm">
                         <div class="card-body">
@@ -59,203 +58,577 @@
                 </div>
 
                 <div class="col-md-4 col-sm-6 mb-1">
+
                     <div class="card text-center shadow-sm">
+
                         <div class="card-body">
+
                             <h3>{{ count($tenant->employees) }}</h3>
+
                             <p class="text-muted">Employees</p>
+
                         </div>
+
                     </div>
+
                 </div>
 
+
+
                 <div class="col-md-4 col-sm-6 mb-1">
+
                     <div class="card text-center shadow-sm">
+
                         <div class="card-body">
+
                             <h3>{{ $clientCount }}</h3>
+
                             <p class="text-muted">Clients</p>
+
                         </div>
+
                     </div>
+
                 </div>
 
+
+
                 <div class="col-md-4 col-sm-6 mb-1">
+
                     <div class="card text-center shadow-sm">
+
                         <div class="card-body">
+
                             <h3>{{ @$projectCount ?? 0 }}</h3>
+
                             <p class="text-muted">Projects</p>
+
                         </div>
+
                     </div>
+
                 </div>
 
+
+
                 <div class="col-md-4 col-sm-6 mb-1">
+
                     <div class="card text-center shadow-sm">
+
                         <div class="card-body">
-                            <h3>{{ $invoiceCount }}</h3>
+
+                            <h3>{{ @$invoiceCount }}</h3>
+
                             <p class="text-muted">Invoices</p>
+
                         </div>
+
                     </div>
+
                 </div>
 
+
+
                 <div class="col-md-4 col-sm-6 mb-1">
+
                     <div class="card text-center shadow-sm">
+
                         <div class="card-body">
+
                             <h3>{{ @$activeUserCount ?? 0 }}</h3>
+
                             <p class="text-muted">Active Users</p>
+
                         </div>
+
                     </div>
+
                 </div>
+
+
 
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- Company Information -->
+
     <div class="card mt-4 shadow-sm">
+
         <div class="card-header">
-            <h5 class="card-title mb-0">Admin Information</h5>
+
+            <h5 class="card-title mb-0">
+
+                Configure Settings & Default Permissions
+
+            </h5>
+
         </div>
 
+
+
         <div class="card-body">
+
+            <p class="text-muted mb-3">
+
+                This action will automatically create and configure the default
+
+                system roles, permissions, and application settings required for
+
+                the CRM. It is recommended to run this once after setting up a new
+
+                organization or tenant. Existing roles and permissions will not be
+
+                removed.
+
+            </p>
+
+
+
+            <ul class="text-muted small mb-3">
+
+                <li>Create default roles (Admin, HR, Manager, Employee, etc.)</li>
+
+                <li>Assign predefined permissions to each role</li>
+
+                <li>Configure essential system settings</li>
+
+                <li>Prepare the CRM for immediate use</li>
+
+            </ul>
+
+
+
+            <button id="configure" class="btn btn-primary">
+
+                <i class="fa fa-cogs me-1"></i>
+
+                Configure Default Settings & Permissions
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- Company Information -->
+
+
+
+    <div class="card mt-4 shadow-sm">
+
+
+
+        <div class="card-header">
+
+            <h5 class="card-title mb-0">Admin Information</h5>
+
+        </div>
+
+
+
+        <div class="card-body">
+
             <div class="row">
 
-                <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
-                    <img src="{{ @$tenant->adminUser->avatar ? asset('storage/' . @$tenant->adminUser->avatar) : asset('images/user.jpg') }}" style="height: 100px; width: 100px; object-fit: cover;">
-                </div>
+
 
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
+                    <img src="{{ @$tenant->adminUser->avatar ? asset('storage/' . @$tenant->adminUser->avatar) : asset('images/user.jpg') }}" style="height: 100px; width: 100px; object-fit: cover;">
+
+                </div>
+
+
+
+                <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
                     <strong class="col-lg-6">Full Name:</strong>
+
                     <p class="col-lg-6">{{ @$tenant->adminUser->fullname ?? 'Not Provided' }}</p>
 
+
+
                     <strong class="col-lg-6">Phone:</strong>
+
                     <p class="col-lg-6">{{ @$tenant->adminUser->phone ?? 'Not Provided' }}</p>
+
                 </div>
 
+
+
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
                     <strong class="col-lg-6">Email:</strong>
+
                     <p class="col-lg-12">{{ @$tenant->adminUser->email ?? 'Not Provided' }}</p>
 
+
+
                     <!-- <strong class="col-lg-12">Address:</strong>
+
                     <p class="col-lg-6">{{ @$tenant->adminUser->address ?? 'Not Provided' }}</p> -->
+
                 </div>
 
+
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <!-- Company Information -->
+
+
+
     <div class="card mt-4 shadow-sm">
+
         <div class="card-header">
+
             <h5 class="card-title mb-0">Plan Details</h5>
+
         </div>
 
+
+
         <div class="card-body">
+
             <div class="row">
 
+
+
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
                     <strong class="col-lg-6">Plan</strong>
+
                     <p class="col-lg-6">{{ @$subscription->plan->name }}</p>
 
+
+
                     <strong class="col-lg-6">Start Date:</strong>
+
                     <p class="col-lg-6">{{ date('d M Y', strtotime($subscription->start_date)) }}</p>
+
                 </div>
 
+
+
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
                     <strong class="col-lg-6">Duration:</strong>
+
                     <p class="col-lg-6">{{ @$subscription->plan->duration ?? '0' }}days</p>
 
+
+
                     <strong class="col-lg-6">End Date:</strong>
+
                     <p class="col-lg-6">{{ date('d M Y', strtotime($subscription->end_date)) }}</p>
+
                 </div>
+
+
 
                 <div class="col-lg-4 mb-2 mb-lg-0 mb-md-0">
+
+
+
                     @php
+
                       $badge = match ($subscription->status) {
+
                         1 => '<span class="badge bg-inverse-success badge-sm">Active</span>',
+
                         2 => '<span class="badge bg-inverse-danger badge-sm">Expired</span>',
+
                         3 => '<span class="badge bg-inverse-secondary badge-sm">Canceled</span>',
+
                         default => null
+
                       }
+
                     @endphp
 
+
+
                     <strong class="col-lg-6">Status:</strong>
+
                     <p class="col-lg-6">{!! $badge !!}</p>
+
                 </div>
 
+
+
             </div>
+
         </div>
+
     </div>
+
+
+
 
 
     <!-- Company Information -->
+
+
+
     <div class="card mt-4 shadow-sm">
+
         <div class="card-header">
+
             <h5 class="card-title mb-0">Company Information</h5>
+
         </div>
+
+
 
         @php
+
+
+
             $address = $company->firstWhere('name', 'address');
+
             $phone   = $company->firstWhere('name', 'phone');
+
             $mobile   = $company->firstWhere('name', 'mobile');
+
             $email   = $company->firstWhere('name', 'email');
+
             $companyName = $company->firstWhere('name', 'name');
+
         @endphp
 
+
+
         <div class="card-body">
+
             <div class="row">
 
+
+
                 <div class="col-md-6 mb-2">
+
                     <strong>Custom Company Name:</strong><br>
-                    {{ trim($companyName->payload, '"') ?? 'Not Provided' }}
+
+                    {{ $companyName ? trim($companyName->payload, '"') : 'Not Provided' }}
+
                 </div>
 
+
+
                 <div class="col-md-6 mb-2">
+
                     <strong>Email:</strong><br>
-                    {{ trim($email->payload, '"') ?? 'Not Provided' }}
+
+                    {{ $email ? trim($email->payload, '"') : 'Not Provided' }}
+
                 </div>
 
+
+
                 <div class="col-md-6 mb-2">
+
                     <strong>Phone No:</strong><br>
-                    {{ trim($phone->payload, '"') ?? 'Not Provided' }}
+
+                    {{ $phone ? trim($phone->payload, '"') : 'Not Provided' }}
+
                 </div>
 
+
+
                 <div class="col-md-6 mb-2">
+
                     <strong>Mobile No:</strong><br>
-                    {{ trim($mobile->payload, '"') ?? 'Not Provided' }}
+
+                    {{ $mobile ? trim($mobile->payload, '"') : 'Not Provided' }}
+
                 </div>
-                
+
+
 
                 <div class="col-md-6 mb-2">
+
                     <strong>Address:</strong><br>
-                    {{ trim($address->payload, '"') ?? 'Not Provided' }}
+
+                    {{ $address ? trim($address->payload, '"') : 'Not Provided' }}
+
                 </div>
+
+
 
             </div>
+
         </div>
+
     </div>
+
+
+
 
 
     <!-- Theme Settings -->
+
+
+
     <div class="card mt-4 shadow-sm">
+
+
+
         <div class="card-header">
+
             <h5 class="card-title mb-0">Theme Settings</h5>
+
         </div>
+
+
 
         <div class="card-body">
 
             @php
-                $primaryColor = $theme->firstWhere('name', 'primary_color');
+
+                $colorScheme = $theme->firstWhere('name', 'color_scheme');
+                $colorValue = $colorScheme
+                    ? trim($colorScheme->payload, '"')
+                    : '#ccc';
+
             @endphp
 
+
+
             <div class="row">
+
                 <div class="col-md-6 mb-3">
-                    <strong>Primary Color:</strong><br>
-                    <span style="display:inline-block;width:40px;height:20px;background:{{ $primaryColor->payload ?? '#ccc' }};"></span>
+
+                    <strong>
+                        Color Scheme:
+                        ({{ $colorScheme ? $colorValue : 'Not Configured' }})
+                    </strong> <br>
+
+                    <span
+                        style="display:inline-block;width:40px;height:20px;background:{{ $colorValue }};">
+                    </span>
+
                 </div>
+
             </div>
 
+
+
         </div>
+
     </div>
+
 
 
 </div>
 
+
+
 @endsection
+
+
+
+@push('page-scripts')
+
+
+
+<script>
+
+    $('#configure').on('click', function () {
+
+
+
+        let isConfirm = confirm('This will configure all default settings, roles, and permissions for this organization. Existing configurations may be updated. Do you want to continue?');
+
+
+
+        if(!isConfirm) return;
+
+
+
+        const btn = $(this);
+
+
+
+        btn.html(`
+
+            <i class="fa fa-spinner fa-spin me-1"></i>
+
+            Configuring...
+
+        `);
+
+
+
+        btn.prop('disabled', true);
+
+
+
+        $.ajax({
+
+            url: '{{ route("tenant.configure-default") }}',
+
+            type: 'POST',
+
+            data: {
+
+                _token: '{{ csrf_token() }}',
+
+                tenant_id: '{{ $tenant->id }}'
+
+            },
+
+            success: function (response) {
+
+                if (response.success) {
+
+                    alert(response.message);
+
+                }else {
+
+                    alert('Something Went Wrong!');
+
+                }
+
+            },
+
+            error: function () {
+
+                alert('Configuration failed');
+
+            },
+
+            complete: function () {
+
+                btn.html(`
+
+                    <i class="fa fa-cogs me-1"></i>
+
+                    Configure Default Settings & Permissions
+
+                `);
+
+                btn.prop('disabled', false);
+
+            }
+
+        });
+
+    });
+
+</script>
+
+    
+
+@endpush

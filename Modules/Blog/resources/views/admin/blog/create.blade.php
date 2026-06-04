@@ -35,11 +35,11 @@
                 <div class="mb-3">
                     <label class="form-label">Blog Category</label>
                     
-                    @foreach($categories as $category)
                     <select name="category" class="form-control">
-                        <option value="{{ $category }}"> {{ $category->name }} </option>
+                        @foreach($categories as $category)
+                         <option value="{{ $category }}"> {{ $category->name }} </option>
+                        @endforeach
                     </select>
-                    @endforeach
                 </div>
 
                 <div class="mb-3">

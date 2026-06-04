@@ -48,9 +48,9 @@
 	             	?? $theme->firstWhere('name', 'logo_light');
 
 	             	$adr = $company->firstWhere('name', 'address');
-	             	$address = trim($adr->payload, '"');
+	             	$address = trim(@$adr->payload, '"');
 
-	             	$file = trim($logo->payload, '"');
+	             	$file = trim(@$logo->payload, '"');
 
 	             	$badge = match($tenant->status) {
 				        \App\Enums\TenantStatus::ACTIVE => 'success',
@@ -61,8 +61,6 @@
 
                 <div class="col-md-4 col-sm-6 col-12 col-lg-4">
                     <div class="card">
-
-                    	
 
                        <div class="p-3 text-center" style="height:100px; display:flex; align-items:center; justify-content:center;">
 

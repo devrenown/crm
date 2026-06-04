@@ -39,6 +39,8 @@ class PlanRestriction
         $route = Route::currentRouteName();
         $module = $this->detectModule($route);
 
+        // dd($features['modules'][$module]);
+
         if ($module && empty($features['modules'][$module])) {
 
             $notification = notify("Your plan does not allow access to the {$module} module.");
@@ -46,7 +48,6 @@ class PlanRestriction
         }
 
         if ($permission && auth()->check()) {
-            dd(activeRoleCan($permission));
             if (!activeRoleCan($permission)) {
                 abort(403, 'Unauthorized');
             }
@@ -92,6 +93,7 @@ class PlanRestriction
             str_starts_with($route, "budgets.")             => "accounting",
             str_starts_with($route, "leaves.")              => "leave",
             str_starts_with($route, "roles.")               => "roles",
+            str_starts_with($route, "permissions.")         => "permissions",
             str_starts_with($route, "tenant.")              => "Organization",
             default => null,
         };

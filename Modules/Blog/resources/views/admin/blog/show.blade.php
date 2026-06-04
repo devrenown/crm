@@ -27,7 +27,7 @@
             <div class="mb-4 text-muted">
 
                 Created:
-                {{ $blog->created_at->format('d M Y h:i A') }}
+                {{ tz($blog->created_at, 'd M Y h:i A') }}
 
             </div>
             

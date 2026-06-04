@@ -139,7 +139,7 @@
     
                                     <span>
     
-                                        {{ $recent->created_at->format('M d, Y') }}
+                                        {{ tz($recent->created_at, 'M d, Y') }}
     
                                     </span>
     
@@ -180,7 +180,7 @@
                 <div class="section-heading mb-4">
 
                     <h2 class="fw-bold">
-                        Related Articles
+                        Related Blogs
                     </h2>
 
                 </div>
@@ -219,7 +219,7 @@
 
                             </p>
 
-                            <a href="{{ route('website.blog.show', $related->slug) }}"
+                            <a href="{{ route('blog.details', $related->slug) }}"
                                class="read-more-btn">
 
                                 Read More

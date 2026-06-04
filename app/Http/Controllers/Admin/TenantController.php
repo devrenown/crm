@@ -10,6 +10,8 @@ use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 use App\Services\TenantService;
 use App\Enums\UserType;
+use App\Services\TenantDefaultSettings;
+use App\Services\TenantDefaultPermissions;
 
 class TenantController extends Controller
 {
@@ -23,6 +25,7 @@ class TenantController extends Controller
 
         foreach ($tenants as $tenant) {
             $settings[$tenant->id] = [
+
                 'theme' => DB::table('settings')
                     ->where('group', 'theme')
                     ->where('tenant_id', $tenant->id)
@@ -64,7 +67,7 @@ class TenantController extends Controller
 
         // Logo
         $logo = $theme->firstWhere('name', 'logo_dark') ?? $theme->firstWhere('name', 'logo_light');
-        $file = trim($logo->payload, '"');
+        $file = trim(@$logo->payload, '"');
 
         $clientCount        = User::withoutGlobalScopes()->where(['tenant_id' => $tenant->id, 'type' => UserType::CLIENT])->count();
         $activeUserCount    = User::withoutGlobalScopes()->where(['tenant_id' => $tenant->id, 'is_active' => 1])->count();
@@ -131,4 +134,38 @@ class TenantController extends Controller
         return back()->with($notification);
     }
 
+    public function configureDefaultServices(Request $request)
+    {
+        $tenantId = (int)$request->tenant_id;
+
+        if (!$tenantId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization not found!'
+            ], 422);
+
+        }
+
+        try {
+            DB::transaction(function () use ($tenantId) {
+                TenantDefaultSettings::createDefaults($tenantId);
+                TenantDefaultPermissions::configure($tenantId);
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Default settings and permissions configured successfully.'
+            ]);
+
+        } catch (\Throwable $th) {
+            report($th);
+
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
 }
+

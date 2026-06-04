@@ -12,4 +12,5 @@ enum UserType: string
     case HR         = 'Hr';
     case ACCOUNTANT = 'Accountant';
     case TL         = 'Tl';
+    case BLOGWRITER = 'Blog Writer';
 }

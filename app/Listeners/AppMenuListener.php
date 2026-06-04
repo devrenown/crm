@@ -55,11 +55,11 @@ class AppMenuListener
         }
 
         /* ================= SUBSCRIPTION ================= */
-        $menu->canForActiveRole(
-            'view-subscriptions',
-            Link::toRoute('subscription.index', '<i class="la la-credit-card"></i> <span>' . __('Subscription') . '</span>')
-                ->setActive(route_is('subscription.*'))
-        );
+        // $menu->canForActiveRole(
+        //     'view-subscriptions',
+        //     Link::toRoute('subscription.index', '<i class="la la-credit-card"></i> <span>' . __('Subscription') . '</span>')
+        //         ->setActive(route_is('subscription.*'))
+        // );
 
         /* ================= Demo Request ================= */
         // $menu->canForActiveRole(
@@ -173,6 +173,34 @@ class AppMenuListener
                 Link::toRoute('reporting-managers', '<i class="la la-user-tie"></i> <span>' . __('Reporting Managers') . '</span>')
                     ->setActive(route_is('reporting-managers.*'))
             );
+        }
+        
+         
+       /* ================= ORGANIZATION ================= */
+        if (true) {
+            $menu->canAnyForActiveRole([
+                'view-hierarchy',
+                'view-own-hierarchy',
+                'edit-role-dept-permission', 
+            ], function ($menu) {
+        
+                $menu->canForActiveRole(
+                    'view-hierarchy',
+                    Link::toRoute(
+                        'hierarchy.org-tree',
+                        '<i class="la la-sitemap"></i> <span>' . __('Org Hierarchy') . '</span>'
+                    )->setActive(route_is('hierarchy.org-tree'))
+                );
+        
+                $menu->canForActiveRole(
+                    'view-own-hierarchy',
+                    Link::toRoute(
+                        'hierarchy.my-hierarchy',
+                        '<i class="la la-users"></i> <span>' . __('My Hierarchy') . '</span>'
+                    )->setActive(route_is('hierarchy.my-hierarchy'))
+                );
+        
+            });
         }
 
         /* ================= CLIENTS ================= */

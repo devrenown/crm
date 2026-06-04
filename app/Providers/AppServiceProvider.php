@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
             Log::info('Locale set to: ' . $lang);
         });
 
-        \App\Models\Tenant::observe(\App\Observers\TenantObserver::class);
+        // \App\Models\Tenant::observe(\App\Observers\TenantObserver::class);
 
         Menu::macro('canForActiveRole', function ($permission, $item) {
             if (! Auth::check()) {

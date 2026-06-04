@@ -55,13 +55,17 @@ class UsersDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
+
     public function query(User $model): QueryBuilder
     {
         return $model->newQuery()
-            ->whereIn('id', function ($query) {
-                $query->select('model_id')
-                    ->from('model_has_roles')
-                    ->whereIn('role_id', [4, 5, 6, 10]);
+            ->whereHas('roles', function ($query) {
+                $query->whereIn('name', [
+                    'Admin',
+                    'Manager',
+                    'Tl',
+                    'Hr'
+                ]);
             });
     }
 

@@ -92,7 +92,7 @@
                 <a href="{{ url('/#pricing') }}" class="footer-link">Pricing</a><br>
                 <a href="{{ url('/#how-it-works') }}" class="footer-link">How it Works</a><br>
                 <a href="{{ url('/#testimonials') }}" class="footer-link">Testimonials</a><br>
-                <a href="{{ route('blogs') }}" class="footer-link">Blogs</a>
+                <a href="{{ route('blogs') }}" class="footer-link">Blog</a>
             </div>
 
             <!-- Features -->

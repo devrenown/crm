@@ -19,6 +19,7 @@ class LeaveType extends Model
     protected $fillable = [
         'tenant_id',
         'name',
+        'leave_code',
         'description',
 
         // Leave rules
@@ -29,6 +30,7 @@ class LeaveType extends Model
         'max_carry_forward',
         'monthly_accrual',
         'accrual_rate',
+        'allow_during_probation',
         'requires_document',
         'min_days_notice',
         'max_days_per_application',

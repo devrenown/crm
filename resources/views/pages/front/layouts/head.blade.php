@@ -31,6 +31,9 @@
     <meta name="twitter:title" content="Best CRM for project management Tools - Renown System">
     <meta name="twitter:description" content="Renown System CRM helps businesses manage customers, sales, tasks, employees & projects with a secure CRM platform.">
     <meta name="twitter:image" content="https://renownsystem.com/images/renownsystem-prev-img.jpg">
+    
+    <!-- Canonical URL -->
+    <link rel="icon" type="image/png" href="{{ 'images/favicon.png' }}">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://renownsystem.com/">

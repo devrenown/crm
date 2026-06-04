@@ -65,11 +65,11 @@
                                                 <div class="chat-body">
                                                     <div class="chat-bubble">
                                                         <div class="chat-content">
-                                                            <p>{{ $message->body }}</p>
+                                                            <p class="mb-0 text-break" style="white-space: pre-wrap;">{{ $message->body }}</p>
                                     
                                                             @if ($message->getMedia('chat-attachments')->count())
 
-                                                                    <div class="mt-2 d-flex flex-column gap-2">
+                                                                <div class="mt-2 d-flex flex-column gap-2">
                                                                 
                                                                         @foreach ($message->getMedia('chat-attachments') as $media)
                                                                 
@@ -85,6 +85,7 @@
                                                                                     href="{{ $media->getUrl() }}"
                                                                                     target="_blank"
                                                                                     class="d-inline-block"
+                                                                                    style="z-index: 999;"
                                                                                 >
                                                                                     <img
                                                                                         src="{{ $media->getUrl() }}"
@@ -109,6 +110,7 @@
                                                                                     style="
                                                                                         max-width:250px;
                                                                                         color:#333;
+                                                                                        z-index: 999;
                                                                                     "
                                                                                 >
                                                                                     <i class="fa-solid fa-file fa-lg text-primary"></i>
@@ -138,7 +140,7 @@
                                                                 
                                                                     </div>
                                                                 
-                                                                @endif
+                                                            @endif
                                     
                                                             <span class="chat-time">
                                                                 {{ tz($message->created_at, 'H:i a') }}
@@ -163,11 +165,11 @@
                                                 <div class="chat-body">
                                                     <div class="chat-bubble">
                                                         <div class="chat-content">
-                                                            <p>{{ $message->body }}</p>
+                                                            <p class="mb-0 text-break" style="white-space: pre-wrap;">{{ $message->body }}</p>
                                     
                                                             @if ($message->getMedia('chat-attachments')->count())
 
-                                                                    <div class="mt-2 d-flex flex-column gap-2">
+                                                                <div class="mt-2 d-flex flex-column gap-2">
                                                                 
                                                                         @foreach ($message->getMedia('chat-attachments') as $media)
                                                                 
@@ -183,6 +185,7 @@
                                                                                     href="{{ $media->getUrl() }}"
                                                                                     target="_blank"
                                                                                     class="d-inline-block"
+                                                                                    style="z-index: 999;"
                                                                                 >
                                                                                     <img
                                                                                         src="{{ $media->getUrl() }}"
@@ -207,6 +210,7 @@
                                                                                     style="
                                                                                         max-width:250px;
                                                                                         color:#333;
+                                                                                        z-index: 999;
                                                                                     "
                                                                                 >
                                                                                     <i class="fa-solid fa-file fa-lg text-primary"></i>
@@ -236,7 +240,7 @@
                                                                 
                                                                     </div>
                                                                 
-                                                                @endif
+                                                            @endif
                                     
                                                             <span class="chat-time">
                                                                 {{ tz($message->created_at, 'H:i a') }}
@@ -372,7 +376,12 @@
                                 <textarea
                                     class="form-control"
                                     wire:model.defer="messageBody"
-                                    wire:keydown.enter.exact.prevent="sendMessage"
+                                    x-on:keydown.enter="
+                                        if (!$event.shiftKey) {
+                                            $event.preventDefault();
+                                            $wire.sendMessage();
+                                        }
+                                    "
                                     id="messageInput"
                                     rows="1"
                                     placeholder="Type your message..."
@@ -513,8 +522,8 @@
                                             @endif
                                             @if (!empty($user->phone))
                                             <li>
-                                                <span>{{ __('Phone') }}:</span>
-                                                <span class="float-end text-muted">{{ $user->phoneNumber }}</span>
+                                                <span>{{ __('Designation') }}:</span>
+                                                <span class="float-end text-muted">{{ $user->designation?->name ?? 'N/A' }}</span>
                                             </li>
                                             @endif
                                         </ul>

@@ -11,7 +11,7 @@ class LeaveBalanceInitializer
     public function initialize(User $user): void
     {
         $year = now()->year;
-        $joinDate = Carbon::parse($user->joining_date);
+        $joinDate = Carbon::parse($user->date_joined);
 
         $activeLeaveTypes = LeaveType::where('tenant_id', $user->tenant_id)
             ->where('is_active', 1)

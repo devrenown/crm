@@ -4,11 +4,13 @@ namespace Modules\Roles\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Facades\DB;
 
 class RolesController extends Controller
 {
@@ -28,31 +30,32 @@ class RolesController extends Controller
             $selected_role = Role::find($decrypted_id);
         }
 
-        // Group permissions by category/module
         $permissions = Permission::orderBy('category_name')->get()->groupBy('category_name');
-
         return view('roles::index', compact('pageTitle', 'roles', 'selected_role', 'permissions'));
     }
+
     /*
     public function index($id = null)
     {
         $pageTitle = 'Roles and Permissions';
-       
         $roles = Role::with(['permissions'])->get();
-
         $selected_role = null;
+
         if(!empty($id)){
             $decrypted_id = Crypt::decrypt($id);
             $selected_role = Role::find($decrypted_id);
         }
+
         $permissions = [];
 
         $permissionArray = Permission::orderBy('module')->get();
+
         foreach ($permissionArray as $item) {
             $module = $item->module;
             $permission = $item->name;
             $permissions[$module][] = $permission;
         }
+
         // Group permissions by module (category)
         $permissions = Permission::orderBy('category_name')->get()->groupBy('category_name');
 
@@ -72,49 +75,80 @@ class RolesController extends Controller
         ));
     }
 
-
     /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Renderable
      */
+
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required',
         ]);
+
         $role = Role::create(['name' => $request->name]);
         $notification = notify('role created successfully');
+
         return back()->with($notification);
     }
 
-
-    public function updatePermission(Request $request, Role $role){
+    public function updatePermission(Request $request, Role $role)
+    {
         $request->validate([
-            'permissions' => 'required',
-        ],[
-            'permissions.required' => 'Select atleast one permission'
+            'permissions' => 'required|array',
+        ], [
+            'permissions.required' => 'Select atleast one permission',
         ]);
-        $role->syncPermissions($request->permissions);
-        $notification = notify("permissions has been updated");
-        return back()->with($notification);
-    }
 
+        $tenantId = app('tenant')->id;
+
+        $hiddenNames   = ['view-roles', 'view-permissions', 'edit-permission'];
+
+        app(PermissionRegistrar::class)
+            ->setPermissionsTeamId($tenantId);
+
+        $permissionNames = $request->permissions;
+
+        if ($role->name === 'Admin') {
+            $permissionNames = array_unique(array_merge(
+                $permissionNames,
+                [
+                    'view-roles',
+                    'view-permissions',
+                    'edit-permission',
+                ]
+            ));
+        }
+
+        $role->syncPermissions($permissionNames);
+
+        app(PermissionRegistrar::class)
+            ->forgetCachedPermissions();
+
+        return back()->with(
+            notify('Permissions have been updated')
+        );
+    }
 
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @return Renderable
      */
+
     public function update(Request $request)
     {
         $request->validate([
             'name' => 'required'
         ]);
+
         $role = Role::findOrFail($request->id);
+
         $role->update([
             'name' => $request->name
         ]);
+
         $notification = notify("Role has been updated");
         return back()->with($notification);
     }
@@ -124,10 +158,13 @@ class RolesController extends Controller
      * @param Request $request
      * @return Renderable
      */
+
     public function destroy(Request $request, Role $role)
     {
         $role->delete();
         $notification = notify("Role has been deleted");
         return back()->with($notification);
     }
+
 }
+

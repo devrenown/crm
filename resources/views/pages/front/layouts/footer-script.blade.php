@@ -1,5 +1,5 @@
 <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}" defer></script>
 <!-- jQuery Validation plugin -->
