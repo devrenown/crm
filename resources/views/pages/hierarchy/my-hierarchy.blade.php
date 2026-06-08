@@ -2,326 +2,549 @@
 
 @push('page-styles')
 <style>
-    /* ========== MY HIERARCHY — 3-TIER PROMINENT VIEW ========== */
-    .my-hierarchy-container {
-        max-width: 920px;
-        margin: 0 auto;
+    /* ================================================================
+       MY HIERARCHY — ENTERPRISE REDESIGN (v2)
+       Clean • Fast • Scalable (1000+ reports)
+       ================================================================ */
+
+    /* ── PAGE HEADER ── */
+    .mh-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .mh-header-left h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+    .mh-header-left p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 2px 0 0;
     }
 
-    /* ── Header ── */
-    .chain-header {
-        text-align: center;
-        margin-bottom: 32px;
+    /* ── SECTION BLOCKS ── */
+    .mh-section {
+        margin-bottom: 28px;
     }
-    .chain-header h3 { font-size: 22px; font-weight: 700; color: #1e293b; }
-    .chain-header p { color: #94a3b8; font-size: 14px; margin-top: 4px; }
-
-    /* ── Section Title ── */
-    .tier-section-title {
+    .mh-section-label {
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 14px;
-        padding: 0 2px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #475569;
     }
-    .tier-section-title .tier-dot {
-        width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    .mh-section-label .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
     }
-    .tier-section-title .tier-label {
-        font-size: 11px; font-weight: 600; text-transform: uppercase;
-        letter-spacing: .6px; color: #64748b;
-    }
-    .tier-section-title .tier-count {
-        font-size: 10px; padding: 1px 8px; border-radius: 20px;
-        background: #f1f5f9; color: #94a3b8; font-weight: 600;
-    }
-
-    /* ── CONNECTOR BETWEEN SECTIONS ── */
-    .tier-connector {
-        display: flex;
-        justify-content: center;
-        padding: 6px 0;
-    }
-    .tier-connector .connector-line {
-        width: 2px;
-        height: 24px;
-        background: #cbd5e1;
-        border-radius: 2px;
+    .mh-section-label .badge {
+        font-size: 10px;
+        padding: 1px 8px;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        font-weight: 600;
     }
 
-    /* ── LEVEL UP SECTION ── */
-    .level-up-section { margin-bottom: 8px; }
-
-    .level-up-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 14px;
-    }
-
-    /* ── CENTER (SELF) — HERO CARD ── */
-    .self-section {
-        margin: 12px 0;
-    }
-
-    .self-hero-card {
+    /* ══════════════════════════════════════════
+       SELF CARD — Prominent Hero
+       ══════════════════════════════════════════ */
+    .mh-self-card {
         background: linear-gradient(135deg, var(--primary, #ff6b35), #ff9a5c);
-        border-radius: 16px;
-        padding: 28px;
+        border-radius: 14px;
+        padding: 24px 28px;
         color: #fff;
-        box-shadow: 0 8px 32px rgba(255, 107, 53, 0.25);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .self-hero-card::before {
-        content: '';
-        position: absolute;
-        top: -40px;
-        right: -40px;
-        width: 160px;
-        height: 160px;
-        background: rgba(255,255,255,0.08);
-        border-radius: 50%;
-    }
-
-    .self-hero-card::after {
-        content: '';
-        position: absolute;
-        bottom: -30px;
-        left: -30px;
-        width: 120px;
-        height: 120px;
-        background: rgba(255,255,255,0.06);
-        border-radius: 50%;
-    }
-
-    .self-hero-inner {
         display: flex;
         align-items: center;
         gap: 20px;
-        position: relative;
-        z-index: 1;
+        min-height: 120px;
     }
-
-    .self-hero-avatar {
-        width: 80px;
-        height: 80px;
+    .mh-self-avatar {
+        width: 72px;
+        height: 72px;
         border-radius: 50%;
         object-fit: cover;
-        border: 4px solid rgba(255,255,255,0.3);
+        border: 3px solid rgba(255,255,255,0.3);
         flex-shrink: 0;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: block;
     }
-
-    .self-hero-info { flex: 1; min-width: 0; }
-
-    .self-hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 10px;
-        font-weight: 600;
+    .mh-self-body {
+        flex: 1;
+        min-width: 0;
+    }
+    .mh-self-tag {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: .8px;
+        letter-spacing: 1px;
         background: rgba(255,255,255,0.2);
-        padding: 3px 10px;
+        padding: 2px 10px;
         border-radius: 20px;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
-
-    .self-hero-name {
-        font-size: 22px;
+    .mh-self-name {
+        font-size: 20px;
         font-weight: 700;
         margin-bottom: 4px;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
-
-    .self-hero-meta {
+    .mh-self-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
+        gap: 6px 14px;
         font-size: 13px;
-        opacity: 0.9;
+        opacity: .9;
     }
-
-    .self-hero-meta span {
+    .mh-self-meta span {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 5px;
     }
-
-    .self-hero-roles {
+    .mh-self-meta i { font-size: 11px; }
+    .mh-self-roles {
         display: flex;
         flex-wrap: wrap;
-        gap: 5px;
-        margin-top: 10px;
+        gap: 4px;
+        margin-top: 8px;
     }
-
-    .self-hero-role-tag {
+    .mh-self-role {
         font-size: 10px;
-        padding: 3px 9px;
+        padding: 2px 8px;
         border-radius: 20px;
-        background: rgba(255,255,255,0.2);
-        font-weight: 500;
+        background: rgba(255,255,255,0.18);
     }
 
-    /* ── LEVEL DOWN SECTION ── */
-    .level-down-section { margin-top: 8px; }
-
-    .level-down-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 14px;
-    }
-
-    /* ── PERSON CARD (for up & down tiers) ── */
-    .person-card {
+    /* ══════════════════════════════════════════
+       PERSON ROW — Compact horizontal card
+       ══════════════════════════════════════════ */
+    .mh-person {
         background: #fff;
-        border-radius: 12px;
-        padding: 14px 16px;
-        box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-        border: 1.5px solid #f1f5f9;
-        transition: all .2s;
+        border-radius: 10px;
+        padding: 12px 14px;
+        border: 1px solid #f1f5f9;
         display: flex;
         align-items: center;
         gap: 12px;
+        min-height: 64px;
     }
-
-    .person-card:hover {
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        transform: translateY(-1px);
+    .mh-person:hover {
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         border-color: #e2e8f0;
     }
+    /* Left accent border */
+    .mh-person.direct { border-left: 3px solid #4f6df5; }
+    .mh-person.sub    { border-left: 3px dashed #2ecc71; }
 
-    .person-card.rm-card { border-left: 3px solid #4f6df5; }
-    .person-card.sub-rm-card { border-left: 3px solid #2ecc71; }
-
-    .person-card-avatar {
-        width: 44px;
-        height: 44px;
+    .mh-person-avatar {
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #e8ecf1;
         flex-shrink: 0;
+        display: block;
     }
-
-    .person-card-info { flex: 1; min-width: 0; }
-    .person-card-name { font-size: 14px; font-weight: 600; color: #1e293b; }
-
-    .person-card-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        align-items: center;
-        margin-top: 3px;
+    .mh-person-body {
+        flex: 1;
+        min-width: 0;
     }
-
-    .person-card-desg { font-size: 11px; color: #64748b; }
-    .person-card-dept {
-        font-size: 9px;
-        padding: 1px 6px;
-        background: #f0f4ff;
-        color: #4f6df5;
-        border-radius: 20px;
-    }
-
-    .person-card-email {
-        font-size: 10px;
-        color: #94a3b8;
-        margin-top: 3px;
+    .mh-person-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-    .person-card-roles {
+    .mh-person-sub {
         display: flex;
-        flex-wrap: wrap;
-        gap: 3px;
-        margin-top: 4px;
+        align-items: center;
+        gap: 6px;
+        margin-top: 2px;
+        font-size: 11px;
+        color: #64748b;
     }
-
-    .person-card-role-tag {
+    .mh-person-dept {
         font-size: 9px;
         padding: 1px 6px;
         border-radius: 20px;
+        background: #f0f4ff;
+        color: #4f6df5;
+        font-weight: 500;
+    }
+    .mh-person-dept.green {
+        background: #eafaf1;
+        color: #2ecc71;
+    }
+    .mh-person-email {
+        font-size: 10px;
+        color: #94a3b8;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+    }
+    .mh-person-rel {
+        font-size: 9px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 20px;
+        color: #fff;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+    .mh-person-rel.rm   { background: #4f6df5; }
+    .mh-person-rel.srm  { background: #2ecc71; }
+    .mh-person-rel.hr   { background: #e74c3c; }
+    .mh-person-rel.admin { background: #9b59b6; }
+
+    /* ── LEVEL UP GRID ── */
+    .mh-up-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 10px;
+    }
+
+    /* ══════════════════════════════════════════
+       LEVEL DOWN — Toolbar + Cards/Table + Pagination
+       ══════════════════════════════════════════ */
+    .mh-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+    }
+    .mh-search {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 320px;
+    }
+    .mh-search input {
+        width: 100%;
+        padding: 8px 12px 8px 34px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #334155;
+        background: #fff;
+    }
+    .mh-search input:focus {
+        outline: none;
+        border-color: #4f6df5;
+        box-shadow: 0 0 0 3px rgba(79,109,245,0.1);
+    }
+    .mh-search input::placeholder {
+        color: #cbd5e1;
+    }
+    .mh-search i {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: #cbd5e1;
+    }
+
+    .mh-filter-tabs {
+        display: flex;
+        gap: 4px;
+    }
+    .mh-filter-tabs button {
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        font-size: 11px;
+        font-weight: 500;
+        color: #64748b;
+        cursor: pointer;
+    }
+    .mh-filter-tabs button.active {
+        background: #4f6df5;
+        color: #fff;
+        border-color: #4f6df5;
+    }
+    .mh-filter-tabs button:hover:not(.active) {
+        background: #f8fafc;
+    }
+
+    /* ── VIEW TOGGLE ── */
+    .mh-view-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+        flex-shrink: 0;
+    }
+    .mh-view-toggle button {
+        padding: 6px 10px;
+        border: none;
+        background: transparent;
+        color: #94a3b8;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+    }
+    .mh-view-toggle button:not(:last-child) {
+        border-right: 1px solid #e2e8f0;
+    }
+    .mh-view-toggle button.active {
+        background: #4f6df5;
+        color: #fff;
+    }
+    .mh-view-toggle button:hover:not(.active) {
         background: #f1f5f9;
         color: #475569;
     }
 
-    /* Rel badge on card */
-    .person-card-rel {
-        position: absolute;
-        top: -8px;
-        left: 12px;
-        font-size: 9px;
+    /* ── TABLE ── */
+    .mh-table-wrap {
+        border: 1px solid #e8ecf1;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .mh-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+    .mh-table thead th {
+        background: #f8fafc;
+        padding: 10px 14px;
+        text-align: left;
         font-weight: 600;
+        font-size: 11px;
         text-transform: uppercase;
-        letter-spacing: .6px;
+        letter-spacing: .4px;
+        color: #475569;
+        border-bottom: 1.5px solid #e2e8f0;
+    }
+    .mh-table tbody tr {
+    }
+    .mh-table tbody tr:hover {
+        background: #f8fafc;
+    }
+    .mh-table tbody td {
+        padding: 10px 14px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        vertical-align: middle;
+    }
+    .mh-table .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1.5px solid #e8ecf1;
+        display: block;
+    }
+    .mh-table .name {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    .mh-table .dept-badge {
+        font-size: 10px;
         padding: 2px 8px;
         border-radius: 20px;
+        display: inline-block;
+    }
+    .mh-table .dept-badge.blue {
+        background: #f0f4ff;
+        color: #4f6df5;
+    }
+    .mh-table .dept-badge.green {
+        background: #eafaf1;
+        color: #2ecc71;
+    }
+    .mh-table .rel-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: 600;
         color: #fff;
+        display: inline-block;
+    }
+    .mh-table .rel-badge.direct { background: #4f6df5; }
+    .mh-table .rel-badge.sub    { background: #2ecc71; }
+
+    /* ── PAGINATION ── */
+    .mh-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        background: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    /* Standalone card pagination (outside table wrapper) */
+    #mhCardPagination {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        margin-top: 8px;
+    }
+    .mh-pagination .info {
+        font-size: 12px;
+        color: #64748b;
+    }
+    .mh-pagination .pages {
+        display: flex;
+        gap: 4px;
+    }
+    .mh-pagination .pages button {
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        font-size: 12px;
+        color: #475569;
+        cursor: pointer;
+    }
+    .mh-pagination .pages button:hover:not(:disabled):not(.active) {
+        background: #f1f5f9;
+    }
+    .mh-pagination .pages button.active {
+        background: #4f6df5;
+        color: #fff;
+        border-color: #4f6df5;
+    }
+    .mh-pagination .pages button:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+    }
+
+    /* ── CARD GRID ── */
+    .mh-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 10px;
     }
 
     /* ── EMPTY STATE ── */
-    .tier-empty {
+    .mh-empty {
         text-align: center;
-        padding: 24px 16px;
-        color: #94a3b8;
+        padding: 28px 16px;
         background: #f8fafc;
         border-radius: 10px;
         border: 1.5px dashed #e2e8f0;
     }
-
-    .tier-empty i { font-size: 24px; margin-bottom: 6px; display: block; }
-    .tier-empty p { font-size: 13px; margin: 0; }
-
-    /* ── SUMMARY BAR ── */
-    .hierarchy-summary-bar {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-top: 28px;
+    .mh-empty i {
+        font-size: 22px;
+        color: #cbd5e1;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .mh-empty p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
     }
 
-    .summary-bar-item {
+    /* ── NO RESULTS ── */
+    .mh-no-results {
+        text-align: center;
+        padding: 28px;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    /* ── LOADER ── */
+    .mh-loader {
+        text-align: center;
+        padding: 30px;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+    .mh-loader i { font-size: 20px; }
+    .mh-loader p { margin-top: 8px; }
+
+    /* ══════════════════════════════════════════
+       PROFILE + STATS — ONE ROW (left + right)
+       ══════════════════════════════════════════ */
+    .mh-hero-row {
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+    .mh-hero-row .mh-self-card {
+        flex: 1;
+        min-width: 0;
+    }
+    .mh-hero-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+        width: 200px;
+    }
+    .mh-stat-card {
         background: #fff;
         border-radius: 10px;
-        padding: 14px 16px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        padding: 12px 14px;
+        border: 1px solid #f1f5f9;
         display: flex;
         align-items: center;
         gap: 12px;
+        flex: 1;
     }
-
-    .summary-bar-icon {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
+    .mh-stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 14px;
-        color: #fff;
         flex-shrink: 0;
     }
+    .mh-stat-icon.up  { background: #eef2ff; color: #4f6df5; }
+    .mh-stat-icon.me  { background: #fff4ed; color: #ff6b35; }
+    .mh-stat-icon.dn  { background: #eafaf1; color: #2ecc71; }
+    .mh-stat-num {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e293b;
+        line-height: 1.1;
+    }
+    .mh-stat-label {
+        font-size: 11px;
+        color: #94a3b8;
+        margin-top: 1px;
+    }
 
-    .summary-bar-icon.up { background: linear-gradient(135deg, #4f6df5, #7c93f7); }
-    .summary-bar-icon.self { background: linear-gradient(135deg, #ff6b35, #ff9a5c); }
-    .summary-bar-icon.down { background: linear-gradient(135deg, #2ecc71, #55e89a); }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+        .mh-hero-row { flex-direction: column; }
+        .mh-hero-stats { width: auto; flex-direction: row; }
+        .mh-up-grid { grid-template-columns: 1fr; }
 
-    .summary-bar-value { font-size: 20px; font-weight: 700; color: #1e293b; line-height: 1; }
-    .summary-bar-label { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-
-    /* ── Responsive ── */
-    @media (max-width: 640px) {
-        .self-hero-inner { flex-direction: column; text-align: center; }
-        .self-hero-meta { justify-content: center; }
-        .self-hero-roles { justify-content: center; }
-        .self-hero-card { padding: 20px; }
-        .level-up-grid, .level-down-grid { grid-template-columns: 1fr; }
-        .hierarchy-summary-bar { grid-template-columns: 1fr; }
+        .mh-self-card { flex-direction: column; text-align: center; padding: 20px; }
+        .mh-self-meta { justify-content: center; }
+        .mh-self-roles { justify-content: center; }
+        .mh-cards-grid { grid-template-columns: 1fr; }
+        .mh-table-wrap { overflow-x: auto; }
     }
 </style>
 @endpush
@@ -346,233 +569,396 @@
         </x-slot>
     </x-breadcrumb>
 
-    <div class="my-hierarchy-container">
-        <div class="chain-header">
-            <h3>My Organization View</h3>
-            <p>Your position in the reporting structure</p>
-        </div>
+    @php
+        $aboveMe  = array_filter($chain, fn($p) => $p['relationship'] !== 'self');
+        $selfNode = collect($chain)->firstWhere('relationship', 'self');
+        $aboveCount = count($aboveMe);
+        $aboveMe    = array_values($aboveMe);
+        $defaultAvatar = asset('images/user.jpg');
+        $ajaxUrl   = route('hierarchy.my-reports-paginated');
+    @endphp
 
-        @php
-            // Separate chain into "above me" (skip self) and identify self
-            $aboveMe = array_filter($chain, fn($p) => $p['relationship'] !== 'self');
-            $selfNode = collect($chain)->firstWhere('relationship', 'self');
-            $reportingManager = collect($chain)->firstWhere('relationship', 'reporting_manager');
-            $subReportingManager = collect($chain)->firstWhere('relationship', 'sub_reporting_manager');
-            $aboveCount = count($aboveMe);
-            $downCount = count($directReports);
-        @endphp
-
-        <!-- ══════════════ TIER 1: LEVEL UP ══════════════ -->
-        <div class="level-up-section">
-            <div class="tier-section-title">
-                <span class="tier-dot" style="background:#4f6df5"></span>
-                <span class="tier-label">1 Level Up</span>
-                @if($aboveCount > 0)
-                    <span class="tier-count">{{ $aboveCount }}</span>
-                @endif
-            </div>
-
-            @if($aboveCount > 0)
-                <div class="level-up-grid">
-                    @foreach($aboveMe as $person)
-                        @php
-                            $cardClass = match($person['relationship']) {
-                                'reporting_manager' => 'rm-card',
-                                'sub_reporting_manager' => 'sub-rm-card',
-                                'hr' => 'rm-card',
-                                'admin' => 'rm-card',
-                                default => 'rm-card',
-                            };
-                            $relLabel = match($person['relationship']) {
-                                'reporting_manager' => 'Reporting Manager',
-                                'sub_reporting_manager' => 'Sub RM',
-                                'hr' => 'HR',
-                                'admin' => 'Admin',
-                                default => ucfirst(str_replace('_', ' ', $person['relationship'])),
-                            };
-                            $relColor = match($person['relationship']) {
-                                'reporting_manager' => '#4f6df5',
-                                'sub_reporting_manager' => '#2ecc71',
-                                'hr' => '#e74c3c',
-                                'admin' => '#9b59b6',
-                                default => '#64748b',
-                            };
-                        @endphp
-                        <div class="person-card {{ $cardClass }}" style="position:relative">
-                            <span class="person-card-rel" style="background:{{ $relColor }}">{{ $relLabel }}</span>
-                            <img class="person-card-avatar" src="{{ $person['avatar'] }}"
-                                 onerror="this.src='{{ asset('images/user.jpg') }}'"
-                                 alt="{{ $person['name'] }}">
-                            <div class="person-card-info">
-                                <div class="person-card-name">{{ $person['name'] }}</div>
-                                <div class="person-card-meta">
-                                    <span class="person-card-desg">{{ $person['designation'] ?? 'N/A' }}</span>
-                                    @if($person['department'])
-                                        <span class="person-card-dept">{{ $person['department'] }}</span>
-                                    @endif
-                                </div>
-                                @if($person['email'])
-                                    <div class="person-card-email">
-                                        <i class="fa-solid fa-envelope" style="font-size:9px;margin-right:3px"></i>
-                                        {{ $person['email'] }}
-                                    </div>
-                                @endif
-                                @if(!empty($person['role_names']))
-                                    <div class="person-card-roles">
-                                        @foreach($person['role_names'] as $r)
-                                            <span class="person-card-role-tag">{{ $r }}</span>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="tier-empty">
-                    <i class="fa-solid fa-arrow-up"></i>
-                    <p>No reporting manager assigned yet</p>
-                </div>
-            @endif
-        </div>
-
-        <!-- Connector -->
-        @if($aboveCount > 0 || $selfNode)
-        <div class="tier-connector"><div class="connector-line"></div></div>
-        @endif
-
-        <!-- ══════════════ TIER 2: YOU (CENTER) ══════════════ -->
+    <!-- ══════════════════════════════════════
+         PROFILE (LEFT) + STATS (RIGHT) — ONE ROW
+         ══════════════════════════════════════ -->
+    <div class="mh-hero-row">
         @if($selfNode)
-        <div class="self-section">
-            <div class="tier-section-title">
-                <span class="tier-dot" style="background:var(--primary, #ff6b35)"></span>
-                <span class="tier-label">You</span>
-            </div>
-            <div class="self-hero-card">
-                <div class="self-hero-inner">
-                    <img class="self-hero-avatar" src="{{ $selfNode['avatar'] }}"
-                         onerror="this.src='{{ asset('images/user.jpg') }}'"
-                         alt="{{ $selfNode['name'] }}">
-                    <div class="self-hero-info">
-                        <!-- <div class="self-hero-badge">
-                            <i class="fa-solid fa-user"></i> This Is You
-                        </div> -->
-                        <div class="self-hero-name">{{ $selfNode['name'] }}</div>
-                        <div class="self-hero-meta">
-                            <span><i class="fa-solid fa-briefcase"></i> {{ $selfNode['designation'] ?? 'N/A' }}</span>
-                            @if($selfNode['department'])
-                                <span><i class="fa-solid fa-building"></i> {{ $selfNode['department'] }}</span>
-                            @endif
-                            @if($selfNode['email'])
-                                <span><i class="fa-solid fa-envelope"></i> {{ $selfNode['email'] }}</span>
-                            @endif
-                        </div>
-                        @if(!empty($selfNode['role_names']))
-                            <div class="self-hero-roles">
-                                @foreach($selfNode['role_names'] as $r)
-                                    <span class="self-hero-role-tag">{{ $r }}</span>
-                                @endforeach
-                            </div>
+            <div class="mh-self-card">
+                <img class="mh-self-avatar"
+                     src="{{ $selfNode['avatar'] ?? $defaultAvatar }}"
+                     onerror="this.src='{{ $defaultAvatar }}'"
+                     alt="{{ $selfNode['name'] }}">
+                <div class="mh-self-body">
+                    <div class="mh-self-tag"><i class="fa-solid fa-user" style="margin-right:3px;font-size:8px"></i>Profile</div>
+                    <div class="mh-self-name">{{ $selfNode['name'] }}</div>
+                    <div class="mh-self-meta">
+                        @if($selfNode['designation'])
+                            <span><i class="fa-solid fa-briefcase"></i> {{ $selfNode['designation'] }}</span>
+                        @endif
+                        @if($selfNode['department'])
+                            <span><i class="fa-solid fa-building"></i> {{ $selfNode['department'] }}</span>
+                        @endif
+                        @if($selfNode['email'])
+                            <span><i class="fa-solid fa-envelope"></i> {{ $selfNode['email'] }}</span>
                         @endif
                     </div>
+                    @if(!empty($selfNode['role_names']))
+                        <div class="mh-self-roles">
+                            @foreach($selfNode['role_names'] as $r)
+                                <span class="mh-self-role">{{ $r }}</span>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
+        <div class="mh-hero-stats">
+            <div class="mh-stat-card">
+                <div class="mh-stat-icon up"><i class="fa-solid fa-arrow-up"></i></div>
+                <div>
+                    <div class="mh-stat-num">{{ $aboveCount }}</div>
+                    <div class="mh-stat-label">Above You</div>
+                </div>
+            </div>
+            <div class="mh-stat-card">
+                <div class="mh-stat-icon me"><i class="fa-solid fa-user"></i></div>
+                <div>
+                    <div class="mh-stat-num">1</div>
+                    <div class="mh-stat-label">You</div>
+                </div>
+            </div>
+            <div class="mh-stat-card">
+                <div class="mh-stat-icon dn"><i class="fa-solid fa-arrow-down"></i></div>
+                <div>
+                    <div class="mh-stat-num">{{ $downCount }}</div>
+                    <div class="mh-stat-label">Reporting to You</div>
                 </div>
             </div>
         </div>
-        @endif
+    </div>
 
-        <!-- Connector -->
-        @if($downCount > 0)
-        <div class="tier-connector"><div class="connector-line"></div></div>
-        @endif
-
-        <!-- ══════════════ TIER 3: LEVEL DOWN ══════════════ -->
-        <div class="level-down-section">
-            <div class="tier-section-title">
-                <span class="tier-dot" style="background:#2ecc71"></span>
-                <span class="tier-label">1 Level Down</span>
-                @if($downCount > 0)
-                    <span class="tier-count">{{ $downCount }}</span>
-                @endif
-            </div>
-
-            @if($downCount > 0)
-                <div class="level-down-grid">
-                    @foreach($directReports as $person)
-                        @php
-                            $relLabel = $person['rel_type'] === 'reporting_manager'
-                                ? 'Reports to You'
-                                : 'Sub-Reports to You';
-                            $cardClass = $person['rel_type'] === 'reporting_manager'
-                                ? 'rm-card'
-                                : 'sub-rm-card';
-                            $relColor = $person['rel_type'] === 'reporting_manager'
-                                ? '#4f6df5'
-                                : '#2ecc71';
-                        @endphp
-                        <div class="person-card {{ $cardClass }}" style="position:relative">
-                            <span class="person-card-rel" style="background:{{ $relColor }}">{{ $relLabel }}</span>
-                            <img class="person-card-avatar" src="{{ $person['avatar'] }}"
-                                 onerror="this.src='{{ asset('images/user.jpg') }}'"
-                                 alt="{{ $person['name'] }}">
-                            <div class="person-card-info">
-                                <div class="person-card-name">{{ $person['name'] }}</div>
-                                <div class="person-card-meta">
-                                    <span class="person-card-desg">{{ $person['designation'] ?? 'N/A' }}</span>
-                                    @if($person['department'])
-                                        <span class="person-card-dept">{{ $person['department'] }}</span>
-                                    @endif
-                                </div>
-                                @if($person['email'])
-                                    <div class="person-card-email">
-                                        <i class="fa-solid fa-envelope" style="font-size:9px;margin-right:3px"></i>
-                                        {{ $person['email'] }}
-                                    </div>
-                                @endif
-                                @if(!empty($person['role_names']))
-                                    <div class="person-card-roles">
-                                        @foreach($person['role_names'] as $r)
-                                            <span class="person-card-role-tag">{{ $r }}</span>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <div class="tier-empty">
-                    <i class="fa-solid fa-users"></i>
-                    <p>No one reports to you yet</p>
-                </div>
+    <!-- ══════════════════════════════════════
+         LEVEL UP — Managers & HR & Admin
+         ══════════════════════════════════════ -->
+    <div class="mh-section">
+        <div class="mh-section-label">
+            <span class="dot" style="background:#4f6df5"></span>
+            Reporting Chain
+            @if($aboveCount > 0)
+                <span class="badge">{{ $aboveCount }}</span>
             @endif
         </div>
 
-        <!-- ══════════════ SUMMARY BAR ══════════════ -->
-        <div class="hierarchy-summary-bar">
-            <div class="summary-bar-item">
-                <div class="summary-bar-icon up"><i class="fa-solid fa-arrow-up"></i></div>
-                <div>
-                    <div class="summary-bar-value">{{ $aboveCount }}</div>
-                    <div class="summary-bar-label">Above You</div>
-                </div>
+        @if($aboveCount > 0)
+            <div class="mh-up-grid">
+                @foreach($aboveMe as $person)
+                    @php
+                        $relClass = match($person['relationship']) {
+                            'reporting_manager'      => 'rm',
+                            'sub_reporting_manager'  => 'srm',
+                            'hr'                     => 'hr',
+                            'admin'                  => 'admin',
+                            default                  => 'rm',
+                        };
+                        $relText = match($person['relationship']) {
+                            'reporting_manager'      => 'RM',
+                            'sub_reporting_manager'  => 'Sub RM',
+                            'hr'                     => 'HR',
+                            'admin'                  => 'Admin',
+                            default                  => '',
+                        };
+                        $cardBorder = ($person['relationship'] === 'sub_reporting_manager') ? 'sub' : 'direct';
+                    @endphp
+                    <div class="mh-person {{ $cardBorder }}">
+                        <img class="mh-person-avatar"
+                             src="{{ $person['avatar'] ?? $defaultAvatar }}"
+                             onerror="this.src='{{ $defaultAvatar }}'"
+                             alt="{{ $person['name'] }}">
+                        <div class="mh-person-body">
+                            <div class="mh-person-name">{{ $person['name'] }}</div>
+                            <div class="mh-person-sub">
+                                @if($person['designation'])
+                                    <span>{{ $person['designation'] }}</span>
+                                @endif
+                                @if($person['department'])
+                                    <span class="mh-person-dept">{{ $person['department'] }}</span>
+                                @endif
+                            </div>
+                            @if($person['email'])
+                                <div class="mh-person-email">{{ $person['email'] }}</div>
+                            @endif
+                        </div>
+                        @if($relText)
+                            <span class="mh-person-rel {{ $relClass }}">{{ $relText }}</span>
+                        @endif
+                    </div>
+                @endforeach
             </div>
-            <div class="summary-bar-item">
-                <div class="summary-bar-icon self"><i class="fa-solid fa-user"></i></div>
-                <div>
-                    <div class="summary-bar-value">1</div>
-                    <div class="summary-bar-label">You</div>
-                </div>
+        @else
+            <div class="mh-empty">
+                <i class="fa-solid fa-arrow-up"></i>
+                <p>No reporting manager assigned yet</p>
             </div>
-            <div class="summary-bar-item">
-                <div class="summary-bar-icon down"><i class="fa-solid fa-arrow-down"></i></div>
-                <div>
-                    <div class="summary-bar-value">{{ $downCount }}</div>
-                    <div class="summary-bar-label">Below You</div>
-                </div>
-            </div>
+        @endif
+    </div>
+
+    <!-- ══════════════════════════════════════
+         LEVEL DOWN — Reports (AJAX Paginated)
+         ══════════════════════════════════════ -->
+    <div class="mh-section">
+        <div class="mh-section-label">
+            <span class="dot" style="background:#2ecc71"></span>
+            Direct Reports & Sub-Reports
+            @if($downCount > 0)
+                <span class="badge" id="mhDownBadge">{{ $downCount }}</span>
+            @endif
         </div>
 
+        @if($downCount > 0)
+
+            {{-- TOOLBAR: Search + Filter + View Toggle --}}
+            <div class="mh-toolbar">
+                <div class="mh-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text"
+                           id="mhSearchInput"
+                           placeholder="Search by name, designation, or department..."
+                           autocomplete="off">
+                </div>
+                <div class="mh-filter-tabs" id="mhFilterTabs">
+                    <button class="active" data-filter="all" onclick="mhFilter('all', this)">
+                        All ({{ $downCount }})
+                    </button>
+                    @if($directCount > 0)
+                        <button data-filter="direct" onclick="mhFilter('direct', this)">
+                            Direct ({{ $directCount }})
+                        </button>
+                    @endif
+                    @if($subCount > 0)
+                        <button data-filter="sub" onclick="mhFilter('sub', this)">
+                            Sub ({{ $subCount }})
+                        </button>
+                    @endif
+                </div>
+                {{-- VIEW TOGGLE: Cards / Table --}}
+                <div class="mh-view-toggle" id="mhViewToggle">
+                    <button class="active" data-view="cards" onclick="mhSwitchView('cards', this)" title="Card View">
+                        <i class="fa-solid fa-grip"></i>
+                    </button>
+                    <button data-view="table" onclick="mhSwitchView('table', this)" title="Table View">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            {{-- LOADING SPINNER --}}
+            <div id="mhLoader" class="mh-loader">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <p>Loading reports...</p>
+            </div>
+
+            {{-- CARD GRID (populated by AJAX) --}}
+            <div class="mh-cards-grid" id="mhCardsGrid" style="display:none"></div>
+
+            {{-- TABLE VIEW (populated by AJAX, hidden by default) --}}
+            <div class="mh-table-wrap" id="mhTableWrap" style="display:none">
+                <table class="mh-table">
+                    <thead>
+                        <tr>
+                            <th style="width:48px">Photo</th>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Department</th>
+                            <th>Email</th>
+                            <th style="width:80px;text-align:center">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mhTableBody"></tbody>
+                </table>
+                <div class="mh-pagination" id="mhTablePagination"></div>
+            </div>
+
+            {{-- CARD PAGINATION (outside table) --}}
+            <div class="mh-pagination" id="mhCardPagination" style="display:none"></div>
+
+            {{-- NO RESULTS (shown by JS when search has 0 matches) --}}
+            <div id="mhNoResults" class="mh-no-results" style="display:none">
+                <i class="fa-solid fa-magnifying-glass" style="margin-right:6px"></i> No matching results found
+            </div>
+
+        @else
+            <div class="mh-empty">
+                <i class="fa-solid fa-users"></i>
+                <p>No one reports to you yet</p>
+            </div>
+        @endif
     </div>
 
 </div>
 @endsection
+
+@push('page-scripts')
+<script>
+(function() {
+    'use strict';
+
+    /* ════════════════════════════════════════════
+       SERVER-SIDE PAGINATION VIA AJAX
+       - Loads 10 items per page from server
+       - Search, filter, page nav — all via AJAX
+       - View toggle re-renders cached data (no extra call)
+       - Counts: PHP COUNT() on page load for tabs
+       - Counts: AJAX response.total for search results
+       ════════════════════════════════════════════ */
+
+    var PAGE_SIZE     = 10;
+    var currentPage  = 1;
+    var currentFilter = 'all';
+    var currentView   = 'cards';
+    var searchTerm    = '';
+    var isLoading     = false;
+    var lastData      = [];
+
+    var AJAX_URL       = '{{ $ajaxUrl }}';
+    var DEFAULT_AVATAR = '{{ $defaultAvatar }}';
+
+    var cardsGrid   = document.getElementById('mhCardsGrid');
+    var tableWrap   = document.getElementById('mhTableWrap');
+    var tableBody   = document.getElementById('mhTableBody');
+    var cardPagEl   = document.getElementById('mhCardPagination');
+    var tablePagEl  = document.getElementById('mhTablePagination');
+    var loaderEl    = document.getElementById('mhLoader');
+    var noResultsEl = document.getElementById('mhNoResults');
+    var badgeEl     = document.getElementById('mhDownBadge');
+    var searchInput = document.getElementById('mhSearchInput');
+
+    function esc(str) {
+        if (!str) return '';
+        var d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    function cardHtml(p) {
+        var isDir = (p.rel_type === 'reporting_manager');
+        return '<div class="mh-person ' + (isDir ? 'direct' : 'sub') + '">' +
+            '<img class="mh-person-avatar" src="' + esc(p.avatar) + '" onerror="this.src=\'' + DEFAULT_AVATAR + '\'" alt="' + esc(p.name) + '">' +
+            '<div class="mh-person-body">' +
+                '<div class="mh-person-name">' + esc(p.name) + '</div>' +
+                '<div class="mh-person-sub">' +
+                    (p.designation ? '<span>' + esc(p.designation) + '</span>' : '') +
+                    (p.department ? '<span class="mh-person-dept' + (isDir ? '' : ' green') + '">' + esc(p.department) + '</span>' : '') +
+                '</div>' +
+                (p.email ? '<div class="mh-person-email">' + esc(p.email) + '</div>' : '') +
+            '</div>' +
+            '<span class="mh-person-rel ' + (isDir ? 'rm' : 'srm') + '">' + (isDir ? 'Direct' : 'Sub') + '</span>' +
+        '</div>';
+    }
+
+    function rowHtml(p) {
+        var isDir = (p.rel_type === 'reporting_manager');
+        return '<tr>' +
+            '<td><img class="avatar" src="' + esc(p.avatar) + '" onerror="this.src=\'' + DEFAULT_AVATAR + '\'" alt="' + esc(p.name) + '"></td>' +
+            '<td class="name">' + esc(p.name) + '</td>' +
+            '<td>' + esc(p.designation || '-') + '</td>' +
+            '<td><span class="dept-badge ' + (isDir ? 'blue' : 'green') + '">' + esc(p.department || '-') + '</span></td>' +
+            '<td style="font-size:12px;color:#64748b">' + esc(p.email || '-') + '</td>' +
+            '<td style="text-align:center"><span class="rel-badge ' + (isDir ? 'direct' : 'sub') + '">' + (isDir ? 'Direct' : 'Sub') + '</span></td>' +
+        '</tr>';
+    }
+
+    function renderData(data) {
+        lastData = data;
+        cardsGrid.innerHTML = data.map(cardHtml).join('');
+        tableBody.innerHTML = data.map(rowHtml).join('');
+        applyViewVisibility();
+    }
+
+    function applyViewVisibility() {
+        cardsGrid.style.display  = (currentView === 'cards') ? '' : 'none';
+        tableWrap.style.display  = (currentView === 'table') ? '' : 'none';
+        cardPagEl.style.display  = (currentView === 'cards') ? '' : 'none';
+        tablePagEl.style.display = (currentView === 'table') ? '' : 'none';
+    }
+
+    function hideAllContent() {
+        cardsGrid.style.display  = 'none';
+        tableWrap.style.display  = 'none';
+        cardPagEl.style.display  = 'none';
+        tablePagEl.style.display = 'none';
+        noResultsEl.style.display = 'none';
+    }
+
+    function fetchData() {
+        if (isLoading) return;
+        isLoading = true;
+        hideAllContent();
+        if (loaderEl) loaderEl.style.display = '';
+
+        var params = 'page=' + currentPage + '&per_page=' + PAGE_SIZE + '&type=' + currentFilter;
+        if (searchTerm) params += '&search=' + encodeURIComponent(searchTerm);
+
+        fetch(AJAX_URL + '?' + params, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(resp) {
+            isLoading = false;
+            if (loaderEl) loaderEl.style.display = 'none';
+            if (resp.data) {
+                var total = resp.total || 0;
+                var lastPg = resp.last_page || 1;
+                if (badgeEl) badgeEl.textContent = total;
+                if (total === 0) { hideAllContent(); if (noResultsEl) noResultsEl.style.display = ''; return; }
+                renderData(resp.data);
+                renderPagination((currentView === 'cards') ? cardPagEl : tablePagEl, lastPg, total);
+            }
+        })
+        .catch(function(err) {
+            isLoading = false;
+            if (loaderEl) loaderEl.style.display = 'none';
+            console.error('Failed to load reports:', err);
+        });
+    }
+
+    function renderPagination(el, totalPages, totalVisible) {
+        if (!el) return;
+        var start = (currentPage - 1) * PAGE_SIZE + 1;
+        var end   = Math.min(currentPage * PAGE_SIZE, totalVisible);
+        var html = '<span class="info">Showing ' + start + '\u2013' + end + ' of ' + totalVisible + '</span>';
+        html += '<div class="pages">';
+        html += '<button ' + (currentPage <= 1 ? 'disabled' : '') + ' onclick="mhGoPage(' + (currentPage - 1) + ')"><i class="fa-solid fa-chevron-left" style="font-size:10px"></i></button>';
+        var sp = Math.max(1, currentPage - 2), ep = Math.min(totalPages, sp + 4);
+        if (ep - sp < 4) sp = Math.max(1, ep - 4);
+        for (var i = sp; i <= ep; i++) html += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="mhGoPage(' + i + ')">' + i + '</button>';
+        html += '<button ' + (currentPage >= totalPages ? 'disabled' : '') + ' onclick="mhGoPage(' + (currentPage + 1) + ')"><i class="fa-solid fa-chevron-right" style="font-size:10px"></i></button>';
+        html += '</div>';
+        el.innerHTML = html;
+    }
+
+    var searchTimeout;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() { searchTerm = searchInput.value; currentPage = 1; fetchData(); }, 300);
+        });
+    }
+
+    fetchData();
+
+    window.mhFilter = function(filter, btn) {
+        currentFilter = filter; currentPage = 1; searchTerm = '';
+        if (searchInput) searchInput.value = '';
+        document.querySelectorAll('#mhFilterTabs button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        fetchData();
+    };
+    window.mhSwitchView = function(view, btn) {
+        currentView = view;
+        document.querySelectorAll('#mhViewToggle button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        if (lastData.length > 0) applyViewVisibility();
+    };
+    window.mhGoPage = function(page) { currentPage = page; fetchData(); };
+
+})();
+</script>
+@endpush

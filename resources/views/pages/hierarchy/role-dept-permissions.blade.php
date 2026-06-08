@@ -283,16 +283,17 @@
                     <h6>Select departments this role can access:</h6>
                     <div class="dept-checkbox-grid">
                         @foreach($departments as $dept)
-                            <div class="dept-checkbox-item {{ in_array($dept->id, $assignedDepts) ? 'selected' : '' }}"
-                                 onclick="toggleDept(this, {{ $role->id }}, {{ $dept->id }})">
-                                <input type="checkbox"
-                                       id="dept-{{ $role->id }}-{{ $dept->id }}"
-                                       value="{{ $dept->id }}"
-                                       {{ in_array($dept->id, $assignedDepts) ? 'checked' : '' }}
-                                       onchange="toggleDept(this.parentElement, {{ $role->id }}, {{ $dept->id }})">
-                                <label for="dept-{{ $role->id }}-{{ $dept->id }}">{{ $dept->name }}</label>
-                            </div>
-                        @endforeach
+    <div class="dept-checkbox-item {{ in_array($dept->id, $assignedDepts) ? 'selected' : '' }}"
+         onclick="toggleDept(this, {{ $role->id }}, {{ $dept->id }})">
+        <input type="checkbox"
+               id="dept-{{ $role->id }}-{{ $dept->id }}"
+               value="{{ $dept->id }}"
+               {{ in_array($dept->id, $assignedDepts) ? 'checked' : '' }}
+               onclick="event.preventDefault()">
+        <label for="dept-{{ $role->id }}-{{ $dept->id }}"
+               onclick="event.preventDefault()">{{ $dept->name }}</label>
+    </div>
+@endforeach
                     </div>
                     <button class="save-btn" onclick="savePermission({{ $role->id }})">
                         <i class="fa-solid fa-check me-1"></i> Save Permission

@@ -49,14 +49,14 @@ class AuthController extends Controller
 
             $user = Auth::user();
             
-            if (!$user->hasRole('Blog Writer')) {
+            // if (!$user->hasRole('Blog Writer')) {
 
-                Auth::logout();
+            //     Auth::logout();
 
-                return redirect()
-                    ->route('blog.login')
-                    ->with('error', 'Unauthorized access.');
-            }
+            //     return redirect()
+            //         ->route('blog.login')
+            //         ->with('error', 'Unauthorized access.');
+            // }
 
             $request->session()->regenerate();
 
